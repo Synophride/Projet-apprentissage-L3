@@ -1,0 +1,40 @@
+synophride@EL:~/Documents/TP_IA/IIA_TD4-4_Guyot-Devatine$ ls
+pom.xml  src  target
+synophride@EL:~/Documents/TP_IA/IIA_TD4-4_Guyot-Devatine$ 
+synophride@EL:~/Documents/TP_IA/IIA_TD4-4_Guyot-Devatine$ 
+synophride@EL:~/Documents/TP_IA/IIA_TD4-4_Guyot-Devatine$ ls
+pom.xml  src  target
+synophride@EL:~/Documents/TP_IA/IIA_TD4-4_Guyot-Devatine$ cd src/
+synophride@EL:~/Documents/TP_IA/IIA_TD4-4_Guyot-Devatine/src$ ls
+main  test
+synophride@EL:~/Documents/TP_IA/IIA_TD4-4_Guyot-Devatine/src$ cd main/
+synophride@EL:~/Documents/TP_IA/IIA_TD4-4_Guyot-Devatine/src/main$ ls
+java
+synophride@EL:~/Documents/TP_IA/IIA_TD4-4_Guyot-Devatine/src/main$ cd java/
+synophride@EL:~/Documents/TP_IA/IIA_TD4-4_Guyot-Devatine/src/main/java$ ls
+iia  jeux
+synophride@EL:~/Documents/TP_IA/IIA_TD4-4_Guyot-Devatine/src/main/java$ cd iia/
+synophride@EL:~/Documents/TP_IA/IIA_TD4-4_Guyot-Devatine/src/main/java/iia$ ls
+jeux
+synophride@EL:~/Documents/TP_IA/IIA_TD4-4_Guyot-Devatine/src/main/java/iia$ cd jeux/
+synophride@EL:~/Documents/TP_IA/IIA_TD4-4_Guyot-Devatine/src/main/java/iia/jeux$ ls
+alg  modele
+synophride@EL:~/Documents/TP_IA/IIA_TD4-4_Guyot-Devatine/src/main/java/iia/jeux$cd alg/
+synophride@EL:~/Documents/TP_IA/IIA_TD4-4_Guyot-Devatine/src/main/java/iia/jeux/alg$ ls
+AlgoJeu.java  Heuristique.java  Minimax.java
+synophride@EL:~/Documents/TP_IA/IIA_TD4-4_Guyot-Devatine/src/main/java/iia/jeux/alg$ 
+synophride@EL:~/Documents/TP_IA/IIA_TD4-4_Guyot-Devatine/src/main/java/iia/jeux/alg$ ls
+AlgoJeu.java  Heuristique.java  Minimax.java  y
+synophride@EL:~/Documents/TP_IA/IIA_TD4-4_Guyot-Devatine/src/main/java/iia/jeux/alg$ 
+synophride@EL:~/Documents/TP_IA/IIA_TD4-4_Guyot-Devatine/src/main/java/iia/jeux/alg$ 
+synophride@EL:~/Documents/TP_IA/IIA_TD4-4_Guyot-Devatine/src/main/java/iia/jeux/alg$ 
+synophride@EL:~/Documents/TP_IA/IIA_TD4-4_Guyot-Devatine/src/main/java/iia/jeux/alg$ 
+synophride@EL:~/Documents/TP_IA/IIA_TD4-4_Guyot-Devatine/src/main/java/iia/jeux/alg$ 
+synophride@EL:~/Documents/TP_IA/IIA_TD4-4_Guyot-Devatine/src/main/java/iia/jeux/alg$rm y
+synophride@EL:~/Documents/TP_IA/IIA_TD4-4_Guyot-Devatine/src/main/java/iia/jeux/alg$ ls
+AlgoJeu.java  Heuristique.java  Minimax.java
+synophride@EL:~/Documents/TP_IA/IIA_TD4-4_Guyot-Devatine/src/main/java/iia/jeux/alg$ emacs
+synophride@EL:~/Documents/TP_IA/IIA_TD4-4_Guyot-Devatine/src/main/java/iia/jeux/alg$exit
+exit
+
+Process shell finished

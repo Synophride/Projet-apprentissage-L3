@@ -1,7 +1,7 @@
-ackage jeux.quarto;
+package jeux.quarto;
 import iia.jeux.modele.CoupJeu;
 
-pubic class CoupQuarto implements CoupJeu {
+public class CoupQuarto implements CoupJeu {
 
     private final byte idCoup;
 
@@ -13,12 +13,12 @@ pubic class CoupQuarto implements CoupJeu {
 	byte ind_type_coup;
 	
 	if(is_piece)
-	    ind_type_coup = 0x80;
+	    ind_type_coup = (byte) 0x80;
 	else
-	    inf_type_coup = 0;
-	
-	idCoup = (id | ind_byte_coup);
+	    ind_type_coup = 0x00;
 
+	
+	idCoup = (byte) (id | ind_type_coup);
     }
     
     public byte get(){
@@ -26,7 +26,7 @@ pubic class CoupQuarto implements CoupJeu {
     }
     
     public String toString(){
-	""	    
+	return "";
     }
     
 }

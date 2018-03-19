@@ -24,6 +24,13 @@ public class CoupQuarto implements CoupJeu {
     public byte get(){
 	return idCoup;
     }
+
+    public String toString(boolean isDon){
+	// Si c'est un don de pièce, on affiche une pièce.
+
+	// Dans le cas contraire, on affiche une coordonnée.
+      
+    }
     
     public String toString(){
 	return "";

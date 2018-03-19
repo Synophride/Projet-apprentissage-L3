@@ -4,7 +4,6 @@ import iia.jeux.modele.CoupJeu;
 public class CoupDominos implements CoupJeu{
 
 	/****** Attributs *******/ 
-
 	private int ligne;
 
 	private int colonne;

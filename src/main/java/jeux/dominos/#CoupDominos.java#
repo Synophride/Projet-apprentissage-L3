@@ -1,34 +1,35 @@
+package jeux.dominos;
+import iia.jeux.modele.CoupJeu;
 
 public class CoupDominos implements CoupJeu{
 
-	/****** Attributs *******/ 
+    /****** Attributs *******/ 
+    private int ligne;
 
-	private int ligne;
-
-	private int colonne;
+    private int colonne;
 
 
-	/****** Constructeur *******/ 
+    /****** Constructeur *******/ 
 
-	public CoupDominos(int l, int c) {
-		ligne = l;
-		colonne = c;
-	}
+    public CoupDominos(int l, int c) {
+	ligne = l;
+	colonne = c;
+    }
 
-	/****** Accesseurs *******/ 
+    /****** Accesseurs *******/ 
 
-	public int getLigne() {
-		return ligne;
-	}
+    public int getLigne() {
+	return ligne;
+    }
 
-	public int getColonne() {
-		return colonne;
-	}
+    public int getColonne() {
+	return colonne;
+    }
 
-	/****** Accesseurs *******/ 
-
-	public String toString() {
-		return "("+ligne+","+colonne+")";
-	}
+    /****** Accesseurs *******/ 
+    
+    public String toString() {
+	return "("+ligne+","+colonne+")";
+    }
 }
 

@@ -38,9 +38,4 @@ public interface PlateauJeu {
      * @param c Le coup envisagé par le joueur
      */
     public abstract boolean coupValide(Joueur j, CoupJeu c);
-
-    /** indique si la partie est terminée
-     *
-     * @return vrai si la partie est terminée
-     */
 }

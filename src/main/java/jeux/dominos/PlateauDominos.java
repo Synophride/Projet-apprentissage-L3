@@ -116,15 +116,14 @@ public class PlateauDominos implements PlateauJeu {
     }
 
     /* ********************* Autres méthodes ***************** */	
-
     private boolean coupValide(Joueur joueur,int l, int c) {
 	if (joueur.equals(joueurBlanc))  
 	    return (damier[l][c] == VIDE && damier[l][c+1] == VIDE);
 	else
 	    return (damier[l][c] == VIDE && damier[l+1][c] == VIDE);		
     }
-
-
+    
+    
     public String toString() {
 	String retstr = new String("");
 	for(int i=0; i < TAILLE; i++) {
@@ -143,7 +142,7 @@ public class PlateauDominos implements PlateauJeu {
     public void printPlateau(PrintStream out) {
 	out.println(this.toString());		
     }
-
+    
     public int nbCoupsBlanc(){
 	int nbCoups = 0;		
 	for(int i=0 ; i < TAILLE ; i++) { 

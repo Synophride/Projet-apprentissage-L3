@@ -8,4 +8,3 @@ public interface Heuristique {
 	public int eval(PlateauJeu p, Joueur j);
 
 }
- 

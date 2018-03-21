@@ -19,10 +19,15 @@ public class PlateauQuarto implements PlateauJeu{
     /// >>> -> shift D logique (non signé)
     /// !! NE PAS UTILISER '>>' !! ///
     /// Il faut caster le résultat en byte/short pour les opérateurs au dessus
-
     
     /// Apparemment, pas d'entiers non-signés en java.
-    
+
+    // Syntaxe des pièces ("en commençant par les bits de poids fort="
+    // b/r -> bleu , rouge. resp. 1 et 0 en notation binaire.
+    // g/p -> grand, petit. resp. 1 et 0
+    // p/t -> plein, troué. Resp. 1 et 0
+    // c/r -> carré, rond . Resp. 1 et 0
+
     /************* Attributs *******************/
     
     // au lieu de faire j1 et j2, on appelle les joueurs j0 et j1.
@@ -42,13 +47,12 @@ public class PlateauQuarto implements PlateauJeu{
 
     /*************  constructeurs  ****************/
     public PlateauQuarto(){}
-    
+v    
     public PlateauQuarto(Joueur joueurZero, Joueur joueurUn){
 	j0 = joueurZero;
 	j1 = joueurUn;
     }
     
-    // Est-ce qu'on garde les mêmes j0/J1 ?
     public PlateauQuarto(long plateau, short indcases, short indpiece, byte tourEtPiece){
 	this.plateau = plateau;
 	this.indCases = indcases;
@@ -72,10 +76,10 @@ public class PlateauQuarto implements PlateauJeu{
     private void unsafe_jouer_coup_depot(byte coup){
 	// 1. Dépot de la pièce
 	byte piece = (byte) (coup & 0x0F),
-	     coord = (byte) (coup >>> 4);
+	    coord = (byte) (coup >>> 4);
 	
 	plateau = plateau | (piece << (4*coord));
-
+	
 	// 2. Marquer la coordonnée comme jouée 
 	indCases = (short) (indCases | ((0x0001) << ((short) coord))); // -> on met un '1' au coord-ème bit (à partir de la droite) du short - qu'on présume à 0. 
 	
@@ -100,6 +104,63 @@ public class PlateauQuarto implements PlateauJeu{
 	// 0xC = 0b1100
     }
     
+    /********** Méthodes utiles pour les tests *****/
+
+    /**
+    * @brief renvoie la représentation sous un octet de la pièce mentionnée en paramètre
+    * @param idpiece l'identifiant "string" de la pièce
+    * @return l'identifiant de la pièce associée à la str associée en paramètre
+    ***/
+    public byte stringToPiece(String idPiece){
+	byte ret = 0x00;
+	// Pê il faudrait faire genre plutôt String.get(i)
+	byte id_krq = 0x00;
+	if( idPiece[0] == 'b' ) // b = bleu = blanc = 1
+	    id_krq = 0x08; // 0b1000
+	if( idPiece[1] == 'g' ) // g = grand = 1
+	    id_krq = (byte) (0x04 ^ id_krq); // 0b0100
+	if( idPiece[2] == 'p' ) // plèce pleine
+	    id_krq = (byte) (0x02 ^ id_krq);
+	if( idPiece[3] == 'c' ) // pièce carrée
+	    id_krq = (byte) (0x01 ^ id_krq);
+	    
+	return id_krq; 
+    }
+	
+
+    /**
+    * @brief renvoie la représentation sous forme de chaine de caractères de la pièce en paramètre
+    * @param idPiece l'identifiant de la pièce.
+    * @return la chaine de caractères associée à l'identifiant
+    ***/
+    public String pieceToString(byte idPiece){
+	// Bleu/rouge, Grand/petit, Plein/troué, Rond/carré
+	// Bleu = blanc, Rouge = noir
+	String str = "xxxx";
+	
+	if(idPiece % 2 ==  0) // 0 = rond
+	    str[3] = 'r';
+	else str[3] = 'c';
+
+	if((if_piece>>> 1) % 2 == 0) // 0 = troué
+	    str[2] = 't';
+	else str[2] = 'p';
+	
+	if((idPiece>>> 2) % 2 == 0) // 0 = troué
+	    str[1] = 'p';
+	else str[1] = 'g';
+	
+	if((idPiece>>> 3) % 2 == 0) // 0 = troué
+	    str[0] = 'r';
+	else str[0] = 'b';
+	    
+	return str;
+    }
+
+    
+
+
+    
     /**********  Méthodes de PlateauJeu *********/
     
     // Apparemment pas besoin de vérifier que c'est le bon joueur qui demande. On devrait pê faire une fonction genre "joueur jouant" ou quelque chose comme ça
@@ -122,17 +183,17 @@ public class PlateauQuarto implements PlateauJeu{
 		if ( (indCases >>> i) %2  == 0)
 		    ret.add(new CoupQuarto( i ));
 	    }
-	}
-	
+	}	
 	return ret;
     }
 
     public void joue(Joueur j, CoupJeu cj){
+
 	// 1. vérification que c'est le bon joueur qui joue
         if( ! coupValide(j, cj) ) 
 	    throw IllegalArgumentException( "joue() : Coup invalide" );
 
-	    // On peut jouer le coup s'il est valide	
+	// On peut jouer le coup s'il est valide	
 	CoupQuarto c = (CoupQuarto) cj;
 
 	// 2. vérification du type du coup
@@ -153,7 +214,7 @@ public class PlateauQuarto implements PlateauJeu{
 	/// Test des lignes
 	
 	/// Test des colonnes
-
+	
 	/// Test des diagonales 
 	
 	/// Test des carrés
@@ -179,19 +240,39 @@ public class PlateauQuarto implements PlateauJeu{
 	      || (!is_don()) && (indCases >>> id_coup) % 2 == 0) 
 	    ;
     }
-   
+    
     /*********** Méthodes de Partiel **************/
-
-    private String get_str_piece(byte id_piece){
-	
-    }
+    
+    /// TODO
 
     private String get_str_coord(byte coordonnee_case){
+	byte chiffre = (byte) 0x03 & coordonnee_case,
+	    lettre = (byte) (0x0C & coordonnee_case) >>> 2;
+	String ret = "x" + chiffre;
 	
+	
+	switch(lettre){
+	case 0:
+	    ret[0] = 'A';
+	    break;
+	case 1:
+	    ret[0] = 'B';
+	    break;
+	case 2:
+	    ret[0] = 'C';
+	    break;
+	case 3:
+	    ret[0] = 'D';
+	    break;
+	}
     }
+
     
     /// TODO
     public void setFromFile(String fileName){
+	// On peut calculer le joueur qui doit jouer en fonction du nombre de pièces posées.
+	// Du coup, a priori on retourne ²
+	
 	return;
     }
     

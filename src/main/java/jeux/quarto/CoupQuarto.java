@@ -51,8 +51,8 @@ public class CoupQuarto implements CoupJeu {
 		throw new IllegalArgumentException("Construction de coupQuarto : La chaîne n'est pas valide");		
 	    }
 
-
 	    this.idCoup = coup;
+
 	} else {
 
 	    char color  = s.charAt(0),
@@ -109,7 +109,7 @@ public class CoupQuarto implements CoupJeu {
 	
 	return char_lettre + Integer.toString(chiffre);
     }
-
+    
     private static String pieceToString(byte idPiece){
 	// Bleu/rouge, Grand/petit, Plein/troué, Rond/carré
 	// Bleu = blanc, Rouge = noir

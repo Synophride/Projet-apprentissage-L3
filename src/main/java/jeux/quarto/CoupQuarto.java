@@ -3,29 +3,28 @@ package jeux.quarto;
 import iia.jeux.modele.CoupJeu;
 
 public class CoupQuarto implements CoupJeu {
-    private final byte idCoup;
+	private final byte idCoup;
 
-    public CoupQuarto(byte id){
-	idCoup = id;
-    }
-    
-    public CoupQuarto(byte id, boolean is_piece){
-	byte ind_type_coup;
-	
-	if(is_piece)
-	    ind_type_coup = (byte) 0x80;
-	else
-	    ind_type_coup = 0x00;
+	public CoupQuarto(byte id) {
+		idCoup = id;
+	}
 
-	
-	idCoup = (byte) (id | ind_type_coup);
-    }
-    
-    public byte get(){
-	return idCoup;
-    }
-    
-    public String toString(){
-	return "";
-    }
+	public CoupQuarto(byte id, boolean is_piece) {
+		byte ind_type_coup;
+
+		if (is_piece)
+			ind_type_coup = (byte) 0x80;
+		else
+			ind_type_coup = 0x00;
+
+		idCoup = (byte) (id | ind_type_coup);
+	}
+
+	public byte get() {
+		return idCoup;
+	}
+
+	public String toString() {
+		return "";
+	}
 }

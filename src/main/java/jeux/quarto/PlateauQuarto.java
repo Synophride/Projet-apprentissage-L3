@@ -3,9 +3,19 @@ package jeux.quarto;
 import iia.jeux.modele.*;
 import iia.jeux.modele.joueur.Joueur;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.io.PrintStream;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.lang.IllegalArgumentException;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 public class PlateauQuarto implements PlateauJeu {
 	/********** commentaires *********/ 
@@ -272,28 +282,41 @@ public class PlateauQuarto implements PlateauJeu {
 		return ret; // ?
 	}
 
-
 	/// TODO
-	public void setFromFile(String fileName){
+	public void setFromFile(String fileName) throws FileNotFoundException, IOException {
 		// On peut calculer le joueur qui doit jouer en fonction du nombre de pièces posées.
 		// Du coup, a priori on retourne ²
-
-		return;
+		
+		try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
+		    String line;
+		    
+		    while ((line = br.readLine()) != null) {
+		       if (line.charAt(0) != '%') {
+		    	   String[] s = line.split(" ");
+		    	   String lignePlateau = s[1];
+		    	   
+		    	   // TODO : création du plateau
+		       }
+		    }
+		}
 	}
 
-	public void saveToFile(String fileName){
-		return;
+	public void saveToFile(String fileName) throws IOException {
+		// TODO : Convertir le plateau en lignes de String
+		List<String> lines = Arrays.asList("% TEST", "% ABCD");
+		Path file = Paths.get(fileName);
+		Files.write(file, lines, Charset.forName("UTF-8"));
 	}
 
-	public boolean estmoveValide(String move, String player){
+	public boolean estmoveValide(String move, String player) {
 		return false;
 	}
 
-	public String[] mouvementsPossibles(String player){
+	public String[] mouvementsPossibles(String player) {
 		return null;
 	}
 
-	public void play(String move, String player){
+	public void play(String move, String player) {
 
 	}
 }

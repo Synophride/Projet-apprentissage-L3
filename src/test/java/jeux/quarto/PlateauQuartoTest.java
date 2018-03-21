@@ -11,7 +11,7 @@ public class PlateauQuartoTest {
 	}
 
 	@Test
-	public void testPlateauDominos() {
+	public void testPlateauQuarto() {
 		Assert.assertTrue(true);
 	}
 }

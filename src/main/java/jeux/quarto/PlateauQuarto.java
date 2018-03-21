@@ -47,8 +47,8 @@ public class PlateauQuarto implements PlateauJeu{
 
     /*************  constructeurs  ****************/
     public PlateauQuarto(){}
-    v    
-	public PlateauQuarto(Joueur joueurZero, Joueur joueurUn){
+    
+    public PlateauQuarto(Joueur joueurZero, Joueur joueurUn){
 	j0 = joueurZero;
 	j1 = joueurUn;
     }
@@ -111,8 +111,11 @@ public class PlateauQuarto implements PlateauJeu{
      * @param idpiece l'identifiant "string" de la pièce
      * @return l'identifiant de la pièce associée à la str associée en paramètre
      ***/
-    public byte stringToPiece(String idPiece){
+    public byte stringToPiece(String strPiece){
 	byte ret = 0x00;
+	
+	char [] idPiece = strPiece.toCharArray();
+	
 	// Pê il faudrait faire genre plutôt String.get(i)
 	byte id_krq = 0x00;
 	if( idPiece[0] == 'b' ) // b = bleu = blanc = 1
@@ -123,7 +126,7 @@ public class PlateauQuarto implements PlateauJeu{
 	    id_krq = (byte) (0x02 ^ id_krq);
 	if( idPiece[3] == 'c' ) // pièce carrée
 	    id_krq = (byte) (0x01 ^ id_krq);
-	    
+	
 	return id_krq; 
     }
 	
@@ -136,13 +139,14 @@ public class PlateauQuarto implements PlateauJeu{
     public String pieceToString(byte idPiece){
 	// Bleu/rouge, Grand/petit, Plein/troué, Rond/carré
 	// Bleu = blanc, Rouge = noir
-	String str = "xxxx";
+	
+	char[] str = new char[4];
 	
 	if(idPiece % 2 ==  0) // 0 = rond
 	    str[3] = 'r';
 	else str[3] = 'c';
 
-	if((if_piece>>> 1) % 2 == 0) // 0 = troué
+	if((idPiece >>> 1) % 2 == 0) // 0 = troué
 	    str[2] = 't';
 	else str[2] = 'p';
 	
@@ -153,15 +157,22 @@ public class PlateauQuarto implements PlateauJeu{
 	if((idPiece>>> 3) % 2 == 0) // 0 = troué
 	    str[0] = 'r';
 	else str[0] = 'b';
-	    
-	return str;
+
+	
+	return new String(str);
     }
 
     
 
 
     
-    /**********  Méthodes de PlateauJeu *********/
+    /********************************************************
+     *
+     * Méthodes de PlateauJeu 
+     *
+     ********************************************************/
+
+    
     
     // Apparemment pas besoin de vérifier que c'est le bon joueur qui demande. On devrait pê faire une fonction genre "joueur jouant" ou quelque chose comme ça
     public ArrayList<CoupJeu> coupsPossibles(Joueur j) {	
@@ -187,17 +198,17 @@ public class PlateauQuarto implements PlateauJeu{
 	return ret;
     }
 
+    
     public void joue(Joueur j, CoupJeu cj){
-
 	// 1. vérification que c'est le bon joueur qui joue
         if( ! coupValide(j, cj) ) 
-	    throw IllegalArgumentException( "joue() : Coup invalide" );
-
+	    throw new IllegalArgumentException( "joue() : Coup invalide" );
+	
 	// On peut jouer le coup s'il est valide	
 	CoupQuarto c = (CoupQuarto) cj;
-
+	
 	// 2. vérification du type du coup
-
+	
 	if( is_don() ){
 	    byte idpiece = c.get();
 	    unsafe_jouer_coup_don(idpiece);
@@ -219,7 +230,7 @@ public class PlateauQuarto implements PlateauJeu{
 	
 	/// Test des carrés
 	
-	return false;
+	return indCases == 0xFFFF;
     }
 
     public PlateauJeu copy(){
@@ -245,37 +256,46 @@ public class PlateauQuarto implements PlateauJeu{
     
     /// TODO
 
-    private String get_str_coord(byte coordonnee_case){
-	byte chiffre = (byte) 0x03 & coordonnee_case,
-	    lettre = (byte) (0x0C & coordonnee_case) >>> 2;
-	String ret = "x" + chiffre;
+    public static String coord_toString(byte coordonnee_case){
+	byte chiffre =(byte) (0x03 & coordonnee_case);
+	byte lettre = (byte) ((0x0C & coordonnee_case) >>> 2);
+	
+	char char_lettre = '?';
 	
 	
 	switch(lettre){
 	case 0:
-	    ret[0] = 'A';
+	    char_lettre = 'A';
 	    break;
 	case 1:
-	    ret[0] = 'B';
+	    char_lettre = 'B';
 	    break;
 	case 2:
-	    ret[0] = 'C';
+	    char_lettre = 'C';
 	    break;
 	case 3:
-	    ret[0] = 'D';
+	    char_lettre = 'D';
+	    break;
+	default:
+	    char_lettre = '?';
 	    break;
 	}
+	
+	return char_lettre + Integer.toString(chiffre);
     }
 
-    
+    /// TODO FIRST
+    public String toString(){
+	return null;
+    }
+	
     /// TODO
     public void setFromFile(String fileName){
-	// On peut calculer le joueur qui doit jouer en fonction du nombre de pièces posées.
-	// Du coup, a priori on retourne ²
-	
+	// On peut calculer le joueur qui doit jouer en fonction du nombre de pièces posées. 
 	return;
     }
     
+    /// TODO
     public void saveToFile(String fileName){
 	return;
     }
@@ -285,11 +305,40 @@ public class PlateauQuarto implements PlateauJeu{
     }
 
     public String[] mouvementsPossibles(String player){
-	return null;
-    }
-
-    public void play(String move, String player){
+	Joueur j;
+	if(player.equals("noir"))
+	    j = j0;
+	else j = j1;
+	ArrayList<CoupJeu> cj;
 	
+	// Tester à quel moment du jeu on est, puis faire appel à 
+	try {
+	    cj_arr = this.coupsPossibles(j);
+	} catch( IllegalArgumentException e ) {
+	    return null; 
+	}
+
+	String[] ret = new String[cj_arr.size()];
+	boolean is_don = this.is_don();
+	
+	for(int i = 0; i<cj_arr.size(); i++){
+	    CoupJeu cj = cj_arr.get(i);
+	    CoupQuarto cq = ( CoupQuarto ) cj;
+
+	    ret[i] = cq.toString(is_don);
+	}
+	
+	return ret;	
+    }
+       
+
+    // player : noir = j0;
+    // blanc = j1.
+    public void play(String move, String player){ 
+	int id_joueur = 0;
+	if(player.equals("blanc"))
+	    id_joueur = 1;
+	return;
     }
 
 }

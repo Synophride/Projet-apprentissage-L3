@@ -171,6 +171,14 @@ public class PlateauQuarto implements PlateauJeu {
 		
 		return str;
 	}
+	
+	public Joueur getJ0() {
+		return j0;
+	}
+	
+	public Joueur getJ1() {
+		return j1;
+	}
 
 	/**********  Méthodes de PlateauJeu *********/
 

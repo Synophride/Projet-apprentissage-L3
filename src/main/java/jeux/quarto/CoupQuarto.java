@@ -1,8 +1,8 @@
 package jeux.quarto;
+
 import iia.jeux.modele.CoupJeu;
 
 public class CoupQuarto implements CoupJeu {
-
     private final byte idCoup;
 
     public CoupQuarto(byte id){
@@ -28,5 +28,4 @@ public class CoupQuarto implements CoupJeu {
     public String toString(){
 	return "";
     }
-    
 }

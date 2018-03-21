@@ -47,8 +47,8 @@ public class PlateauQuarto implements PlateauJeu{
 
     /*************  constructeurs  ****************/
     public PlateauQuarto(){}
-v    
-    public PlateauQuarto(Joueur joueurZero, Joueur joueurUn){
+    v    
+	public PlateauQuarto(Joueur joueurZero, Joueur joueurUn){
 	j0 = joueurZero;
 	j1 = joueurUn;
     }
@@ -107,10 +107,10 @@ v
     /********** Méthodes utiles pour les tests *****/
 
     /**
-    * @brief renvoie la représentation sous un octet de la pièce mentionnée en paramètre
-    * @param idpiece l'identifiant "string" de la pièce
-    * @return l'identifiant de la pièce associée à la str associée en paramètre
-    ***/
+     * @brief renvoie la représentation sous un octet de la pièce mentionnée en paramètre
+     * @param idpiece l'identifiant "string" de la pièce
+     * @return l'identifiant de la pièce associée à la str associée en paramètre
+     ***/
     public byte stringToPiece(String idPiece){
 	byte ret = 0x00;
 	// Pê il faudrait faire genre plutôt String.get(i)
@@ -129,10 +129,10 @@ v
 	
 
     /**
-    * @brief renvoie la représentation sous forme de chaine de caractères de la pièce en paramètre
-    * @param idPiece l'identifiant de la pièce.
-    * @return la chaine de caractères associée à l'identifiant
-    ***/
+     * @brief renvoie la représentation sous forme de chaine de caractères de la pièce en paramètre
+     * @param idPiece l'identifiant de la pièce.
+     * @return la chaine de caractères associée à l'identifiant
+     ***/
     public String pieceToString(byte idPiece){
 	// Bleu/rouge, Grand/petit, Plein/troué, Rond/carré
 	// Bleu = blanc, Rouge = noir
@@ -237,7 +237,7 @@ v
 	    
 	    // 2 : Vérification de la validité du coup
 	    (  is_don() && ((indPiece >>> id_coup) %2 == 0 )
-	      || (!is_don()) && (indCases >>> id_coup) % 2 == 0) 
+	       || (!is_don()) && (indCases >>> id_coup) % 2 == 0) 
 	    ;
     }
     
@@ -292,8 +292,4 @@ v
 	
     }
 
-
 }
-
-
-    

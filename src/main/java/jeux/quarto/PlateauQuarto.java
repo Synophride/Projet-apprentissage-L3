@@ -37,11 +37,19 @@ public class PlateauQuarto implements PlateauJeu{
     // p/t -> plein, troué. Resp. 1 et 0
     // c/r -> carré, rond . Resp. 1 et 0
 
-    /************* Attributs *******************/
+    // Le joueur noir commence 
+    
+	/*******************
+	*	
+	* Attributs 
+	*
+	*******************/	
     
     // au lieu de faire j1 et j2, on appelle les joueurs j0 et j1.
     public static Joueur j0; 
     public static Joueur j1; 
+    public static String str_j0 = "noir";
+    public static String str_j1 = "blanc";
     
     // Plateau de jeu
     private long plateau = 0;
@@ -56,13 +64,15 @@ public class PlateauQuarto implements PlateauJeu{
 
     /*************  constructeurs  ****************/
     
-    public PlateauQuarto(){}
+    public PlateauQuarto(){
+    }
     
     public PlateauQuarto(Joueur joueurZero, Joueur joueurUn){
 	j0 = joueurZero;
 	j1 = joueurUn;
     }
     
+	// ok
     public PlateauQuarto(long plateau, short indcases, short indpiece, byte tourEtPiece){
 	this.plateau = plateau;
 	this.indCases = indcases;
@@ -74,15 +84,17 @@ public class PlateauQuarto implements PlateauJeu{
 
     /************ Méthodes privées ****************/
 
+    // ok
     private boolean j0plays(){
 	return (tourEtPiece >>> 7) % 2  == 0;
     }
     
+	// ok
     private boolean is_don(){
 	return (tourEtPiece >>> 6) % 2  == 0;
     }
     
-    
+    // ok
     /* AUCUN TEST. On part du principe que le coup est valide */
     private void unsafe_jouer_coup_depot(byte coup){
 	// 1. Dépot de la pièce
@@ -103,6 +115,7 @@ public class PlateauQuarto implements PlateauJeu{
 
     
     /* Aucun test. On part aussi du principe que piece est de la forme 0x0(pdpiece) */
+    // ok    
     private void unsafe_jouer_coup_don(byte piece){
 	// 1 : montrer la pièce qu'il faut jouer 
 	tourEtPiece = (byte) (piece | (tourEtPiece & 0xF0));
@@ -174,18 +187,15 @@ public class PlateauQuarto implements PlateauJeu{
     }
 
     
-
-
-    
     /********************************************************
      *
      * Méthodes de PlateauJeu 
      *
      ********************************************************/
-
     
     
     // Apparemment pas besoin de vérifier que c'est le bon joueur qui demande. On devrait pê faire une fonction genre "joueur jouant" ou quelque chose comme ça
+	// ok    
     public ArrayList<CoupJeu> coupsPossibles(Joueur j) {	
 	ArrayList<CoupJeu> ret = new ArrayList<CoupJeu>();
 	
@@ -228,7 +238,6 @@ public class PlateauQuarto implements PlateauJeu{
     /*********** Méthodes de Partiel **************/
     
     /// TODO
-
     public static String coordToString(byte coordonnee_case){
 	byte chiffre =(byte) (0x03 & coordonnee_case);
 	byte lettre = (byte) ((0x0C & coordonnee_case) >>> 2);
@@ -251,7 +260,7 @@ public class PlateauQuarto implements PlateauJeu{
 	    break;
 	default:
 	    char_lettre = '?';
-	    break;
+	    break
 	}
 	
 	return char_lettre + Integer.toString(chiffre);
@@ -261,32 +270,38 @@ public class PlateauQuarto implements PlateauJeu{
     public String toString(){
 	return null;
     }
-    
+
+    // Modifié le 22/03
     public boolean estmoveValide(String move, String player){
-	return false;
+		CoupQuarto cj = new CoupQuarto(move);
+		Joueur j;
+		if (player.equals(str_j0) ) 
+			j = j0;
+		else  j = j1
     }
 
+    // impléemnté 
     public String[] mouvementsPossibles(String player){
-	Joueur j;
-	if(player.equals("noir"))
-	    j = j0;
-	else j = j1;
-	ArrayList<CoupJeu> cj_arr;
+		Joueur j;
+		if(player.equals(str_j0))
+		    j = j0;
+		else j = j1;
+		ArrayList<CoupJeu> cj_arr;
+		
+		// Tester à quel moment du jeu on est, puis faire appel à 
+		try {
+		    cj_arr =  this.coupsPossibles(j) ;
+		} catch ( IllegalArgumentException e ) {
+		    return null;
+		}
+		
+		String[] ret = new String[cj_arr.size()];
+		boolean is_don = this.is_don();
+		
+		for(int i = 0; i<cj_arr.size(); i++){
+		    CoupJeu cj = cj_arr.get(i);
+		    CoupQuarto cq = ( CoupQuarto ) cj;
 	
-	// Tester à quel moment du jeu on est, puis faire appel à 
-	try {
-	    cj_arr =  this.coupsPossibles(j) ;
-	} catch ( IllegalArgumentException e ) {
-	    return null;
-	}
-
-	String[] ret = new String[cj_arr.size()];
-	boolean is_don = this.is_don();
-	
-	for(int i = 0; i<cj_arr.size(); i++){
-	    CoupJeu cj = cj_arr.get(i);
-	    CoupQuarto cq = ( CoupQuarto ) cj;
-
 	    ret[i] = cq.toString(is_don);
 	}
 	
@@ -296,11 +311,27 @@ public class PlateauQuarto implements PlateauJeu{
 
     // player : noir = j0;
     // blanc = j1.
+    /**
+    * @brief joue le coup, matérialisé par une chaine de caractères.
+    * Ce coup peut être sous deux formes différentes : deux lettres matérialisant une coordonnées (par 
+    * ex. "A4", ou quatre lettres matérialisant une pièce ("rppc"), ou la première lettre représente la couleur, la deuxième représente 
+    *  la taille, la troisième représente si la pièce est pleine ou vide, la quatrième représente
+    * si ka mièce est carrée ou ronde.
+    *
+    * @param move le coup joué
+    * @param player le joueur jouant le coup
+    * @return rien si le coup est joué, sinon lance une exception 
+    *
+    * @version 
+    **/
     public void play(String move, String player){ 
-	int id_joueur = 0;
-	if(player.equals("blanc"))
-	    id_joueur = 1;
-	return;
+	Joueur j;
+	if( j0toString().equals(player) )   
+	    j = j0;
+	else j = j1;
+	CoupQuarto cq = new CoupQuarto(move);
+	joue(j, cq);
+	
     }
 
     
@@ -322,13 +353,12 @@ public class PlateauQuarto implements PlateauJeu{
 
 	// On peut jouer le coup s'il est valide	
 	CoupQuarto c = (CoupQuarto) cj;
-
+	
 	// 2. vérification du type du coup
-
 	if( is_don() ){
 	    byte idpiece = c.get();
 	    unsafe_jouer_coup_don(idpiece);
-
+	    
 	} else { // C'est un dépôt
 	    byte id_piece = c.get();
 	    unsafe_jouer_coup_don( id_piece );
@@ -351,8 +381,7 @@ public class PlateauQuarto implements PlateauJeu{
 	    
 	    // 2 : Vérification de la validité du coup
 	    (  is_don() && ((indPiece >>> id_coup) %2 == 0 )
-	       || (!is_don()) && (indCases >>> id_coup) % 2 == 0) 
-	    ;
+	       || (!is_don()) && (indCases >>> id_coup) % 2 == 0) 	    ;
     }
 
     /*********** Méthodes de Partiel **************/
@@ -361,9 +390,8 @@ public class PlateauQuarto implements PlateauJeu{
     /// TODO
     public void setFromFile(String fileName) throws FileNotFoundException, IOException {
 	// On peut calculer le joueur qui doit jouer en fonction du nombre de pièces posées.
-	// Du coup, a priori on retourne ²
 
-	/// Note: étant donné qu'on utilise java préhistorique, ce code donne une erreur (car le bufferedReader doit pas être déclaré dans un try, je crois...
+	/// Note: étant donné qu'on utilise java préhistorique, ce code donne une erreur (car le bufferedReader doit pas être déclaré dans un try, je crois... Ou il faut un bloc "finally")
 	/// Je mets ça en commentaire pour l'instant (cc flemme masterrace) 
 	/*
 	try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {

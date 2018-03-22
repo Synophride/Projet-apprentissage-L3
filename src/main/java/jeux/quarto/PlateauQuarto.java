@@ -30,20 +30,20 @@ public class PlateauQuarto implements PlateauJeu{
     /// Il faut caster le résultat en byte/short pour les opérateurs au dessus
     
     /// Apparemment, pas d'entiers non-signés en java.
-
+    // Don = 0, dépôt = 1
     // Syntaxe des pièces ("en commençant par les bits de poids fort="
     // b/r -> bleu , rouge. resp. 1 et 0 en notation binaire.
     // g/p -> grand, petit. resp. 1 et 0
     // p/t -> plein, troué. Resp. 1 et 0
     // c/r -> carré, rond . Resp. 1 et 0
-
-    // Le joueur noir commence 
     
-	/*******************
-	*	
-	* Attributs 
-	*
-	*******************/	
+    // Le joueur noir commence à donner une pièce
+    
+    /*******************
+     *	
+     * Attributs 
+     *
+     *******************/	
     
     // au lieu de faire j1 et j2, on appelle les joueurs j0 et j1.
     public static Joueur j0; 
@@ -72,7 +72,7 @@ public class PlateauQuarto implements PlateauJeu{
 	j1 = joueurUn;
     }
     
-	// ok
+    // ok
     public PlateauQuarto(long plateau, short indcases, short indpiece, byte tourEtPiece){
 	this.plateau = plateau;
 	this.indCases = indcases;
@@ -89,7 +89,7 @@ public class PlateauQuarto implements PlateauJeu{
 	return (tourEtPiece >>> 7) % 2  == 0;
     }
     
-	// ok
+    // ok
     private boolean is_don(){
 	return (tourEtPiece >>> 6) % 2  == 0;
     }
@@ -135,7 +135,7 @@ public class PlateauQuarto implements PlateauJeu{
      * @param idpiece l'identifiant "string" de la pièce
      * @return l'identifiant de la pièce associée à la str associée en paramètre
      ***/
-    public byte stringToPiece(String strPiece){
+    public static byte stringToPiece(String strPiece){
 	byte ret = 0x00;
 	
 	char [] idPiece = strPiece.toCharArray();
@@ -160,7 +160,7 @@ public class PlateauQuarto implements PlateauJeu{
      * @param idPiece l'identifiant de la pièce.
      * @return la chaine de caractères associée à l'identifiant
      ***/
-    public String pieceToString(byte idPiece){
+    public static String pieceToString(byte idPiece){
 	// Bleu/rouge, Grand/petit, Plein/troué, Rond/carré
 	// Bleu = blanc, Rouge = noir
 	
@@ -171,15 +171,15 @@ public class PlateauQuarto implements PlateauJeu{
 	else str[3] = 'c';
 	
 	if((idPiece >>> 1) % 2 == 0) // 0 = troué
-	     str[2] = 't';
+	    str[2] = 't';
 	else str[2] = 'p';
 	
 	if((idPiece>>> 2) % 2 == 0) // 0 = troué
-	     str[1] = 'p';
+	    str[1] = 'p';
 	else str[1] = 'g';
 	
 	if((idPiece>>> 3) % 2 == 0) // 0 = troué
-	     str[0] = 'r';
+	    str[0] = 'r';
 	else str[0] = 'b';
 
 	
@@ -195,7 +195,7 @@ public class PlateauQuarto implements PlateauJeu{
     
     
     // Apparemment pas besoin de vérifier que c'est le bon joueur qui demande. On devrait pê faire une fonction genre "joueur jouant" ou quelque chose comme ça
-	// ok    
+    // ok    
     public ArrayList<CoupJeu> coupsPossibles(Joueur j) {	
 	ArrayList<CoupJeu> ret = new ArrayList<CoupJeu>();
 	
@@ -220,6 +220,45 @@ public class PlateauQuarto implements PlateauJeu{
     }
 
     
+    public void joue(Joueur j, CoupJeu cj) {
+	
+	// 1. vérification que c'est le bon joueur qui joue
+	if( ! coupValide(j, cj) ) 
+	    throw new IllegalArgumentException( "joue() : Coup invalide" );
+
+	// On peut jouer le coup s'il est valide	
+	CoupQuarto c = (CoupQuarto) cj;
+	
+	// 2. vérification du type du coup
+	if( is_don() ){
+	    byte idpiece = c.get();
+	    unsafe_jouer_coup_don(idpiece);
+	    
+	} else { // C'est un dépôt
+	    byte id_piece = c.get();
+	    unsafe_jouer_coup_don( id_piece );
+	}
+    }
+    
+    
+    public PlateauJeu copy() {
+	return new PlateauQuarto(plateau, indCases, indPiece, tourEtPiece);
+    }
+    
+    public boolean coupValide(Joueur j, CoupJeu cj) {
+	CoupQuarto cq = (CoupQuarto) cj;
+	byte id_coup = cq.get();
+	
+	return
+	    // 1: vérification que c'est le bon joueur qui joue
+	    ((j0plays() && j.equals(j0)) || (!j0plays() && j.equals(j1))) 
+	    &&
+	    
+	    // 2 : Vérification de la validité du coup
+	    (  is_don() && ((indPiece >>> id_coup) %2 == 0 )
+	       || (!is_don()) && (indCases >>> id_coup) % 2 == 0) 	    ;
+    }
+   
     ///TODO
     public boolean finDePartie(){
 	/// Test des lignes
@@ -261,7 +300,7 @@ public class PlateauQuarto implements PlateauJeu{
 	default:
 	    char_lettre = '?';
 	    break
-	}
+		}
 	
 	return char_lettre + Integer.toString(chiffre);
     }
@@ -273,34 +312,36 @@ public class PlateauQuarto implements PlateauJeu{
 
     // Modifié le 22/03
     public boolean estmoveValide(String move, String player){
-		CoupQuarto cj = new CoupQuarto(move);
-		Joueur j;
-		if (player.equals(str_j0) ) 
-			j = j0;
-		else  j = j1
+	CoupQuarto cj = new CoupQuarto(move);
+	Joueur j;
+	if (player.equals(str_j0) ) 
+	    j = j0;
+	else  j = j1;
+
+	return estValide(cj, j);
     }
 
     // impléemnté 
     public String[] mouvementsPossibles(String player){
-		Joueur j;
-		if(player.equals(str_j0))
-		    j = j0;
-		else j = j1;
-		ArrayList<CoupJeu> cj_arr;
+	Joueur j;
+	if(player.equals(str_j0))
+	    j = j0;
+	else j = j1;
+	ArrayList<CoupJeu> cj_arr;
 		
-		// Tester à quel moment du jeu on est, puis faire appel à 
-		try {
-		    cj_arr =  this.coupsPossibles(j) ;
-		} catch ( IllegalArgumentException e ) {
-		    return null;
-		}
+	// Tester à quel moment du jeu on est, puis faire appel à 
+	try {
+	    cj_arr =  this.coupsPossibles(j) ;
+	} catch ( IllegalArgumentException e ) {
+	    return null;
+	}
 		
-		String[] ret = new String[cj_arr.size()];
-		boolean is_don = this.is_don();
+	String[] ret = new String[cj_arr.size()];
+	boolean is_don = this.is_don();
 		
-		for(int i = 0; i<cj_arr.size(); i++){
-		    CoupJeu cj = cj_arr.get(i);
-		    CoupQuarto cq = ( CoupQuarto ) cj;
+	for(int i = 0; i<cj_arr.size(); i++){
+	    CoupJeu cj = cj_arr.get(i);
+	    CoupQuarto cq = ( CoupQuarto ) cj;
 	
 	    ret[i] = cq.toString(is_don);
 	}
@@ -312,18 +353,18 @@ public class PlateauQuarto implements PlateauJeu{
     // player : noir = j0;
     // blanc = j1.
     /**
-    * @brief joue le coup, matérialisé par une chaine de caractères.
-    * Ce coup peut être sous deux formes différentes : deux lettres matérialisant une coordonnées (par 
-    * ex. "A4", ou quatre lettres matérialisant une pièce ("rppc"), ou la première lettre représente la couleur, la deuxième représente 
-    *  la taille, la troisième représente si la pièce est pleine ou vide, la quatrième représente
-    * si ka mièce est carrée ou ronde.
-    *
-    * @param move le coup joué
-    * @param player le joueur jouant le coup
-    * @return rien si le coup est joué, sinon lance une exception 
-    *
-    * @version 
-    **/
+     * @brief joue le coup, matérialisé par une chaine de caractères.
+     * Ce coup peut être sous deux formes différentes : deux lettres matérialisant une coordonnées (par 
+     * ex. "A4", ou quatre lettres matérialisant une pièce ("rppc"), ou la première lettre représente la couleur, la deuxième représente 
+     *  la taille, la troisième représente si la pièce est pleine ou vide, la quatrième représente
+     * si ka mièce est carrée ou ronde.
+     *
+     * @param move le coup joué
+     * @param player le joueur jouant le coup
+     * @return rien si le coup est joué, sinon lance une exception 
+     *
+     * @version 
+     **/
     public void play(String move, String player){ 
 	Joueur j;
 	if( j0toString().equals(player) )   
@@ -333,7 +374,7 @@ public class PlateauQuarto implements PlateauJeu{
 	joue(j, cq);
 	
     }
-
+    
     
     public Joueur getJ0() {
 	return j0;
@@ -343,47 +384,7 @@ public class PlateauQuarto implements PlateauJeu{
 	return j1;
     }
 
-    /**********  Méthodes de PlateauJeu *********/
-    
-    public void joue(Joueur j, CoupJeu cj) {
-	
-	// 1. vérification que c'est le bon joueur qui joue
-	if( ! coupValide(j, cj) ) 
-	    throw new IllegalArgumentException( "joue() : Coup invalide" );
-
-	// On peut jouer le coup s'il est valide	
-	CoupQuarto c = (CoupQuarto) cj;
-	
-	// 2. vérification du type du coup
-	if( is_don() ){
-	    byte idpiece = c.get();
-	    unsafe_jouer_coup_don(idpiece);
-	    
-	} else { // C'est un dépôt
-	    byte id_piece = c.get();
-	    unsafe_jouer_coup_don( id_piece );
-	}
-    }
-
-        
-    public PlateauJeu copy() {
-	return new PlateauQuarto(plateau, indCases, indPiece, tourEtPiece);
-    }
-    
-    public boolean coupValide(Joueur j, CoupJeu cj) {
-	CoupQuarto cq = (CoupQuarto) cj;
-	byte id_coup = cq.get();
-	
-	return
-	    // 1: vérification que c'est le bon joueur qui joue
-	    ((j0plays() && j.equals(j0)) || (!j0plays() && j.equals(j1))) 
-	    &&
-	    
-	    // 2 : Vérification de la validité du coup
-	    (  is_don() && ((indPiece >>> id_coup) %2 == 0 )
-	       || (!is_don()) && (indCases >>> id_coup) % 2 == 0) 	    ;
-    }
-
+     
     /*********** Méthodes de Partiel **************/
     
     
@@ -394,27 +395,36 @@ public class PlateauQuarto implements PlateauJeu{
 	/// Note: étant donné qu'on utilise java préhistorique, ce code donne une erreur (car le bufferedReader doit pas être déclaré dans un try, je crois... Ou il faut un bloc "finally")
 	/// Je mets ça en commentaire pour l'instant (cc flemme masterrace) 
 	/*
-	try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
-	    String line;
+	  try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
+	  String line;
 	    
-	    while ((line = br.readLine()) != null) {
-		if (line.charAt(0) != '%') {
-		    String[] s = line.split(" ");
-		    String lignePlateau = s[1];
+	  while ((line = br.readLine()) != null) {
+	  if (line.charAt(0) != '%') {
+	  String[] s = line.split(" ");
+	  String lignePlateau = s[1];
 		    
-		    // TODO : création du plateau
-		}
-	    }
+	  // TODO : création du plateau
+	  }
+	  }
 	*/
     }
 
     public void saveToFile(String fileName) throws IOException {
 	// TODO : Convertir le plateau en lignes de String -> on codera tout ça dans toString()
-	    
+	
 	List<String> lines = Arrays.asList("% TEST", "% ABCD");
 	Path file = Paths.get(fileName);
 	Files.write(file, lines, Charset.forName("UTF-8"));
     }
 
-     
+    // Modifié le 22/03
+    public boolean estmoveValide(String move, String player){
+	CoupQuarto cj = new CoupQuarto(move);
+	Joueur j;
+	if (player.equals(str_j0) ) 
+	    j = j0;
+	else  j = j1;
+
+	return estValide(cj, j);
+    }
 }

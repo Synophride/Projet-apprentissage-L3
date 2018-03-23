@@ -92,18 +92,19 @@ public class PlateauQuarto implements PlateauJeu{
     
 
     /************ Méthodes privées ****************/
-
-    public byte get_piece (byte ligne, byte colonne) throws Exception {
-       if ( (indCases >>> (ligne * 4 + colonne) ) % 2 == 0 )
-	   throw new Exception();
+    
+    public byte get_piece (byte colonne, byte ligne) throws Exception {
+	if ( (indCases >>> (ligne * 4 + colonne) ) % 2 == 0 )
+	    throw new Exception();
        
-       // Ligne et colonne sont comris entre 0 et 3
-       return (byte) (plateau >>> ((ligne*4 + colonne)*4)) & (0x0F);
+	// Ligne et colonne sont comris entre 0 et 3
+	return 
+	    (byte) ((plateau >>> ((ligne*4 + colonne)*4)) & (0x0F));
     }
 
-
+    // Utile pour les carrés
     // Précondition : 0 <= ligne/colonne < 3
-    public get_double_piece(byte ligne, byte colonne) throws Exception {
+    public byte get_double_piece(byte colonne, byte ligne) throws Exception {
 	if ( (indCases >>> (ligne * 4 + colonne) ) % 2 == 0  || ( indCases >>> (ligne * 4 + colonne + 1) ) % 2 == 0 )
 	    throw new Exception();
 	
@@ -111,7 +112,85 @@ public class PlateauQuarto implements PlateauJeu{
 	return (byte) (plateau >>> ((ligne*4 + colonne)*4));
     }
 
+    public byte points_communs(byte p1, byte p2){
+	return (byte) (0x0F & ( ~ (p1 ^ p2) ));
+    }
 
+    // Teste les points communs entre deux "double pièce", ou chaque byte correspond à deux ids de pièces
+    // A utiliser avec get_double_piece
+    // db1 = [id_pièce 1a; id_piece2a]
+    // db2 = [id_piece 1b; id_piece2b]
+    public byte points_communs_double_pieces(byte db1, byte db2){
+	// de la forme [points communs entre 1a et 1b ; points communs entre 2a et 2b]	
+	byte points_communs = (byte) ~ (db1 ^ db2 );	
+	return (byte) ((points_communs >>> 4 ) & (0x0F & points_communs));
+    }
+    
+    /// id_colonne id_ligne < 3
+    private boolean test_carre(byte id_colonne, byte id_ligne ){
+	byte dp1, dp2;
+	try {
+	    dp1 = get_double_piece(id_colonne, id_ligne);
+	    dp2 = get_double_piece(id_colonne, (byte) (id_ligne + 1));
+	} catch( Exception e) {
+	    return false;
+	}
+	
+	return (points_communs_double_piece(dp1, dp2) != 0x00);
+    }
+    
+    private boolean test_ligne(byte num_ligne){
+	byte b1, b2;
+	try {
+	    b1 = get_double_piece(0, id_ligne);
+	    b2 = get_double_ligne(2, id_ligne);
+	} catch (Exception e) {
+	    return false;
+	}
+	
+	return (points_communs_double_piece(b1, b2) != 0);
+    }
+    
+    // Les deux à la fois 
+    private boolean test_diagonales(){
+	byte [] g = new byte[4],
+	        d = new byte[4];
+	boolean g_false = false,
+	    d_false = false;
+	
+	for(int i = 0; i<4; i++){
+	    try{
+		g[i] =  get_piece(i, i);
+	    } catch (Exception e) {
+		g_false = true;
+		if(d_false)
+		    return false;
+	    }
+
+	    try{
+		D[i] =  get_piece(3-i, 3-i);
+	    } catch (Exception e) {
+		d_false = true;
+		if(g_false)
+		    return false;
+	    }    
+	}
+	
+	return true;
+    }
+    
+    private boolean test_colonne(byte colonne){
+	byte c1, c2, c3, c4;
+	try{
+	    c1 = get_piece(colonne, (byte) 0);
+	    c2 = get_piece(colonne, (byte) 1);
+	    c3 = get_piece(colonne, (byte) 2);
+	    c4 = get_piece(colonne, (byte) 3);
+	} catch (Exception e) {return false;}
+	
+	return (points_communs (c1, c2) & points_communs(c3, c4) != 0);
+    }
+    
     // ok
     private boolean j0plays(){
 	return (tourEtPiece >>> 7) % 2  == 0;
@@ -289,14 +368,18 @@ public class PlateauQuarto implements PlateauJeu{
    
     ///TODO
     public boolean finDePartie(){
+	for(byte i = 0; i<4; i++){
 	/// Test des lignes
-	
-	/// Test des colonnes
-	
+	    if(test_ligne(i) || test_colonne(i) ) return true;
+	}
 	/// Test des diagonales 
-	
+	if (test_diagonales()) return true;
 	/// Test des carrés
-	
+	for(byte i = 0; i<3; i++)
+	    for(byte j = 0; j<3; j++)
+		if(test_carre(i, j)) return true;
+		   
+		   
 	/// Cas ou toutes les pièces ont été posées
 	return indCases == 0xFFFF;
     }
@@ -344,7 +427,7 @@ public class PlateauQuarto implements PlateauJeu{
 	if (player.equals(str_j0) ) 
 	    j = j0;
 	else  j = j1;
-
+	
 	return estValide(cj, j);
     }
 
@@ -436,14 +519,6 @@ public class PlateauQuarto implements PlateauJeu{
 	*/
     }
 
-    public void saveToFile(String fileName) throws IOException {
-	// TODO : Convertir le plateau en lignes de String -> on codera tout ça dans toString()
-	
-	List<String> lines = Arrays.asList("% TEST", "% ABCD");
-	Path file = Paths.get(fileName);
-	Files.write(file, lines, Charset.forName("UTF-8"));
-    }
-
     // Modifié le 22/03
     public boolean estmoveValide(String move, String player){
 	CoupQuarto cj = new CoupQuarto(move);
@@ -454,4 +529,13 @@ public class PlateauQuarto implements PlateauJeu{
 
 	return estValide(cj, j);
     }
+
+    public void saveToFile(String fileName) throws IOException {
+	// TODO : Convertir le plateau en lignes de String -> on codera tout ça dans toString()
+	
+	List<String> lines = Arrays.asList("% TEST", "% ABCD");
+	Path file = Paths.get(fileName);
+	Files.write(file, lines, Charset.forName("UTF-8"));
+    }
+
 }

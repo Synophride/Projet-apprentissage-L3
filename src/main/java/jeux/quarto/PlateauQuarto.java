@@ -508,20 +508,22 @@ public class PlateauQuarto implements PlateauJeu{
 	
 	  try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
 	  String line;
-	  byte [] pieces = new byte[16];
-	  int cpt = 0;
+	  int cpt = 16;
 	  while ((line = br.readLine()) != null) {
 	  if (line.charAt(0) != '%') {
 	  String[] s = line.split(" ");
-		    
 	  // TODO : création du plateau
 	  for(int i=1; i<5; i++) {
-		  pieces[cpt] = stringToPiece(s[i]);
-		  cpt++;
+		  /* 
+		   * Je suis pas encore à l'aise avec la modification du plateau et je suis 
+		   * pas sûr que ce soit bon pour placer la pièce lu au bon endroit, je te laisse 
+		   * me dire si c'est bon.
+		   */
+		  this.plateau = this.plateau | (stringToPiece(s[i]) << (4*cpt));
+		  cpt--;
 	  }
 	  }
 	  }
-	  this.plateau = ByteBuffer.wrap(pieces).getLong();
 	  }
     }
 

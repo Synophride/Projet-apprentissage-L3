@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.lang.IllegalArgumentException;
+import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -428,7 +429,8 @@ public class PlateauQuarto implements PlateauJeu{
 	    j = j0;
 	else  j = j1;
 	
-	return estValide(cj, j);
+	return true;
+	//return estValide(cj, j);
     }
 
     // impléemnté 
@@ -477,7 +479,7 @@ public class PlateauQuarto implements PlateauJeu{
      **/
     public void play(String move, String player){ 
 	Joueur j;
-	if( j0toString().equals(player) )   
+	if( j0.toString().equals(player) )   
 	    j = j0;
 	else j = j1;
 	CoupQuarto cq = new CoupQuarto(move);
@@ -504,19 +506,24 @@ public class PlateauQuarto implements PlateauJeu{
 
 	/// Note: étant donné qu'on utilise java préhistorique, ce code donne une erreur (car le bufferedReader doit pas être déclaré dans un try, je crois... Ou il faut un bloc "finally")
 	/// Je mets ça en commentaire pour l'instant (cc flemme masterrace) 
-	/*
+	
 	  try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
 	  String line;
-	    
+	  byte [] pieces = new byte[16];
+	  int cpt = 0;
 	  while ((line = br.readLine()) != null) {
 	  if (line.charAt(0) != '%') {
 	  String[] s = line.split(" ");
-	  String lignePlateau = s[1];
 		    
 	  // TODO : création du plateau
+	  for(int i=1; i<5; i++) {
+		  pieces[cpt] = stringToPiece(s[i]);
+		  cpt++;
 	  }
 	  }
-	*/
+	  }
+	  this.plateau = ByteBuffer.wrap(pieces).getLong();
+	  }
     }
 
     // Modifié le 22/03
@@ -530,12 +537,30 @@ public class PlateauQuarto implements PlateauJeu{
 	return estValide(cj, j);
     }
 
-    public void saveToFile(String fileName) throws IOException {
+    public void saveToFile(String fileName) throws Exception {
 	// TODO : Convertir le plateau en lignes de String -> on codera tout ça dans toString()
-	
-	List<String> lines = Arrays.asList("% TEST", "% ABCD");
+	ArrayList<String> text = new ArrayList<String>();
 	Path file = Paths.get(fileName);
-	Files.write(file, lines, Charset.forName("UTF-8"));
+	
+	text.add("% Etat initial du plateau de jeu:");
+	text.add("% ABCD");
+	
+	for(int i=0; i<4; i++) {
+		String line = (i+1) +" ";
+		
+		for(int j=0; j<4; j++) {
+			byte piece = get_piece((byte) j, (byte) i);
+			line = line + pieceToString(piece) + " ";
+			
+		}
+		
+		line +=  (i+1);
+		text.add(line);
+	}
+	
+	text.add("% ABCD");
+	
+	Files.write(file, text, Charset.forName("UTF-8"));
     }
 
 }

@@ -18,7 +18,15 @@ import java.nio.file.Paths;
 
 public class PlateauQuarto implements PlateauJeu{
     /********** commentaires *********/ 
-
+    /// Lignes = chiffres
+    /// Colonne = lettres
+    ///0x0000 4
+    ///  0000 3
+    ///  0000 2
+    ///  0000 1
+    ///  DCBA
+    /// En bas à droite, on a la case A1 
+    
     /// Opérateurs logiques sur les entiers
     ///    ^ -> XOR
     ///    | -> OR
@@ -39,6 +47,7 @@ public class PlateauQuarto implements PlateauJeu{
     
     // Le joueur noir commence à donner une pièce
     
+    // Note : il faut définir ce qui est ligne et ce qui est colonne
     /*******************
      *	
      * Attributs 
@@ -83,6 +92,25 @@ public class PlateauQuarto implements PlateauJeu{
     
 
     /************ Méthodes privées ****************/
+
+    public byte get_piece (byte ligne, byte colonne) throws Exception {
+       if ( (indCases >>> (ligne * 4 + colonne) ) % 2 == 0 )
+	   throw new Exception();
+       
+       // Ligne et colonne sont comris entre 0 et 3
+       return (byte) (plateau >>> ((ligne*4 + colonne)*4)) & (0x0F);
+    }
+
+
+    // Précondition : 0 <= ligne/colonne < 3
+    public get_double_piece(byte ligne, byte colonne) throws Exception {
+	if ( (indCases >>> (ligne * 4 + colonne) ) % 2 == 0  || ( indCases >>> (ligne * 4 + colonne + 1) ) % 2 == 0 )
+	    throw new Exception();
+	
+	// Ligne et colonne sont comris entre 0 et 3
+	return (byte) (plateau >>> ((ligne*4 + colonne)*4));
+    }
+
 
     // ok
     private boolean j0plays(){
@@ -268,7 +296,7 @@ public class PlateauQuarto implements PlateauJeu{
 	/// Test des diagonales 
 	
 	/// Test des carrés
-
+	
 	/// Cas ou toutes les pièces ont été posées
 	return indCases == 0xFFFF;
     }
@@ -282,7 +310,6 @@ public class PlateauQuarto implements PlateauJeu{
 	byte lettre = (byte) ((0x0C & coordonnee_case) >>> 2);
 	
 	char char_lettre = '?';
-	
 	
 	switch(lettre){
 	case 0:
@@ -299,8 +326,8 @@ public class PlateauQuarto implements PlateauJeu{
 	    break;
 	default:
 	    char_lettre = '?';
-	    break
-		}
+	    break;
+	}
 	
 	return char_lettre + Integer.toString(chiffre);
     }

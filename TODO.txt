@@ -1,4 +1,0 @@
-TODO:
-	- Copier l'interface "Partiel"
-	- Implémenter les opérations sur le plateau (a priori je
-	pourrai le faire)

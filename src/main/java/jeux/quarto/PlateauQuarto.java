@@ -48,6 +48,7 @@ public class PlateauQuarto implements PlateauJeu{
     // Le joueur noir commence à donner une pièce
     
     // Note : il faut définir ce qui est ligne et ce qui est colonne
+
     /*******************
      *	
      * Attributs 
@@ -116,6 +117,7 @@ public class PlateauQuarto implements PlateauJeu{
 	return (byte) (0x0F & ( ~ (p1 ^ p2) ));
     }
 
+    
     // Teste les points communs entre deux "double pièce", ou chaque byte correspond à deux ids de pièces
     // A utiliser avec get_double_piece
     // db1 = [id_pièce 1a; id_piece2a]
@@ -136,19 +138,19 @@ public class PlateauQuarto implements PlateauJeu{
 	    return false;
 	}
 	
-	return (points_communs_double_piece(dp1, dp2) != 0x00);
+	return (points_communs_double_pieces(dp1, dp2) != 0x00);
     }
     
-    private boolean test_ligne(byte num_ligne){
+    private boolean test_ligne(byte id_ligne){
 	byte b1, b2;
 	try {
-	    b1 = get_double_piece(0, id_ligne);
-	    b2 = get_double_ligne(2, id_ligne);
+	    b1 = get_double_piece((byte) 0x00, id_ligne);
+	    b2 = get_double_piece((byte) 0x02, id_ligne);
 	} catch (Exception e) {
 	    return false;
 	}
 	
-	return (points_communs_double_piece(b1, b2) != 0);
+	return (points_communs_double_pieces(b1, b2) != 0x00);
     }
     
     // Les deux à la fois 
@@ -158,7 +160,7 @@ public class PlateauQuarto implements PlateauJeu{
 	boolean g_false = false,
 	    d_false = false;
 	
-	for(int i = 0; i<4; i++){
+	for(byte i = 0; i<4; i++){
 	    try{
 		g[i] =  get_piece(i, i);
 	    } catch (Exception e) {
@@ -168,11 +170,11 @@ public class PlateauQuarto implements PlateauJeu{
 	    }
 
 	    try{
-		D[i] =  get_piece(3-i, 3-i);
+			d[i] = get_piece( (byte) (0x03 - i), (byte) (0x03 - i));
 	    } catch (Exception e) {
-		d_false = true;
-		if(g_false)
-		    return false;
+			d_false = true;
+			if(g_false)
+				return false;
 	    }    
 	}
 	
@@ -188,7 +190,7 @@ public class PlateauQuarto implements PlateauJeu{
 	    c4 = get_piece(colonne, (byte) 3);
 	} catch (Exception e) {return false;}
 	
-	return (points_communs (c1, c2) & points_communs(c3, c4) != 0);
+	return (points_communs(c1, c2) & points_communs(c3, c4)) != 0;
     }
     
     // ok
@@ -366,7 +368,6 @@ public class PlateauQuarto implements PlateauJeu{
 	       || (!is_don()) && (indCases >>> id_coup) % 2 == 0) 	    ;
     }
    
-    ///TODO
     public boolean finDePartie(){
 	for(byte i = 0; i<4; i++){
 	/// Test des lignes
@@ -379,7 +380,7 @@ public class PlateauQuarto implements PlateauJeu{
 	    for(byte j = 0; j<3; j++)
 		if(test_carre(i, j)) return true;
 		   
-		   
+
 	/// Cas ou toutes les pièces ont été posées
 	return indCases == 0xFFFF;
     }
@@ -428,9 +429,9 @@ public class PlateauQuarto implements PlateauJeu{
 	    j = j0;
 	else  j = j1;
 	
-	return estValide(cj, j);
+	return coupValide(j, cj);
     }
-
+ 
     // impléemnté 
     public String[] mouvementsPossibles(String player){
 	Joueur j;
@@ -477,7 +478,7 @@ public class PlateauQuarto implements PlateauJeu{
      **/
     public void play(String move, String player){ 
 	Joueur j;
-	if( j0toString().equals(player) )   
+	if( str_j0.equals(player) )   
 	    j = j0;
 	else j = j1;
 	CoupQuarto cq = new CoupQuarto(move);
@@ -520,15 +521,7 @@ public class PlateauQuarto implements PlateauJeu{
     }
 
     // Modifié le 22/03
-    public boolean estmoveValide(String move, String player){
-	CoupQuarto cj = new CoupQuarto(move);
-	Joueur j;
-	if (player.equals(str_j0) ) 
-	    j = j0;
-	else  j = j1;
-
-	return estValide(cj, j);
-    }
+   
 
     public void saveToFile(String fileName) throws IOException {
 	// TODO : Convertir le plateau en lignes de String -> on codera tout ça dans toString()

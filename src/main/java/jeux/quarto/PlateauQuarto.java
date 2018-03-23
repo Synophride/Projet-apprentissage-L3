@@ -429,8 +429,7 @@ public class PlateauQuarto implements PlateauJeu{
 	    j = j0;
 	else  j = j1;
 	
-	return true;
-	//return estValide(cj, j);
+	return estValide(cj, j);
     }
 
     // impléemnté 

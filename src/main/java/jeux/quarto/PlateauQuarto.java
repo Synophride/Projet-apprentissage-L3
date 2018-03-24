@@ -19,6 +19,9 @@ import java.nio.file.Paths;
 
 public class PlateauQuarto implements PlateauJeu{
     /********** commentaires *********/ 
+    /// str Mouvement 
+
+    
     /// Lignes = chiffres
     /// Colonne = lettres
     ///0x0000 4
@@ -92,7 +95,6 @@ public class PlateauQuarto implements PlateauJeu{
 	// Pas besoin d'initialiser j1 et j2 puisque ce sont des attributs statiques 
     }
     
-
     /************ Méthodes privées ****************/
     
     public byte get_piece (byte colonne, byte ligne) throws Exception {
@@ -306,7 +308,7 @@ public class PlateauQuarto implements PlateauJeu{
     
     // Apparemment pas besoin de vérifier que c'est le bon joueur qui demande. On devrait pê faire une fonction genre "joueur jouant" ou quelque chose comme ça
     // ok    
-    public ArrayList<CoupJeu> coupsPossibles(Joueur j) {	
+    public ArrayList<CoupJeu> coupsPossibles(Joueur j) throws IllegalArgumentException {	
 	ArrayList<CoupJeu> ret = new ArrayList<CoupJeu>();
 	
 	// Si c'est pas le bon joueur
@@ -423,6 +425,7 @@ public class PlateauQuarto implements PlateauJeu{
     }
 
     // Modifié le 22/03
+    // Note: Mouvement = dépot
     public boolean estmoveValide(String move, String player){
 	CoupQuarto cj = new CoupQuarto(move);
 	Joueur j;
@@ -433,7 +436,8 @@ public class PlateauQuarto implements PlateauJeu{
 	return coupValide(j, cj);
     }
  
-    // impléemnté 
+    // impléemnté
+    
     public String[] mouvementsPossibles(String player){
 	Joueur j;
 	if(player.equals(str_j0))
@@ -460,8 +464,14 @@ public class PlateauQuarto implements PlateauJeu{
 	
 	return ret;	
     }
+    
+    //TODO : modifier ce truc
+    public String[] choixPossibles(String player){
+	return mouvementPossibles(player);
+    }
        
-
+    /// TODO: système d'exception (si possible internes) au lieu des return tous moisis
+    
     // player : noir = j0;
     // blanc = j1.
     /**
@@ -477,6 +487,7 @@ public class PlateauQuarto implements PlateauJeu{
      *
      * @version 
      **/
+    /// Note : la vérification de la validité du coup se fait dans la méthode joue
     public void play(String move, String player){ 
 	Joueur j;
 	if( j0.toString().equals(player) )   
@@ -484,9 +495,24 @@ public class PlateauQuarto implements PlateauJeu{
 	else j = j1;
 	CoupQuarto cq = new CoupQuarto(move);
 	joue(j, cq);
-	
     }
     
+    /// Choose la pièce jouée
+    /// move la case jouée
+    /// Player le joueur jouant
+    /// Si c'est censé être un don, aucun effet
+    public void play(String choose, String move, String player){
+	/// 1. vérifier qu'il faut bien poser une pièce. 
+	if( is_don() ) return;
+
+	/// 2. Vérifier que c'est la bonne pièce qui est jouée
+	byte piece = strToPiece(choose);
+	if( (tourEtPiece & 0x0F) != ((int) piece) ) return; // Comprendre : La pièce à jouer est différente de celle qu'on est censé jouer
+
+	// 3. Jouer.
+	play(move, player);
+	
+    }
     
     public Joueur getJ0() {
 	return j0;
@@ -498,39 +524,93 @@ public class PlateauQuarto implements PlateauJeu{
 
      
     /*********** Méthodes de Partiel **************/
-    
+
+    // Autant séparer les tâches
+    private void setFromStringTab(String[] s){
+	// Note : on commence par les bits de poids faible.
+	plateau  = 0;
+	indCases = 0;
+	indPieces= 0;
+	tourEtPiece= 0;
+	
+	int ind_of_cases_seen = 0; // indiquera qu'on regardera 'telle' case de la ligne
+	
+	for(int i = 0; i<s.length; i++){
+	    ind_of_cases_seen = 0;
+	    String str = s[i];
+	    for(int j = 0; j<str.length(); j++)
+		if( str.charAt(j) == '+' ){ // Pas de pièce posée.
+		    ind_of_cases_seen ++; 
+		    continue;
+		} else { // Sinon
+		    String str_piece = str.substring(j, j+4); // Le second indice est exclusif
+		    
+		    j + = 3; // Pour pas retomber sur la même chose. j+3 au lieu de j+4 étant donné que le j++ sera fait à la fin de la boucle
+		    byte id_piece = strToPiece(str_piece);
+		    
+		    // on note la pièce comme jouée
+		    indPieces = (short)  indPieces | ( 0x1 << id_piece );
+		    
+		    // Notation de la case comme jouée
+		    short ind_case = i*4 + ind_of_cases_seen;
+		     
+		    indCases = (short)  indCases | (0x0001 << ind_case); 
+		     
+		    // Ajout de la pièce au plateau
+		    plateau =  plateau | (0x1 << (ind_case*4));
+		}
+	}
+
+	// à la fin, on regarde le nombre de pièces jouées pour déterminer le joueur qui doit jouer
+	// Si ce nombre est pair, c'est J0 qui doit donner une pièce, sinon c'est J1.
+	byte cpt = 0;
+        for(byte i = 0; i<16; i++)
+	    if((  indPieces >> i) % 2 == 1)
+		cpt ++;
+	
+	if( cpt % 2 == 1 ) // Joueur = J1
+	    tourEtPiece = (byte) 0x80;
+	
+    }
     
     /// TODO
     public void setFromFile(String fileName) throws FileNotFoundException, IOException {
 	// On peut calculer le joueur qui doit jouer en fonction du nombre de pièces posées.
-
 	/// Note: étant donné qu'on utilise java préhistorique, ce code donne une erreur (car le bufferedReader doit pas être déclaré dans un try, je crois... Ou il faut un bloc "finally")
-	/// Je mets ça en commentaire pour l'instant (cc flemme masterrace) 
 	
 	try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
 	    String line;
-	    int cpt = 16;
-	    while ((line = br.readLine()) != null) {
-		if (line.charAt(0) != '%') {
-		    String[] s = line.split(" ");
-		    // TODO : création du plateau
-		    for(int i=1; i<5; i++) {
-			/* 
-			 * Je suis pas encore à l'aise avec la modification du plateau et je suis 
-			 * pas sûr que ce soit bon pour placer la pièce lu au bon endroit, je te laisse 
-			 * me dire si c'est bon.
-			 */
-			this.plateau = this.plateau | (stringToPiece(s[i]) << (4*cpt));
-			cpt--;
-		    }
+
+	    int cpt_ligne = 0; // Compte le nombre de lignes intéressantes qu'on a déjà vu
+	    
+	    String tab_of_lignes = new String[4];
+
+	    while ( (line = br.readLine()) != null) {
+		
+		if (line.charAt(0) != '%') { // Si pas un commentaire
+		    
+		    String[] s = line.split(" "); // Séparation par les espaces
+		    
+		    /// De ce que je vois sur la fig3, la
+		    /// Ligne ressemble à [CHIFFRE][ESPACE][ID DES PIECES/+][ESPACE][CHIFFRE].
+		    /// Par conséquent on a juste besoin du truc au milieu
+		    String ligne_plateau = s[1];
+		    
+		    tab_of_lignes[cpt_ligne] = ligne_plateau; // On garde la ligne intéressante
+		    cpt_ligne ++;
+
+		    // Si on a vu toutes les lignes intéressantes
+		    if(cpt_ligne == 4)
+			break;
 		}
 	    }
+
+	    setFromStringTab( tab_of_lignes );
 	}
     }
 
+    
     // Modifié le 22/03
-   
-
     public void saveToFile(String fileName) throws Exception {
 	// TODO : Convertir le plateau en lignes de String -> on codera tout ça dans toString()
 	ArrayList<String> text = new ArrayList<String>();
@@ -557,4 +637,8 @@ public class PlateauQuarto implements PlateauJeu{
 	Files.write(file, text, Charset.forName("UTF-8"));
     }
 
+}
+
+
+class InvalidParam extends IllegalArgumentException{
 }

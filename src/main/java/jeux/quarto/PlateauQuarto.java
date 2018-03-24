@@ -265,7 +265,10 @@ public class PlateauQuarto implements PlateauJeu{
 	
 	return id_krq; 
     }
-    
+
+    public boolean estChoixValide(){
+
+    }
 
     /**
      * @brief renvoie la représentation sous forme de chaine de caractères de la pièce en paramètre
@@ -461,6 +464,8 @@ public class PlateauQuarto implements PlateauJeu{
     }
     
     public String[] choixPossibles(String player){
+	if(!is_don()) return null;
+
 	return mouvementPossibles(player);
     }
        
@@ -538,7 +543,7 @@ public class PlateauQuarto implements PlateauJeu{
 		} else { // Sinon
 		    String str_piece = str.substring(j, j+4); // Le second indice est exclusif
 		    
-		    j + = 3; // Pour pas retomber sur la même chose. j+3 au lieu de j+4 étant donné que le j++ sera fait à la fin de la boucle
+		    j += 3; // Pour pas retomber sur la même chose. j+3 au lieu de j+4 étant donné que le j++ sera fait à la fin de la boucle
 		    byte id_piece = strToPiece(str_piece);
 		    
 		    // on note la pièce comme jouée

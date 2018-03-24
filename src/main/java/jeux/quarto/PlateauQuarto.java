@@ -418,7 +418,7 @@ public class PlateauQuarto implements PlateauJeu{
 	
 	return char_lettre + Integer.toString(chiffre);
     }
-
+    
     // Modifié le 22/03
     // Note: Mouvement = dépot
     public boolean estmoveValide(String move, String player){
@@ -430,7 +430,7 @@ public class PlateauQuarto implements PlateauJeu{
 	
 	return coupValide(j, cj);
     }
- 
+    
     // impléemnté
     
     public String[] mouvementsPossibles(String player){
@@ -439,34 +439,32 @@ public class PlateauQuarto implements PlateauJeu{
 	    j = j0;
 	else j = j1;
 	ArrayList<CoupJeu> cj_arr;
-		
+	
 	// Tester à quel moment du jeu on est, puis faire appel à 
 	try {
 	    cj_arr =  this.coupsPossibles(j) ;
 	} catch ( IllegalArgumentException e ) {
 	    return null;
 	}
-		
+	
 	String[] ret = new String[cj_arr.size()];
 	boolean is_don = this.is_don();
-		
+	
 	for(int i = 0; i<cj_arr.size(); i++){
 	    CoupJeu cj = cj_arr.get(i);
 	    CoupQuarto cq = ( CoupQuarto ) cj;
-	
+	    
 	    ret[i] = cq.toString(is_don);
 	}
 	
 	return ret;	
     }
     
-    //TODO : modifier ce truc
     public String[] choixPossibles(String player){
 	return mouvementPossibles(player);
     }
        
-    /// TODO: système d'exception (si possible internes) au lieu des return tous moisis
-    
+    /// TODO: système d'exception (si possible internes) au lieu des return tous moisis    
     // player : noir = j0;
     // blanc = j1.
     /**
@@ -504,22 +502,22 @@ public class PlateauQuarto implements PlateauJeu{
 	byte piece = strToPiece(choose);
 	if( (tourEtPiece & 0x0F) != ((int) piece) ) return; // Comprendre : La pièce à jouer est différente de celle qu'on est censé jouer
 
+	
 	// 3. Jouer.
 	play(move, player);
-	
     }
     
     public Joueur getJ0() {
 	return j0;
     }
-	
+    
     public Joueur getJ1() {
 	return j1;
     }
 
-     
+    
     /*********** Méthodes de Partiel **************/
-
+    
     // Autant séparer les tâches
     private void setFromStringTab(String[] s){
 	// Note : on commence par les bits de poids faible.
@@ -564,8 +562,7 @@ public class PlateauQuarto implements PlateauJeu{
 		cpt ++;
 	
 	if( cpt % 2 == 1 ) // Joueur = J1
-	    tourEtPiece = (byte) 0x80;
-	
+	    tourEtPiece = (byte) 0x80;	
     }
     
     /// TODO
@@ -575,15 +572,15 @@ public class PlateauQuarto implements PlateauJeu{
 	
 	try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
 	    String line;
-
+	    
 	    int cpt_ligne = 0; // Compte le nombre de lignes intéressantes qu'on a déjà vu
 	    
 	    String tab_of_lignes = new String[4];
-
+	    
 	    while ( (line = br.readLine()) != null) {
 		
 		if (line.charAt(0) != '%') { // Si pas un commentaire
-		     
+		    
 		    String[] s = line.split(" "); // Séparation par les espaces
 		    
 		    /// De ce que je vois sur la fig3, la
@@ -631,34 +628,11 @@ public class PlateauQuarto implements PlateauJeu{
     }
     
     // Modifié le 22/03
-    public void saveToFile(String fileName) throws Exception {
+    public void saveToFile(String fileName) throws Exception { 
 	// TODO : Convertir le plateau en lignes de String -> on codera tout ça dans toString()
-	ArrayList<String> text = new ArrayList<String>();
-	Path file = Paths.get(fileName);
-	
-	text.add("% Etat initial du plateau de jeu:");
-	text.add("% ABCD");
-	
-	for(int i=0; i<4; i++) {
-		String line = (i+1) +" ";
-		
-		for(int j=0; j<4; j++) {
-			byte piece = get_piece((byte) j, (byte) i);
-			line = line + pieceToString(piece) + " ";
-			
-		}
-		
-		line +=  (i+1);
-		text.add(line);
-	}
-	
-	text.add("% ABCD");
-	
-	Files.write(file, text, Charset.forName("UTF-8"));
+	// Note : il faudrait mettre les try
+	PrintWriter output_shit = new Printwriter(filename);
+	output_shit.write(this.toString());
+	output_shit.close();
     }
-
-}
-
-
-class InvalidParam extends IllegalArgumentException{
 }

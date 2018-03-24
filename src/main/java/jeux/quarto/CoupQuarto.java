@@ -27,7 +27,7 @@ public class CoupQuarto implements CoupJeu {
 		break;
 	    case('C'): 
 		coup = 0x08;
-		break;
+		break; 
 	    case('D'):
 		coup = 0x0C;
 		break;

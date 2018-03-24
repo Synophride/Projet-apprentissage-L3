@@ -419,11 +419,6 @@ public class PlateauQuarto implements PlateauJeu{
 	return char_lettre + Integer.toString(chiffre);
     }
 
-    /// TODO FIRST
-    public String toString(){
-	return null;
-    }
-
     // Modifié le 22/03
     // Note: Mouvement = dépot
     public boolean estmoveValide(String move, String player){
@@ -588,7 +583,7 @@ public class PlateauQuarto implements PlateauJeu{
 	    while ( (line = br.readLine()) != null) {
 		
 		if (line.charAt(0) != '%') { // Si pas un commentaire
-		    
+		     
 		    String[] s = line.split(" "); // Séparation par les espaces
 		    
 		    /// De ce que je vois sur la fig3, la
@@ -604,11 +599,36 @@ public class PlateauQuarto implements PlateauJeu{
 			break;
 		}
 	    }
-
 	    setFromStringTab( tab_of_lignes );
 	}
     }
+    
 
+    /// TODO FIRST
+    public String toString(){
+	String ret = "";
+	
+	for(byte i = 0; i < 4; i++){
+	    ret = ret + (i+1) + " ";
+
+	    // si pas de pièce, ajout d'un +, si pièce ajout de l'id de la pièce
+	    for(byte j = 0; j<4; j++){
+		// id de la case qu'on regarde
+		byte ind = i * 4 + j;
+		
+		// Si case inoccupée
+		if((indCases >> ind) % 2 == 0) {
+		    ret = ret + "+"; // Ajout d'un '+' dans la str, pour montrer qu'il n'y a pas de pièce
+		} else { // Case occupée
+		    // recherche de la pièce occupant la case
+		    byte id_piece =  (byte) (0x0F & ( plateau >>> (ind * 4)));
+		    ret = ret + pieceToString(id_piece);
+		}
+	    }
+	    ret = ret + " " + (i+1) + "\n"; 
+	}
+	return ret
+    }
     
     // Modifié le 22/03
     public void saveToFile(String fileName) throws Exception {

@@ -170,10 +170,11 @@ public class PlateauQuarto implements PlateauJeu{
      * @see test_carre
      ***/
     private byte points_communs_double_pieces(byte db1, byte db2){
-	//FIXME :
-	// Merde si 0xF0 ^ 0xF0
-	byte points_communsA = (byte) ~ (db1 ^ db2 );	
-	return (byte) ((points_communs >>> 4 ) & (0x0F & points_communs));
+	byte a = (byte) db1 >>> 4,
+	    b = (byte) 0x0F & db1,
+	    c = (byte) db2 >>> 4,
+	    d = (byte) 0x0F & db2;
+	return (byte) 0x0F & ((~ (a ^ b)) & (~ (a ^ c) ) & (~ (a ^ d) ));
     }
     
     /// id_colonne id_ligne < 3
@@ -185,7 +186,7 @@ public class PlateauQuarto implements PlateauJeu{
      * @see test_ligne
      * @see test_diagonales
      * @see finDePartie
-    ***/
+     ***/
     private boolean test_carre(byte id_colonne, byte id_ligne ){
 	byte dp1, dp2;
 	try {

@@ -294,8 +294,10 @@ public class PlateauQuarto implements PlateauJeu{
     
     /**
      * Fonction jouant un dépôt de pièce
-     * @param 
-     *
+     * @param coup un coup valide (!), sous la forme [coordonnée, piece]
+     * @see play
+     * @see jouer
+     * @see unsafe_jouer_don
      ***/
     private void unsafe_jouer_coup_depot(byte coup){
 	// 1. Dépot de la pièce
@@ -332,8 +334,8 @@ public class PlateauQuarto implements PlateauJeu{
     /********** Méthodes utiles pour les tests *********/
 
     /**
-     * @brief renvoie la représentation sous un octet de la pièce mentionnée en paramètre
-     * @param idpiece l'identifiant "string" de la pièce
+     * Renvoie la représentation sous un octet de la pièce mentionnée en paramètre
+     * @param idpiece l'identifiant "string" de la pièce, de la forme indiquée dans le 
      * @return l'identifiant de la pièce associée à la str associée en paramètre
      ***/
     public static byte stringToPiece(String strPiece){
@@ -355,12 +357,8 @@ public class PlateauQuarto implements PlateauJeu{
 	return id_krq; 
     }
 
-    public boolean estChoixValide(){
-
-    }
-
     /**
-     * @brief renvoie la représentation sous forme de chaine de caractères de la pièce en paramètre
+     * Renvoie la représentation sous forme de chaine de caractères de la pièce en paramètre
      * @param idPiece l'identifiant de la pièce.
      * @return la chaine de caractères associée à l'identifiant
      ***/
@@ -379,17 +377,17 @@ public class PlateauQuarto implements PlateauJeu{
 	else str[2] = 'p';
 	
 	if((idPiece>>> 2) % 2 == 0) // 0 = troué
-	    str[1] = 'p';
+	     str[1] = 'p';
 	else str[1] = 'g';
 	
 	if((idPiece>>> 3) % 2 == 0) // 0 = troué
 	    str[0] = 'r';
 	else str[0] = 'b';
-
+	
 	
 	return new String(str);
     }
-
+    
     
     /********************************************************
      *
@@ -399,7 +397,8 @@ public class PlateauQuarto implements PlateauJeu{
     
     
     // Apparemment pas besoin de vérifier que c'est le bon joueur qui demande. On devrait pê faire une fonction genre "joueur jouant" ou quelque chose comme ça
-    // ok    
+    // ok
+
     public ArrayList<CoupJeu> coupsPossibles(Joueur j) throws IllegalArgumentException {	
 	ArrayList<CoupJeu> ret = new ArrayList<CoupJeu>();
 	
@@ -411,10 +410,8 @@ public class PlateauQuarto implements PlateauJeu{
 	    for(byte  i = 0; i<16; i++){
 		if ( (indPiece >>> i) %2  == 0)
 		    ret.add(new CoupQuarto( i ));
-	    }
-	    
+	    }	    
 	} else { // Sinon, dépôt de la pièce
-
 	    for(byte  i = 0; i<16; i++){
 		if ( (indCases >>> i) %2  == 0)
 		    ret.add(new CoupQuarto( i ));
@@ -423,29 +420,28 @@ public class PlateauQuarto implements PlateauJeu{
 	return ret;
     }
 
-    
-    public void joue(Joueur j, CoupJeu cj) {
-	
+    // FIXME
+    public void joue(Joueur j, CoupJeu cj) throws IllegalArgumentException {
 	// 1. vérification que c'est le bon joueur qui joue
-	if( ! coupValide(j, cj) ) 
+	if( ! coupValide(j, cj) )
 	    throw new IllegalArgumentException( "joue() : Coup invalide" );
-
-	// On peut jouer le coup s'il est valide	
-	CoupQuarto c = (CoupQuarto) cj;
 	
+	// On peut jouer le coup pusqu'il est valide	
+	CoupQuarto c = (CoupQuarto) cj;
+        
 	// 2. vérification du type du coup
 	if( is_don() ){
 	    byte idpiece = c.get();
 	    unsafe_jouer_coup_don(idpiece);
-	    
 	} else { // C'est un dépôt
-	    byte id_piece = c.get();
+	    byte id_coord = ( c.get()<< 4);
+	    byte id_piece = (id_coord | (0x0F & tourEtPiece));
 	    unsafe_jouer_coup_don( id_piece );
 	}
     }
     
     
-    public PlateauJeu copy() {
+    public PlateauJeu copy(){
 	return new PlateauQuarto(plateau, indCases, indPiece, tourEtPiece);
     }
     
@@ -465,11 +461,13 @@ public class PlateauQuarto implements PlateauJeu{
    
     public boolean finDePartie(){
 	for(byte i = 0; i<4; i++){
-	/// Test des lignes
+	    /// Test des lignes
 	    if(test_ligne(i) || test_colonne(i) ) return true;
 	}
+	
 	/// Test des diagonales 
 	if (test_diagonales()) return true;
+
 	/// Test des carrés
 	for(byte i = 0; i<3; i++)
 	    for(byte j = 0; j<3; j++)
@@ -611,6 +609,11 @@ public class PlateauQuarto implements PlateauJeu{
 
     
     /*********** Méthodes de Partiel **************/
+
+    
+    public boolean estChoixValide(){
+	//FIXME
+    }
     
     // Autant séparer les tâches
     private void setFromStringTab(String[] s){
@@ -718,7 +721,7 @@ public class PlateauQuarto implements PlateauJeu{
 	    }
 	    ret = ret + " " + (i+1) + "\n"; 
 	}
-	return ret
+	return ret;
     }
     
     // Modifié le 22/03

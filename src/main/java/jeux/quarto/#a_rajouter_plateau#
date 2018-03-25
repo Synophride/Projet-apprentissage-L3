@@ -1,7 +1,0 @@
-
-
-// Fonctionne avec des double_points_communs
-
-public byte get_points_communs(byte p1, byte p2){
-       return ~(pi1 ^ p2); // not (p1 xor p2)
-}

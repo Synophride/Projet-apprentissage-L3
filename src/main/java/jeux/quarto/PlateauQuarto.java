@@ -201,8 +201,12 @@ public class PlateauQuarto implements PlateauJeu{
 
     /**
     * Méthode testant si les pièces d'une ligne possèdent un attribut en commun
-    * @param 
-    *
+    * @param id_ligne la ligne à tester
+    * @return true si toutes les pièces posées sur la ligne en question possèdent un point commun, false si aucun point commun ou toutes les pièces ne sont pas posées
+    * @see test_carre
+    * @see test_diagonales
+    * @see finDePartie
+    * @see test_colonne
     ***/
     private boolean test_ligne(byte id_ligne){
 	byte b1, b2;
@@ -216,7 +220,14 @@ public class PlateauQuarto implements PlateauJeu{
 	return (points_communs_double_pieces(b1, b2) != 0x00);
     }
     
-    // Les deux à la fois 
+    /**
+     * Méthode testant si les pièces des deux diagonales possèdent des attributs en commun, pour chaque diagonale 
+    * @return true si toutes les pièces posées sur une des deux diagonales possèdent (au moins) un point commun, false si aucun point commun ou toutes les pièces ne sont pas posées
+    * @see test_carre
+    * @see test_lgine
+    * @see finDePartie
+    * @see test_colonne
+    ***/
     private boolean test_diagonales(){
 	byte [] g = new byte[4],
 	        d = new byte[4];
@@ -243,7 +254,17 @@ public class PlateauQuarto implements PlateauJeu{
 	
 	return true;
     }
-    
+
+
+    /**
+    * Méthode testant si les pièces d'une colonne possèdent un attribut en commun
+    * @param colonne la colonne à tester
+    * @return true si toutes les pièces posées sur la colonne en question possèdent un point commun, false si aucun point commun ou toutes les pièces ne sont pas posées
+    * @see test_carre
+    * @see test_diagonales
+    * @see finDePartie
+    * @see test_ligne
+    **/
     private boolean test_colonne(byte colonne){
 	byte c1, c2, c3, c4;
 	try{
@@ -256,18 +277,26 @@ public class PlateauQuarto implements PlateauJeu{
 	return (points_communs(c1, c2) & points_communs(c3, c4)) != 0;
     }
     
-    // ok
+    /** Fonction déterminant si c'est le joueur 0 qui jouer 
+     * @return true si le joueur 0 doit faire une action, false si c'est le j1
+     **/
     private boolean j0plays(){
 	return (tourEtPiece >>> 7) % 2  == 0;
     }
     
-    // ok
+    /**
+     * Fonction déterminant quel type de coup est joué
+     * @return true si le coup qui doit être joué est un don
+    **/
     private boolean is_don(){
 	return (tourEtPiece >>> 6) % 2  == 0;
     }
     
-    // ok
-    /* AUCUN TEST. On part du principe que le coup est valide */
+    /**
+     * Fonction jouant un dépôt de pièce
+     * @param 
+     *
+     ***/
     private void unsafe_jouer_coup_depot(byte coup){
 	// 1. Dépot de la pièce
 	byte piece = (byte) (coup & 0x0F),

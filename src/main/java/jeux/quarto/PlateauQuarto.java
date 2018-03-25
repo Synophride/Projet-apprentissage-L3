@@ -326,9 +326,24 @@ public class PlateauQuarto implements PlateauJeu{
 	return id_krq; 
     }
 
-    public boolean estChoixValide(){
+	// Erreur lors des tests mais je ne vois pas d'où pourrait venir l'erreur
+	public boolean estchoixValide(String choose, String player) {
+		for (byte i = 0; i < 4; i++) {
+			for (byte j = 0; j < 4; j++) {
+				byte ind = (byte) (i * 4 + j);
 
-    }
+				if ((indCases >> ind) % 2 != 0) {
+					byte id_piece = (byte) (0x0F & (plateau >>> (ind * 4)));
+					String piece = pieceToString(id_piece);
+					
+					if(piece == choose)
+						return false;
+				}
+			}
+		}
+		
+		return true;
+	}
 
     /**
      * @brief renvoie la représentation sous forme de chaine de caractères de la pièce en paramètre

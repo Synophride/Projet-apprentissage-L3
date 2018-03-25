@@ -69,7 +69,7 @@ public class PlateauQuartoTest {
         PlateauQuarto p = new PlateauQuarto(new Joueur("noir"), new Joueur("blanc"));
 
         String[] t = new String[4];
-        t[0] = "bgpcbgprrgpcrgpr";
+        t[0] = "bgprbgpcbgtcrgtc";
         t[1] = "++++";
         t[2] = "++++";
         t[3] = "++++";

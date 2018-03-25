@@ -701,7 +701,7 @@ public class PlateauQuarto implements PlateauJeu {
                     j += 3; // Pour pas retomber sur la même chose. j+3 au lieu de j+4 étant donné que le
                             // j++ sera fait à la fin de la boucle
                     byte id_piece = stringToPiece(str_piece);
-
+                    
                     // on note la pièce comme jouée
                     indPiece = (short) (indPiece | (0x1 << id_piece));
 
@@ -711,7 +711,10 @@ public class PlateauQuarto implements PlateauJeu {
                     indCases = (short) (indCases | (0x0001 << ind_case));
 
                     // Ajout de la pièce au plateau
-                    plateau = plateau | (0x1 << (ind_case * 4));
+                    //plateau = plateau | (0x1 << (ind_case * 4));
+                    plateau = plateau | (id_piece << (ind_case * 4));
+                    
+                    ind_of_cases_seen++;   
                 }
         }
 	

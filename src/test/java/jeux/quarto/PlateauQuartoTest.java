@@ -73,9 +73,9 @@ public class PlateauQuartoTest {
         t[1] = "++++";
         t[2] = "++++";
         t[3] = "++++";
-
+        System.out.println(p.toString());
         p.setFromStringTab(t);
-
+        System.out.println(p.toString());
         Assert.assertTrue(p.finDePartie());
     }
 

@@ -6,17 +6,10 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.lang.IllegalArgumentException;
-import java.nio.ByteBuffer;
-import java.nio.charset.Charset;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+
 
 public class PlateauQuarto implements PlateauJeu {
     /********** commentaires *********/
@@ -387,8 +380,7 @@ public class PlateauQuarto implements PlateauJeu {
      * @return l'identifiant de la pièce associée à la str associée en paramètre
      ***/
     public static byte stringToPiece(String strPiece) {
-        byte ret = 0x00;
-
+        
         char[] idPiece = strPiece.toCharArray();
 
         // Pê il faudrait faire genre plutôt String.get(i)
@@ -742,7 +734,7 @@ public class PlateauQuarto implements PlateauJeu {
         /// Note: étant donné qu'on utilise java préhistorique, ce code donne une erreur
         // (car le bufferedReader doit pas être déclaré dans un try, je crois... Ou il
         // faut un bloc "finally")
-	BufferedReader  br = new BufferedReader(new FileReader(fileName));
+	BufferedReader br = new BufferedReader(new FileReader(fileName));
 	    
 	String line;
 

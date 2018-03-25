@@ -17,6 +17,5 @@ public class PartieQuarto {
 		
 		PlateauQuarto plateauCourant = new PlateauQuarto();
 		
-		plateauCourant.saveToFile("testfile.txt");
 	}
 }

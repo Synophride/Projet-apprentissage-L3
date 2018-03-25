@@ -13,10 +13,9 @@ import java.util.ArrayList;
 
 public class PartieQuarto {
 
-	public static void main(String[] args) throws IOException {
-		
-		PlateauQuarto plateauCourant = new PlateauQuarto();
-		
-		plateauCourant.saveToFile("testfile.txt");
-	}
+    public static void main(String[] args) throws IOException {
+
+        PlateauQuarto plateauCourant = new PlateauQuarto();
+
+    }
 }

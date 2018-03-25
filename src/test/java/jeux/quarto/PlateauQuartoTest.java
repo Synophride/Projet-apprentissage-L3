@@ -18,7 +18,6 @@ public class PlateauQuartoTest {
     @Before
     public void init() {
         plateau_depart = new PlateauQuarto(new Joueur("blanc"), new Joueur("noir"));
-	
 	plateau_final = new PlateauQuarto(0xA8009F0000000000L , (short) 0xCC00, (short) 0x8700, (byte)0x00);
     }
 
@@ -30,18 +29,19 @@ public class PlateauQuartoTest {
     @Test
     public void testCoupValide() {
 	for(byte i = 0; i < 16; i++){
-	    CoupQuarto c = new CoupQuarto( i );
+	    CoupQuarto c = new CoupQuarto(i, true);
 	    Assert.assertTrue(plateau_depart.coupValide(plateau_depart.getJ0(), c));
 	}
-
     }
 
     @Test
     public void testPieceToString() {
-        Assert.assertEquals(PlateauQuarto.pieceToString((byte) 0x00), "rptr");
-        Assert.assertEquals(PlateauQuarto.pieceToString((byte) 0x01), "rptc");
-        Assert.assertEquals(PlateauQuarto.pieceToString((byte) 0x08), "bptr");
-	Assert.assertEquals(PlateauQuarto.pieceToString((byte) 0x0F), "bgpc");
+        Assert.assertEquals( PlateauQuarto.pieceToString((byte) 0x00) , "rptr");
+        Assert.assertEquals( PlateauQuarto.pieceToString((byte) 0x01), "rptc");
+	
+        Assert.assertEquals( PlateauQuarto.pieceToString((byte) 0x08), "bptr");
+
+	Assert.assertEquals( PlateauQuarto.pieceToString((byte) 0x0F), "bgpc");
     }
 
     @Test
@@ -49,27 +49,29 @@ public class PlateauQuartoTest {
         PlateauQuarto p = plateau_depart;
 	
 	// choix legit
-        Assert.assertTrue(p.estChoixValide("bgpc", "noir")); 
-
+        Assert.assertTrue(p.estchoixValide("bgpc", "noir") ); 
+	
 	// Mauvais type de coup
 	Assert.assertFalse(p.estmoveValide("A1", "noir"));
-
+	
 	p.play("bgpc", "noir");
 
+       
 	// legit
         Assert.assertTrue(p.estmoveValide("A1", "blanc"));
-
+	
 	// Mauvais joueur
 	Assert.assertFalse(p.estmoveValide("A1", "noir"));
 
-	p.play("bgpc", "blanc");
-
-	Assert.assertFalse(p.estChoixValide("rptr", "noir"));
-	Assert.assertTrue( p.estChoixValide("rptr", "blanc"));
-	Assert.assertFalse(p.estChoixValide("bgpc", "blanc"));
+	p.play("A1", "blanc");
+	    
+	Assert.assertFalse(p.estchoixValide("rptr", "noir"));
+	Assert.assertTrue( p.estchoixValide("rptr", "blanc"));
+	Assert.assertFalse(p.estchoixValide("bgpc", "blanc"));
 	
 	// Mauvais type de coup
-	Assert.assertFalse(p.estChoixValide("bgpc", "blanc"));
+	Assert.assertFalse(p.estchoixValide("bgpc", "blanc"));
+	p.play("rptr", "blanc");
     }
     
     @Test
@@ -79,15 +81,30 @@ public class PlateauQuartoTest {
         Assert.assertTrue(p.estchoixValide("bgpr", "noir"));
 	
         p.play("bgpr", "noir");
-        p.play("A2"  , "blanc");
+	
+	p.play("A2", "blanc");
+        p.play("rgpr", "blanc");
+	
+        p.play("A1", "noir");
 	
         Assert.assertFalse(p.estchoixValide("bgpr", "blanc"));
     }
-
+    
     @Test
     public void testFinDePartie() {
 	Assert.assertFalse(plateau_depart.finDePartie());
 	Assert.assertTrue(plateau_final.finDePartie());
+        PlateauQuarto p = new PlateauQuarto(new Joueur("noir"), new Joueur("blanc"));
+
+        String[] t = new String[4];
+        t[0] = "bgprbgpcbgtcrgtc";
+        t[1] = "++++";
+        t[2] = "++++";
+        t[3] = "++++";
+
+        p.setFromStringTab(t);
+
+        Assert.assertTrue(p.finDePartie());
     }
 
     @Test
@@ -95,12 +112,14 @@ public class PlateauQuartoTest {
         PlateauQuarto p = plateau_depart;
 	
         p.play("bgpr", "noir");
-        p.play("A1", "blanc");
+	
+	p.play("A1", "blanc");
 
         String test = "1 bgpr+++ 1\n2 ++++ 2\n3 ++++ 3\n4 ++++ 4\n";
 	
         System.out.print(p.toString());
-        Assert.assertEquals(p.toString(), test);
+
+	Assert.assertEquals(p.toString(), test);
     }
 
 }

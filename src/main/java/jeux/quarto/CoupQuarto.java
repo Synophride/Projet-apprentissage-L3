@@ -4,18 +4,21 @@ import iia.jeux.modele.CoupJeu;
 
 public class CoupQuarto implements CoupJeu {
     private final byte idCoup;
+    private boolean is_don;
     
-    public CoupQuarto(byte id) {
-        idCoup = id;
+    public CoupQuarto(byte id, boolean is_don){
+	idCoup = id;
+	this.is_don = is_don;
     }
     
     public CoupQuarto(String s){
         byte coup = 0;
+	
         if (s.length() == 2) { // C'est une coordonnée.
-
+	    is_don = false;
             // 1. recherche de la colonne
             char first_kr = s.charAt(0), second_kr = s.charAt(1);
-
+	    
             switch (first_kr) {
             case ('A'):
                 coup = 0x00;
@@ -32,10 +35,10 @@ public class CoupQuarto implements CoupJeu {
             default:
                 throw new IllegalArgumentException("Construction de coupQuarto : La chaîne n'est pas valide");
             }
-
+	    
             switch (second_kr) {
             case ('1'):
-                break;
+		break;
             case ('2'):
                 coup = (byte) (coup ^ 0x01);
                 break;
@@ -48,13 +51,15 @@ public class CoupQuarto implements CoupJeu {
             default:
                 throw new IllegalArgumentException("Construction de coupQuarto : La chaîne n'est pas valide");
             }
-
+	    
             this.idCoup = coup;
-
-        } else {
-
-            char color = s.charAt(0), taille = s.charAt(1), pleinure = s.charAt(2), // dénote de si c'est troué ou pas
-                    carrure = s.charAt(3); // --- carré ---
+	    
+        } else if (s.length() == 4 ){
+	    is_don = true;
+            char color = s.charAt(0),
+		taille = s.charAt(1),
+		pleinure = s.charAt(2),
+		carrure = s.charAt(3);
 
             if (color == 'b')
                 coup = 0x08;
@@ -66,11 +71,17 @@ public class CoupQuarto implements CoupJeu {
                 coup = (byte) (coup ^ 0x01);
 
             this.idCoup = coup;
-        }
+        } else 
+	    throw new IllegalArgumentException("Construction de coupQuarto : La chaîne n'est pas valide");
+
     }
 
     public byte get() {
         return idCoup;
+    }
+
+    public boolean get_type(){
+	return is_don;
     }
 
     public String toString(boolean isDon) {

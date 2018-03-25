@@ -59,11 +59,9 @@ public class PlateauQuarto implements PlateauJeu{
      *
      *******************/	
     
-    // au lieu de faire j1 et j2, on appelle les joueurs j0 et j1.
+    // au lieu de faire j1 et j2, on appelle les joueurs j0 et j1 : J1 devient J0, j2 devient j1
     public static Joueur j0; 
     public static Joueur j1; 
-    public static String str_j0 = "noir";
-    public static String str_j1 = "blanc";
     
     // Plateau de jeu
     private long plateau = 0;
@@ -77,17 +75,32 @@ public class PlateauQuarto implements PlateauJeu{
 
 
     /*************  constructeurs  ****************/
-    
+
+    /** 
+     Constructeur de base de la classe
+    **/
     public PlateauQuarto(){
     }
-    
+
+    /** 
+     * Constructeur de PlateauQuarto initialisant le joueurs
+     * @param joueurZero le premier joueur à jouer (qui va donner une pièce en premier
+     * @param joueurUn le second joueur à jouer
+     **/
     public PlateauQuarto(Joueur joueurZero, Joueur joueurUn){
 	j0 = joueurZero;
 	j1 = joueurUn;
     }
     
-    // ok
-    public PlateauQuarto(long plateau, short indcases, short indpiece, byte tourEtPiece){
+    /**
+     * Constructeur initialisant à partir d'un état du plateau, 
+     * 
+     * @param plateau l'état du plateau à partir duquel jouer
+     * @param indcases short dénotant des cases libres
+     * @param indPiece short dénotant des cases jouées
+     * @param tourEtPiece dénotant de l'état du tour
+     **/
+    private PlateauQuarto(long plateau, short indcases, short indpiece, byte tourEtPiece){
 	this.plateau = plateau;
 	this.indCases = indcases;
 	this.indPiece = indpiece;
@@ -96,18 +109,34 @@ public class PlateauQuarto implements PlateauJeu{
     }
     
     /************ Méthodes privées ****************/
-    
-    public byte get_piece (byte colonne, byte ligne) throws Exception {
+
+    /**
+     * Méthode permettant d'accéder à l'identifiant de la pièce présente aux coordonnées (colonnes, lignes).
+     * @param colonne la coordonnée "colonne" de la pièce à laquelle on veut accéder (entre 0 et 3 inclus)
+     * @param ligne la coordonnée "ligne" de la pièce à laquelle on veut accéder (entre 0 et 3 inclus)
+     * @return l'identifiant de la pièce accedée
+     * @throws une Exception si la pièce n'est pas présente sur le plateau.
+     * @see get_double_piece
+     * @see points_communs
+     ***/
+    private byte get_piece (byte colonne, byte ligne) throws Exception {
 	if ( (indCases >>> (ligne * 4 + colonne) ) % 2 == 0 )
 	    throw new Exception();
        
-	// Ligne et colonne sont comris entre 0 et 3
+	// Ligne et colonne sont compris entre 0 et 3
 	return 
 	    (byte) ((plateau >>> ((ligne*4 + colonne)*4)) & (0x0F));
     }
 
-    // Utile pour les carrés
-    // Précondition : 0 <= ligne/colonne < 3
+    /**
+     * Méthode permettant d'accéder à l'identifiant de deux pièces côte à côte dans le plateau.
+     * @param colonne la coordonnée "colonne" de la pièce de gauche à laquelle on veut accéder (entre 0 et 2 inclus)
+     * @param ligne la coordonnée "ligne" des pièces auxquelles on veut accéder (entre 0 et 3 inclus)
+     * @return l'identifiant des pièces accedée, sous la forme[id_piece1, id_piece2] 
+     * @throws une Exception si une des pièces n'est pas présente sur le plateau.
+     * @see get_piece
+     * @see points_communs_double_pieces
+     **/
     public byte get_double_piece(byte colonne, byte ligne) throws Exception {
 	if ( (indCases >>> (ligne * 4 + colonne) ) % 2 == 0  || ( indCases >>> (ligne * 4 + colonne + 1) ) % 2 == 0 )
 	    throw new Exception();
@@ -116,22 +145,47 @@ public class PlateauQuarto implements PlateauJeu{
 	return (byte) (plateau >>> ((ligne*4 + colonne)*4));
     }
 
-    public byte points_communs(byte p1, byte p2){
+    /**
+    * Prend deux identifiants de pièce en paramètre, rend les points communs de ces pièces
+    * @param p1 l'identifiant de la première pièce, sous la forme 0x0[id_pièce].
+    * @param p2 l'identifiant de la seconde pièce, même forme que p1
+    * @return les points commus de ces deux pièces, de manière à ce que chaque bit représentant une caractéristique de la pièce soit à 1 si les identifiants ont cette caractéristique en commun
+    * @see get_piece
+    * @see points_communs_double_piece
+    * @see test_colonne
+    * @see test_diagonale
+    ***/
+    private byte points_communs(byte p1, byte p2){
 	return (byte) (0x0F & ( ~ (p1 ^ p2) ));
     }
 
     
-    // Teste les points communs entre deux "double pièce", ou chaque byte correspond à deux ids de pièces
-    // A utiliser avec get_double_piece
-    // db1 = [id_pièce 1a; id_piece2a]
-    // db2 = [id_piece 1b; id_piece2b]
-    public byte points_communs_double_pieces(byte db1, byte db2){
-	// de la forme [points communs entre 1a et 1b ; points communs entre 2a et 2b]	
-	byte points_communs = (byte) ~ (db1 ^ db2 );	
+    /**
+     * Fonction testant les points communs entre quatre pièces, dont les identi
+     * @param db1 byte contenant les identifiants de deux pièces.
+     * @param db2 byte contenant les identifiants de deux pièces.
+     * @return un byte de la forme 0x0[points communs], ou chaque bit de caractéristique liée à un point commun est à 1 si cette caractéristique est commune à toutes les pièces
+     * @see points_communs
+     * @see test_ligne
+     * @see test_carre
+     ***/
+    private byte points_communs_double_pieces(byte db1, byte db2){
+	//FIXME :
+	// Merde si 0xF0 ^ 0xF0
+	byte points_communsA = (byte) ~ (db1 ^ db2 );	
 	return (byte) ((points_communs >>> 4 ) & (0x0F & points_communs));
     }
     
     /// id_colonne id_ligne < 3
+    /**
+     * Méthode testant si un carré contient quatre pièces du plateau ont une caractéristique en commun
+     * @param id_colonne l'identifiant de la colonne du point le plus en haut à gauche du carré à tester (vers A1). Strictement inférieur à 3
+     * @param id_ligne l'identifiant de la ligne du point le plus en haut à gauche du carré à tester (vers A1). Strictement inférieur à 3 
+     * @return true si toutes les pièces du carré possèdent une caractéristique commun, false si elles n'en ont aucune (ou ne sont pas toutes posées)
+     * @see test_ligne
+     * @see test_diagonales
+     * @see finDePartie
+    ***/
     private boolean test_carre(byte id_colonne, byte id_ligne ){
 	byte dp1, dp2;
 	try {
@@ -143,7 +197,12 @@ public class PlateauQuarto implements PlateauJeu{
 	
 	return (points_communs_double_pieces(dp1, dp2) != 0x00);
     }
-    
+
+    /**
+    * Méthode testant si les pièces d'une ligne possèdent un attribut en commun
+    * @param 
+    *
+    ***/
     private boolean test_ligne(byte id_ligne){
 	byte b1, b2;
 	try {

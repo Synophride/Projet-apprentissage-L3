@@ -58,9 +58,9 @@ public class PlateauQuartoTest {
 
         Assert.assertTrue(p.estchoixValide("bgpr", "noir"));
 
-        plateau.play("bgpr", "noir");
-        plateau.play("A2", "blanc");
-
+        p.play("bgpr", "noir");
+        p.play("A1", "blanc");
+        
         Assert.assertFalse(p.estchoixValide("bgpr", "blanc"));
     }
 
@@ -85,10 +85,9 @@ public class PlateauQuartoTest {
 
         p.play("bgpr", "noir");
         p.play("A1", "blanc");
-
+        
         String test = "1 bgpr+++ 1\n2 ++++ 2\n3 ++++ 3\n4 ++++ 4\n";
 
-        System.out.print(p.toString());
         Assert.assertEquals(p.toString(), test);
     }
 

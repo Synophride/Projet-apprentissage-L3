@@ -447,8 +447,8 @@ public class PlateauQuarto implements PlateauJeu {
                 if ((indCases >> ind) % 2 != 0) {
                     byte id_piece = (byte) (0x0F & (plateau >>> (ind * 4)));
                     String piece = pieceToString(id_piece);
-
-                    if (piece == choose)
+                       
+                    if (piece.equals(choose))
                         return false;
                 }
             }
@@ -503,7 +503,7 @@ public class PlateauQuarto implements PlateauJeu {
 	} else { // C'est un dépôt
 	    byte id_coord = (byte)( c.get()<< 4);
 	    byte id_piece = (byte) (id_coord | (0x0F & tourEtPiece));
-	    unsafe_jouer_coup_don( id_piece );
+	    unsafe_jouer_coup_depot( id_piece );
 	}
     }
     

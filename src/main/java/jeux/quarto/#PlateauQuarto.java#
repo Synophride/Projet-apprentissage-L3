@@ -106,7 +106,7 @@ public class PlateauQuarto implements PlateauJeu {
      * @param tourEtPiece
      *            dénotant de l'état du tour
      **/
-    public PlateauQuarto(long plateau, short indcases, short indpiece, byte tourEtPiece) {
+    public0 PlateauQuarto(long plateau, short indcases, short indpiece, byte tourEtPiece) {
         this.plateau = plateau;
         this.indCases = indcases;
         this.indPiece = indpiece;
@@ -489,6 +489,7 @@ public class PlateauQuarto implements PlateauJeu {
 
     public void joue(Joueur j, CoupJeu cj) throws IllegalArgumentException {
 	// 1. vérification que c'est le bon joueur qui joue
+	
 	if( ! coupValide(j, cj) )
 	    throw new IllegalArgumentException( "joue() : Coup invalide" );
 	
@@ -516,12 +517,14 @@ public class PlateauQuarto implements PlateauJeu {
 	
 	return
 	    // 1: vérification que c'est le bon joueur qui joue
-	    ((j0plays() && j.equals(j0)) || (!j0plays() && j.equals(j1))) 
+	    ((j0plays() && j.equals(j0))
+	     || (!j0plays() && j.equals(j1))) 
+
 	    &&
-	    
 	    // 2 : Vérification de la validité du coup
-	    (  is_don() && ((indPiece >>> id_coup) %2 == 0 )
-	       || (!is_don()) && (indCases >>> id_coup) % 2 == 0) 	    ;
+	    (  is_don() && ((indPiece >>> id_coup) %2 == 0 ) // Pièce déjà jouée
+	       || (!is_don()) && (indCases >>> id_coup) % 2 == 0) // 
+	    ;
     }
    
     public boolean finDePartie(){

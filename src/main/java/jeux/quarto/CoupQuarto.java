@@ -4,12 +4,12 @@ import iia.jeux.modele.CoupJeu;
 
 public class CoupQuarto implements CoupJeu {
     private final byte idCoup;
-
+    
     public CoupQuarto(byte id) {
         idCoup = id;
     }
-
-    public CoupQuarto(String s) {
+    
+    public CoupQuarto(String s){
         byte coup = 0;
         if (s.length() == 2) { // C'est une coordonnée.
 

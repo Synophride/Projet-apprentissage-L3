@@ -10,7 +10,6 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.lang.IllegalArgumentException;
 
-
 public class PlateauQuarto implements PlateauJeu {
     /********** commentaires *********/
     /// str Mouvement
@@ -335,7 +334,9 @@ public class PlateauQuarto implements PlateauJeu {
 
     /**
      * Fonction jouant un dépôt de pièce
-     * @param coup un coup valide (!), sous la forme [coordonnée, piece]
+     * 
+     * @param coup
+     *            un coup valide (!), sous la forme [coordonnée, piece]
      * @see play
      * @see jouer
      * @see unsafe_jouer_don
@@ -376,11 +377,13 @@ public class PlateauQuarto implements PlateauJeu {
 
     /**
      * Renvoie la représentation sous un octet de la pièce mentionnée en paramètre
-     * @param idpiece l'identifiant "string" de la pièce, de la forme indiquée dans le 
+     * 
+     * @param idpiece
+     *            l'identifiant "string" de la pièce, de la forme indiquée dans le
      * @return l'identifiant de la pièce associée à la str associée en paramètre
      ***/
     public static byte stringToPiece(String strPiece) {
-        
+
         char[] idPiece = strPiece.toCharArray();
 
         // Pê il faudrait faire genre plutôt String.get(i)
@@ -398,38 +401,42 @@ public class PlateauQuarto implements PlateauJeu {
     }
 
     /**
-     * Renvoie la représentation sous forme de chaine de caractères de la pièce en paramètre
-     * @param idPiece l'identifiant de la pièce.
+     * Renvoie la représentation sous forme de chaine de caractères de la pièce en
+     * paramètre
+     * 
+     * @param idPiece
+     *            l'identifiant de la pièce.
      * @return la chaine de caractères associée à l'identifiant
      ***/
-    public static String pieceToString(byte idPiece){
-	// Bleu/rouge, Grand/petit, Plein/troué, Rond/carré
-	// Bleu = blanc, Rouge = noir
-	
-	char[] str = new char[4];
-	
-	if(idPiece % 2 ==  0) // 0 = rond
-	    str[3] = 'r';
-	else str[3] = 'c';
-	
-	if((idPiece >>> 1) % 2 == 0) // 0 = troué
-	    str[2] = 't';
-	else str[2] = 'p';
-	
-	if((idPiece>>> 2) % 2 == 0) // 0 = troué
-	    str[1] = 'p';
-	else str[1] = 'g';
-	
-	if((idPiece>>> 3) % 2 == 0) // 0 = troué
-	    str[0] = 'r';
-	else str[0] = 'b';
-	
-	
-	return new String(str);
-    }
-    
+    public static String pieceToString(byte idPiece) {
+        // Bleu/rouge, Grand/petit, Plein/troué, Rond/carré
+        // Bleu = blanc, Rouge = noir
 
-    
+        char[] str = new char[4];
+
+        if (idPiece % 2 == 0) // 0 = rond
+            str[3] = 'r';
+        else
+            str[3] = 'c';
+
+        if ((idPiece >>> 1) % 2 == 0) // 0 = troué
+            str[2] = 't';
+        else
+            str[2] = 'p';
+
+        if ((idPiece >>> 2) % 2 == 0) // 0 = troué
+            str[1] = 'p';
+        else
+            str[1] = 'g';
+
+        if ((idPiece >>> 3) % 2 == 0) // 0 = troué
+            str[0] = 'r';
+        else
+            str[0] = 'b';
+
+        return new String(str);
+    }
+
     // Erreur lors des tests mais je ne vois pas d'où pourrait venir l'erreur
     public boolean estchoixValide(String choose, String player) {
         for (byte i = 0; i < 4; i++) {
@@ -439,7 +446,7 @@ public class PlateauQuarto implements PlateauJeu {
                 if ((indCases >> ind) % 2 != 0) {
                     byte id_piece = (byte) (0x0F & (plateau >>> (ind * 4)));
                     String piece = pieceToString(id_piece);
-                       
+
                     if (piece.equals(choose))
                         return false;
                 }
@@ -454,88 +461,88 @@ public class PlateauQuarto implements PlateauJeu {
      * Méthodes de PlateauJeu
      *
      ********************************************************/
-    
-    
-    // Apparemment pas besoin de vérifier que c'est le bon joueur qui demande. On devrait pê faire une fonction genre "joueur jouant" ou quelque chose comme ça
+
+    // Apparemment pas besoin de vérifier que c'est le bon joueur qui demande. On
+    // devrait pê faire une fonction genre "joueur jouant" ou quelque chose comme ça
     // ok
 
-    public ArrayList<CoupJeu> coupsPossibles(Joueur j) throws IllegalArgumentException {	
-	ArrayList<CoupJeu> ret = new ArrayList<CoupJeu>();
-	
-	// Si c'est pas le bon joueur
-	if (j0plays() && j.equals(j1) || (!j0plays() && j.equals(j0)))
-	    throw new IllegalArgumentException("CoupsPossibles : Mauvais joueur demandé");
-	
-	if( is_don() ){ // Il faut donner la pièce
-	    for(byte  i = 0; i<16; i++){
-		if ( (indPiece >>> i) %2  == 0)
-		    ret.add(new CoupQuarto( i ));
-	    }	    
-	} else { // Sinon, dépôt de la pièce
-	    for(byte  i = 0; i<16; i++){
-		if ( (indCases >>> i) %2  == 0)
-		    ret.add(new CoupQuarto( i ));
-	    }
-	}	
-	return ret;
+    public ArrayList<CoupJeu> coupsPossibles(Joueur j) throws IllegalArgumentException {
+        ArrayList<CoupJeu> ret = new ArrayList<CoupJeu>();
+
+        // Si c'est pas le bon joueur
+        if (j0plays() && j.equals(j1) || (!j0plays() && j.equals(j0)))
+            throw new IllegalArgumentException("CoupsPossibles : Mauvais joueur demandé");
+
+        if (is_don()) { // Il faut donner la pièce
+            for (byte i = 0; i < 16; i++) {
+                if ((indPiece >>> i) % 2 == 0)
+                    ret.add(new CoupQuarto(i));
+            }
+        } else { // Sinon, dépôt de la pièce
+            for (byte i = 0; i < 16; i++) {
+                if ((indCases >>> i) % 2 == 0)
+                    ret.add(new CoupQuarto(i));
+            }
+        }
+        return ret;
     }
 
     public void joue(Joueur j, CoupJeu cj) throws IllegalArgumentException {
-	// 1. vérification que c'est le bon joueur qui joue
-	if( ! coupValide(j, cj) )
-	    throw new IllegalArgumentException( "joue() : Coup invalide" );
-	
-	// On peut jouer le coup pusqu'il est valide	
-	CoupQuarto c = (CoupQuarto) cj;
-        
-	// 2. vérification du type du coup
-	if( is_don() ){
-	    byte idpiece = c.get();
-	    unsafe_jouer_coup_don(idpiece);
-	} else { // C'est un dépôt
-	    byte id_coord = (byte)( c.get()<< 4);
-	    byte id_piece = (byte) (id_coord | (0x0F & tourEtPiece));
-	    unsafe_jouer_coup_depot( id_piece );
-	}
+        // 1. vérification que c'est le bon joueur qui joue
+        if (!coupValide(j, cj))
+            throw new IllegalArgumentException("joue() : Coup invalide");
+
+        // On peut jouer le coup pusqu'il est valide
+        CoupQuarto c = (CoupQuarto) cj;
+
+        // 2. vérification du type du coup
+        if (is_don()) {
+            byte idpiece = c.get();
+            unsafe_jouer_coup_don(idpiece);
+        } else { // C'est un dépôt
+            byte id_coord = (byte) (c.get() << 4);
+            byte id_piece = (byte) (id_coord | (0x0F & tourEtPiece));
+            unsafe_jouer_coup_depot(id_piece);
+        }
     }
-    
+
     public PlateauJeu copy() {
         return new PlateauQuarto(plateau, indCases, indPiece, tourEtPiece);
     }
 
     public boolean coupValide(Joueur j, CoupJeu cj) {
-	CoupQuarto cq = (CoupQuarto) cj;
-	byte id_coup = cq.get();
-	
-	return
-	    // 1: vérification que c'est le bon joueur qui joue
-	    ((j0plays() && j.equals(j0)) || (!j0plays() && j.equals(j1))) 
-	    &&
-	    
-	    // 2 : Vérification de la validité du coup
-	    (  is_don() && ((indPiece >>> id_coup) %2 == 0 )
-	       || (!is_don()) && (indCases >>> id_coup) % 2 == 0) 	    ;
-    }
-   
-    public boolean finDePartie(){
-	for(byte i = 0; i<4; i++){
-	    /// Test des lignes
-	    if(test_ligne(i) || test_colonne(i) ) return true;
-	}
-	
-	/// Test des diagonales 
-	if (test_diagonales()) return true;
+        CoupQuarto cq = (CoupQuarto) cj;
+        byte id_coup = cq.get();
 
-	/// Test des carrés
-	for(byte i = 0; i<3; i++)
-	    for(byte j = 0; j<3; j++)
-		if(test_carre(i, j)) return true;
-		   
+        return
+        // 1: vérification que c'est le bon joueur qui joue
+        ((j0plays() && j.equals(j0)) || (!j0plays() && j.equals(j1))) &&
 
-	/// Cas ou toutes les pièces ont été posées
-	return indCases == 0xFFFF;
+        // 2 : Vérification de la validité du coup
+                (is_don() && ((indPiece >>> id_coup) % 2 == 0) || (!is_don()) && (indCases >>> id_coup) % 2 == 0);
     }
-    
+
+    public boolean finDePartie() {
+        for (byte i = 0; i < 4; i++) {
+            /// Test des lignes
+            if (test_ligne(i) || test_colonne(i))
+                return true;
+        }
+
+        /// Test des diagonales
+        if (test_diagonales())
+            return true;
+
+        /// Test des carrés
+        for (byte i = 0; i < 3; i++)
+            for (byte j = 0; j < 3; j++)
+                if (test_carre(i, j))
+                    return true;
+
+        /// Cas ou toutes les pièces ont été posées
+        return indCases == 0xFFFF;
+    }
+
     /*********** Méthodes de Partiel **************/
 
     /// TODO
@@ -571,7 +578,7 @@ public class PlateauQuarto implements PlateauJeu {
     public boolean estmoveValide(String move, String player) {
         CoupQuarto cj = new CoupQuarto(move);
         Joueur j;
-	if (player.equals(j0.toString()))
+        if (player.equals(j0.toString()))
             j = j0;
         else
             j = j1;
@@ -673,11 +680,11 @@ public class PlateauQuarto implements PlateauJeu {
     }
 
     /*********** Méthodes de Partiel **************/
-    public boolean estChoixValide(String choix){
-	//FIXME
-	return false;
+    public boolean estChoixValide(String choix) {
+        // FIXME
+        return false;
     }
-    
+
     // Autant séparer les tâches
     public void setFromStringTab(String[] s) {
         // Note : on commence par les bits de poids faible.
@@ -701,7 +708,7 @@ public class PlateauQuarto implements PlateauJeu {
                     j += 3; // Pour pas retomber sur la même chose. j+3 au lieu de j+4 étant donné que le
                             // j++ sera fait à la fin de la boucle
                     byte id_piece = stringToPiece(str_piece);
-                    
+
                     // on note la pièce comme jouée
                     indPiece = (short) (indPiece | (0x1 << id_piece));
 
@@ -711,13 +718,13 @@ public class PlateauQuarto implements PlateauJeu {
                     indCases = (short) (indCases | (0x0001 << ind_case));
 
                     // Ajout de la pièce au plateau
-                    //plateau = plateau | (0x1 << (ind_case * 4));
+                    // plateau = plateau | (0x1 << (ind_case * 4));
                     plateau = plateau | (id_piece << (ind_case * 4));
-                    
-                    ind_of_cases_seen++;   
+
+                    ind_of_cases_seen++;
                 }
         }
-	
+
         // à la fin, on regarde le nombre de pièces jouées pour déterminer le joueur qui
         // doit jouer
         // Si ce nombre est pair, c'est J0 qui doit donner une pièce, sinon c'est J1.
@@ -737,69 +744,68 @@ public class PlateauQuarto implements PlateauJeu {
         /// Note: étant donné qu'on utilise java préhistorique, ce code donne une erreur
         // (car le bufferedReader doit pas être déclaré dans un try, je crois... Ou il
         // faut un bloc "finally")
-	BufferedReader br = new BufferedReader(new FileReader(fileName));
-	    
-	String line;
+        BufferedReader br = new BufferedReader(new FileReader(fileName));
 
-	int cpt_ligne = 0; // Compte le nombre de lignes intéressantes qu'on a déjà vu
+        String line;
 
-	String[] tab_of_lignes = new String[4];
+        int cpt_ligne = 0; // Compte le nombre de lignes intéressantes qu'on a déjà vu
 
-	while ((line = br.readLine()) != null) {
+        String[] tab_of_lignes = new String[4];
 
-	    if (line.charAt(0) != '%') { // Si pas un commentaire
+        while ((line = br.readLine()) != null) {
 
-		String[] s = line.split(" "); // Séparation par les espaces
+            if (line.charAt(0) != '%') { // Si pas un commentaire
 
-		/// De ce que je vois sur la fig3, la
-		/// Ligne ressemble à [CHIFFRE][ESPACE][ID DES PIECES/+][ESPACE][CHIFFRE].
-		/// Par conséquent on a juste besoin du truc au milieu
-		String ligne_plateau = s[1];
+                String[] s = line.split(" "); // Séparation par les espaces
 
-		tab_of_lignes[cpt_ligne] = ligne_plateau; // On garde la ligne intéressante
-		cpt_ligne++;
+                /// De ce que je vois sur la fig3, la
+                /// Ligne ressemble à [CHIFFRE][ESPACE][ID DES PIECES/+][ESPACE][CHIFFRE].
+                /// Par conséquent on a juste besoin du truc au milieu
+                String ligne_plateau = s[1];
 
-		// Si on a vu toutes les lignes intéressantes
-		if (cpt_ligne == 4)
-		    break;
-	    }
-	}
-	setFromStringTab(tab_of_lignes);
+                tab_of_lignes[cpt_ligne] = ligne_plateau; // On garde la ligne intéressante
+                cpt_ligne++;
+
+                // Si on a vu toutes les lignes intéressantes
+                if (cpt_ligne == 4)
+                    break;
+            }
+        }
+        setFromStringTab(tab_of_lignes);
     }
-    
-    
+
     public String toString() {
-	String ret = "";
+        String ret = "";
 
-	for (byte i = 0; i < 4; i++) {
-	    ret = ret + (i + 1) + " ";
+        for (byte i = 0; i < 4; i++) {
+            ret = ret + (i + 1) + " ";
 
-	    // si pas de pièce, ajout d'un +, si pièce ajout de l'id de la pièce
-	    for (byte j = 0; j < 4; j++) {
-		// id de la case qu'on regarde
-		byte ind = (byte) (i * 4 + j);
+            // si pas de pièce, ajout d'un +, si pièce ajout de l'id de la pièce
+            for (byte j = 0; j < 4; j++) {
+                // id de la case qu'on regarde
+                byte ind = (byte) (i * 4 + j);
 
-		// Si case inoccupée
-		if ((indCases >> ind) % 2 == 0) {
-		    ret = ret + "+"; // Ajout d'un '+' dans la str, pour montrer qu'il n'y a pas de pièce
-		} else { // Case occupée
-		    // recherche de la pièce occupant la case
-		    byte id_piece = (byte) (0x0F & (plateau >>> (ind * 4)));
-		    ret = ret + pieceToString(id_piece);
-		}
-	    }
-	    ret = ret + " " + (i + 1) + "\n";
-	}
-	return ret;
+                // Si case inoccupée
+                if ((indCases >> ind) % 2 == 0) {
+                    ret = ret + "+"; // Ajout d'un '+' dans la str, pour montrer qu'il n'y a pas de pièce
+                } else { // Case occupée
+                    // recherche de la pièce occupant la case
+                    byte id_piece = (byte) (0x0F & (plateau >>> (ind * 4)));
+                    ret = ret + pieceToString(id_piece);
+                }
+            }
+            ret = ret + " " + (i + 1) + "\n";
+        }
+        return ret;
     }
 
     // Modifié le 22/03
     public void saveToFile(String fileName) throws Exception {
-	// TODO : Convertir le plateau en lignes de String -> on codera tout ça dans
-	// toString()
-	// Note : il faudrait mettre les try
-	PrintWriter output_shit = new PrintWriter(fileName);
-	output_shit.write(this.toString());
-	output_shit.close();
+        // TODO : Convertir le plateau en lignes de String -> on codera tout ça dans
+        // toString()
+        // Note : il faudrait mettre les try
+        PrintWriter output_shit = new PrintWriter(fileName);
+        output_shit.write(this.toString());
+        output_shit.close();
     }
 }

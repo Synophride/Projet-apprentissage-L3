@@ -64,7 +64,7 @@ public class PlateauQuartoTest {
 	Assert.assertFalse(p.estmoveValide("A1", "noir"));
 
 	p.play("A1", "blanc");
-	    
+	
 	Assert.assertFalse(p.estchoixValide("rptr", "noir"));
 	Assert.assertTrue( p.estchoixValide("rptr", "blanc"));
 	Assert.assertFalse(p.estchoixValide("bgpc", "blanc"));
@@ -95,7 +95,7 @@ public class PlateauQuartoTest {
 	Assert.assertFalse(plateau_depart.finDePartie());
 	Assert.assertTrue(plateau_final.finDePartie());
         PlateauQuarto p = new PlateauQuarto(new Joueur("noir"), new Joueur("blanc"));
-
+	
         String[] t = new String[4];
         t[0] = "bgprbgpcbgtcrgtc";
         t[1] = "++++";
@@ -103,23 +103,8 @@ public class PlateauQuartoTest {
         t[3] = "++++";
 
         p.setFromStringTab(t);
-
         Assert.assertTrue(p.finDePartie());
     }
 
-    @Test
-    public void testJoue() throws Exception {
-        PlateauQuarto p = plateau_depart;
-	
-        p.play("bgpr", "noir");
-	
-	p.play("A1", "blanc");
-
-        String test = "1 bgpr+++ 1\n2 ++++ 2\n3 ++++ 3\n4 ++++ 4\n";
-	
-        System.out.print(p.toString());
-
-	Assert.assertEquals(p.toString(), test);
-    }
 
 }

@@ -789,9 +789,30 @@ public class PlateauQuarto implements PlateauJeu {
             }
             ret = ret + " " + (i + 1) + "\n";
         }
+	if( !is_don() ){
+	    String str_j;
+	    if(j0plays())
+		str_j = "noir";
+	    else
+		str_j = "blanc";	      
+	    
+	    byte id_piece = (byte) (0x0F & tourEtPiece);
+	    ret = ret + "%" + str_j + "doit jouer la pièce"  + pieceToString(id_piece); 
+	    
+	} else if (j0plays() ){
+	    ret = ret + "% Le joueur 0 doit donner une pièce";
+	} else {
+	    ret = ret + "% Le joueur 1 doit donner une pièce";
+	}
+	
         return ret;
     }
 
+    public String getStrCurrentPlayer(){
+	if(j0plays())
+	    return "noir";
+	else return "blanc";
+    }
     // Modifié le 22/03
     public void saveToFile(String fileName) throws Exception {
         PrintWriter output_shit = new PrintWriter(fileName);

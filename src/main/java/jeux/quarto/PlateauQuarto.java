@@ -232,7 +232,7 @@ public class PlateauQuarto implements PlateauJeu {
      * @return true si toutes les pièces posées sur la ligne en question possèdent
      *         un point commun, false si aucun point commun ou toutes les pièces ne
      *         sont pas posées
-     * @see test_carre
+v     * @see test_carre
      * @see test_diagonales
      * @see finDePartie
      * @see test_colonne
@@ -342,14 +342,15 @@ public class PlateauQuarto implements PlateauJeu {
      ***/
     private void unsafe_jouer_coup_depot(byte coup) {
         // 1. Dépot de la pièce
-        byte piece = (byte) (coup & 0x0F), coord = (byte) (coup >>> 4);
+        byte coord = (byte) (coup >>> 4);
+	byte piece = (byte) (0x0F & tourEtPiece);
 	
-        plateau = plateau | (piece << (4 * coord));
+        plateau = (plateau) | ((long) (piece << (4 * coord)));
 	
         // 2. Marquer la coordonnée comme jouée
-        indCases = (short) (indCases | ((0x0001) << ((short) coord))); // -> on met un '1' au coord-ème bit (à partir de
+        indCases = (short) (indCases | ((0x0001) << (coord))); // -> on met un '1' au coord-ème bit (à partir de
                                                                        // la droite) du short - qu'on présume à 0.
-
+	
         // 3. Changement du statut du tour : Le joueur venant de poser un pion
         // donne une autre pièce à l'adversaire : On change le 2e bit
         // de tourEtPiece.
@@ -362,10 +363,11 @@ public class PlateauQuarto implements PlateauJeu {
     // ok
     private void unsafe_jouer_coup_don(byte piece) {
         // 1 : montrer la pièce qu'il faut jouer
-        tourEtPiece = (byte) (piece | (tourEtPiece & 0xF0));
+	tourEtPiece = (byte) (0xF0 & tourEtPiece);
+	tourEtPiece = (byte) (piece | (tourEtPiece));
 	
         // 2 : Marquer la pièce comme jouée (même principe qu'au dessus)
-        indPiece = (short) (indPiece | ((0x0001) << piece));
+        indPiece = (short) (indPiece | (1 << piece));
 	
         // 3 : Changer l'état du tour. L'autre joueur va jouer un autre type de tour.
         tourEtPiece = (byte) (0xC0 ^ tourEtPiece);
@@ -471,20 +473,18 @@ public class PlateauQuarto implements PlateauJeu {
     
     public void joue(Joueur j, CoupJeu cj) throws IllegalArgumentException {
 	// 1. vérification que c'est le bon joueur qui joue
-        if (! coupValide(j, cj) )
+        if (! coupValide(j, cj))
             throw new IllegalArgumentException("joue() : Coup invalide");
 	
         // On peut jouer le coup pusqu'il est valide
         CoupQuarto c = (CoupQuarto) cj;
 	
         // 2. vérification du type du coup
-        if (is_don()) {
+        if ( c.get_type() ){
             byte idpiece = c.get();
             unsafe_jouer_coup_don(idpiece);
         } else { // C'est un dépôt
-            byte id_coord = (byte) (c.get() << 4);
-            byte id_piece = (byte) (id_coord | (0x0F & tourEtPiece));
-            unsafe_jouer_coup_depot(id_piece);
+            unsafe_jouer_coup_depot(c.get());
         }
     }
 
@@ -494,21 +494,18 @@ public class PlateauQuarto implements PlateauJeu {
 
     public boolean coupValide(Joueur j, CoupJeu cj) {
         CoupQuarto cq = (CoupQuarto) cj;
-        byte id_coup = cq.get();
-
+        byte id_coup = (byte) (0x0F &cq.get());
+	
         return
 	    // 1: vérification que c'est le bon joueur qui joue
 	    ((j0plays() && j.equals(j0)) 
 	     || (!j0plays() && j.equals(j1)))
 	    &&
 	    // 2 : Vérification de la validité du coup
-	    (( is_don() && (((indPiece >>> id_coup) % 2 == 0)))
-	     || ((!is_don()) && ((indCases >>> id_coup) % 2 == 0)))
-
-	    &&
-	    (is_don() && cq.get_type() || !is_don() && !cq.get_type()) ;
+	    (( is_don() && (((indPiece >>> id_coup) % 2 == 0)) && cq.get_type())
+	     || ((!is_don()) && ((indCases >>> id_coup) % 2 == 0) && !cq.get_type() ));
     }
-
+    
     
     public boolean finDePartie() {
         for (byte i = 0; i < 4; i++) {
@@ -518,7 +515,8 @@ public class PlateauQuarto implements PlateauJeu {
         }
 	
         /// Test des diagonales
-        if (test_diagonales()) return true;
+        if (test_diagonales())
+	    return true;
 
         /// Test des carrés
         for (byte i = 0; i < 3; i++)
@@ -638,7 +636,8 @@ public class PlateauQuarto implements PlateauJeu {
             j = j1;
 
 	CoupQuarto cq = new CoupQuarto(move);
-        joue(j, cq);
+
+	joue(j, cq);
     }
 
     /// Choose la pièce jouée
@@ -724,7 +723,7 @@ public class PlateauQuarto implements PlateauJeu {
         // Si ce nombre est pair, c'est J0 qui doit donner une pièce, sinon c'est J1.
         byte cpt = 0;
         for (byte i = 0; i < 16; i++)
-            if ((indPiece >> i) % 2 == 1)
+            if ((indPiece >>> i) % 2 == 1)
                 cpt++;
 
         if (cpt % 2 == 1) // Joueur = J1
@@ -775,16 +774,17 @@ public class PlateauQuarto implements PlateauJeu {
 
             // si pas de pièce, ajout d'un +, si pièce ajout de l'id de la pièce
             for (byte j = 0; j < 4; j++) {
-                // id de la case qu'on regarde
+                // indice de la case qu'on regarde
                 byte ind = (byte) (i * 4 + j);
-
+		
                 // Si case inoccupée
-                if ((indCases >> ind) % 2 == 0) {
+                if ((indCases >>> ind) % 2 == 0) {
                     ret = ret + "+"; // Ajout d'un '+' dans la str, pour montrer qu'il n'y a pas de pièce
                 } else { // Case occupée
                     // recherche de la pièce occupant la case
-                    byte id_piece = (byte) (0x0F & (plateau >>> (ind * 4)));
-                    ret = ret + pieceToString(id_piece);
+		    byte id_piece = (byte) (0x0F & (plateau >>> (ind * 4)));
+		    ///
+		    ret = ret + pieceToString(id_piece);
                 }
             }
             ret = ret + " " + (i + 1) + "\n";
@@ -792,17 +792,17 @@ public class PlateauQuarto implements PlateauJeu {
 	if( !is_don() ){
 	    String str_j;
 	    if(j0plays())
-		str_j = "noir";
+		str_j = " noir ";
 	    else
-		str_j = "blanc";	      
+		str_j = " blanc ";	      
 	    
 	    byte id_piece = (byte) (0x0F & tourEtPiece);
-	    ret = ret + "%" + str_j + "doit jouer la pièce"  + pieceToString(id_piece); 
+	    ret = ret + "% " + str_j + " doit jouer la pièce "  + pieceToString(id_piece); 
 	    
 	} else if (j0plays() ){
-	    ret = ret + "% Le joueur 0 doit donner une pièce";
+	    ret = ret + "% Le joueur 0 doit donner une pièce ";
 	} else {
-	    ret = ret + "% Le joueur 1 doit donner une pièce";
+	    ret = ret + "% Le joueur 1 doit donner une pièce ";
 	}
 	
         return ret;

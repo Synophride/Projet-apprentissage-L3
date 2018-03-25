@@ -76,18 +76,21 @@ public class PlateauQuartoTest {
     
     @Test
     public void testEstChoixValide() {
-        PlateauQuarto p = plateau_depart;
+        PlateauQuarto p = new PlateauQuarto();
 	
         Assert.assertTrue(p.estchoixValide("bgpr", "noir"));
 	
         p.play("bgpr", "noir");
 	
-	p.play("A2", "blanc");
-        p.play("rgpr", "blanc");
+	p.play("C3", "blanc");
+
+	p.play("rgpr", "blanc");
+
+	Assert.assertTrue(p.estchoixValide("A1", "noir"));
+	//        p.play("A1", "noir");
 	
-        p.play("A1", "noir");
 	
-        Assert.assertFalse(p.estchoixValide("bgpr", "blanc"));
+        Assert.assertFalse( p.estchoixValide("bgpr", "blanc") );
     }
     
     @Test

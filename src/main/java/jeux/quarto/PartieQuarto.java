@@ -30,6 +30,5 @@ public class PartieQuarto {
 	}
 	System.out.println("La partie est finie");
 	input.close();
-    }
-    
+    }    
 }

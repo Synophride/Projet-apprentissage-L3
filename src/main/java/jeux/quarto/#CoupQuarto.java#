@@ -83,14 +83,14 @@ public class CoupQuarto implements CoupJeu {
     public boolean get_type(){
 	return is_don;
     }
-
+    
     public String toString(boolean isDon) {
         if (isDon)
             return coordToString(idCoup);
         else
             return pieceToString(idCoup);
     }
-
+    
     private static String coordToString(byte coordonnee_case) {
         byte chiffre = (byte) (0x03 & coordonnee_case);
         byte lettre = (byte) ((0x0C & coordonnee_case) >>> 2);

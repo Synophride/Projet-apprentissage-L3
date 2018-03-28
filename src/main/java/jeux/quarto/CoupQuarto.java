@@ -92,8 +92,8 @@ public class CoupQuarto implements CoupJeu {
     }
 
     private static String coordToString(byte coordonnee_case) {
-        byte chiffre = (byte) (0x03 & coordonnee_case);
-        byte lettre = (byte) ((0x0C & coordonnee_case) >>> 2);
+        byte chiffre = (byte) (0x03 & coordonnee_case >>> 2);
+        byte lettre = (byte) ((0x0C & coordonnee_case));
 
         char char_lettre = '?';
 

@@ -49,7 +49,7 @@ public class PlateauQuarto implements PlateauJeu {
      * 
      * Attributs
      *
-     *******************/
+v     *******************/
 
     // au lieu de faire j1 et j2, on appelle les joueurs j0 et j1 : J1 devient J0,
     // j2 devient j1
@@ -57,20 +57,23 @@ public class PlateauQuarto implements PlateauJeu {
     public static Joueur j1;
 
     // Plateau de jeu
-    private long plateau = 0;
+    // ligne colonne
+    private byte[][] plateau = new byte[4][4];
+    
+        
+    byte piece_a_jouer = 0xFF;;
 
-    // Montre quelles pièces sont jouées.
-    private short indCases = 0;
-    private short indPiece = 0; // On marque la pièce comme jouée lors du don de la pièce
-
-    // id_joueur id_action 00 id_piexe
-    private byte tourEtPiece = 0;
-
+    byte etat_du_tour = 0;
+    
+    
     /************* constructeurs ****************/
     /**
      * Constructeur de base de la classe
      **/
     public PlateauQuarto() {
+	for(byte i = 0; i<16; i++){
+	    plateau[i/4][i%4]= 0xFF;
+	}
     }
 
     /**
@@ -84,6 +87,9 @@ public class PlateauQuarto implements PlateauJeu {
     public PlateauQuarto(Joueur joueurZero, Joueur joueurUn) {
         j0 = joueurZero;
         j1 = joueurUn;
+	for(byte i = 0; i<16; i++){
+	    plateau[i/4][i%4]= 0xFF;
+	}
     }
 
     /**
@@ -98,7 +104,7 @@ public class PlateauQuarto implements PlateauJeu {
      * @param tourEtPiece
      *            dénotant de l'état du tour
      **/
-    public PlateauQuarto(long plateau, short indcases, short indpiece, byte tourEtPiece) {
+    public PlateauQuarto(long plateau, byte tourEtPiece) {
         this.plateau = plateau;
         this.indCases = indcases;
         this.indPiece = indpiece;
@@ -118,42 +124,13 @@ public class PlateauQuarto implements PlateauJeu {
      * @param ligne
      *            la coordonnée "ligne" de la pièce à laquelle on veut accéder
      *            (entre 0 et 3 inclus)
-     * @return l'identifiant de la pièce accedée
-     * @throws une
-     *             Exception si la pièce n'est pas présente sur le plateau.
+     * @return l'identifiant de la pièce accedée si cette pièce est posée sur le plateau
+     * 0xFF sinon
      * @see get_double_piece
      * @see points_communs
      ***/
-    private byte get_piece(byte colonne, byte ligne) throws Exception {
-        if ((indCases >>> (ligne * 4 + colonne)) % 2 == 0)
-            throw new Exception();
-
-        // Ligne et colonne sont compris entre 0 et 3
-        return (byte) ((plateau >>> ((ligne * 4 + colonne) * 4)) & (0x0F));
-    }
-
-    /**
-     * Méthode permettant d'accéder à l'identifiant de deux pièces côte à côte dans
-     * le plateau.
-     * 
-     * @param colonne
-     *            la coordonnée "colonne" de la pièce de gauche à laquelle on veut
-     *            accéder (entre 0 et 2 inclus)
-     * @param ligne
-     *            la coordonnée "ligne" des pièces auxquelles on veut accéder (entre
-     *            0 et 3 inclus)
-     * @return l'identifiant des pièces accedée, sous la forme[id_piece1, id_piece2]
-     * @throws une
-     *             Exception si une des pièces n'est pas présente sur le plateau.
-     * @see get_piece
-     * @see points_communs_double_pieces
-     **/
-    public byte get_double_piece(byte colonne, byte ligne) throws Exception {
-        if ((indCases >>> (ligne * 4 + colonne)) % 2 == 0 || (indCases >>> (ligne * 4 + colonne + 1)) % 2 == 0)
-            throw new Exception();
-
-        // Ligne et colonne sont comris entre 0 et 3
-        return (byte) (plateau >>> ((ligne * 4 + colonne) * 4));
+    private byte get_piece(byte colonne, byte ligne){
+	return plateau[ligne][colonne];
     }
 
     /**
@@ -173,26 +150,7 @@ public class PlateauQuarto implements PlateauJeu {
      * @see test_diagonale
      ***/
     private byte points_communs(byte p1, byte p2) {
-        return (byte) (0x0F & (~(p1 ^ p2)));
-    }
-
-    /**
-     * Fonction testant les points communs entre quatre pièces, dont les identi
-     * 
-     * @param db1
-     *            byte contenant les identifiants de deux pièces.
-     * @param db2
-     *            byte contenant les identifiants de deux pièces.
-     * @return un byte de la forme 0x0[points communs], ou chaque bit de
-     *         caractéristique liée à un point commun est à 1 si cette
-     *         caractéristique est commune à toutes les pièces
-     * @see points_communs
-     * @see test_ligne
-     * @see test_carre
-     ***/
-    private byte points_communs_double_pieces(byte db1, byte db2) {
-        byte a = (byte) (db1 >>> 4), b = (byte) (0x0F & db1), c = (byte) (db2 >>> 4), d = (byte) (0x0F & db2);
-        return (byte) (0x0F & ((~(a ^ b)) & (~(a ^ c)) & (~(a ^ d))));
+        return (byte) (0x0F & (~(p1 ^ p2))); // Pê truc foireux avec les entiers
     }
 
     /// id_colonne id_ligne < 3
@@ -213,15 +171,18 @@ public class PlateauQuarto implements PlateauJeu {
      * @see finDePartie
      ***/
     private boolean test_carre(byte id_colonne, byte id_ligne) {
-        byte dp1, dp2;
-        try {
-            dp1 = get_double_piece(id_colonne, id_ligne);
-            dp2 = get_double_piece(id_colonne, (byte) (id_ligne + 1));
-        } catch (Exception e) {
-            return false;
-        }
+	byte p1, p2, p3, p4;
+	p1 = get_piece(id_colonne, id_ligne);
+	p2 = get_piece(id_colonne + 1, id_ligne);
+	p3 = get_piece(id_colonne, id_ligne + 1);
+	p4 = get_piece(id_colonne + 1, id_ligne + 1);
 
-        return (points_communs_double_pieces(dp1, dp2) != 0x00);
+	return
+	    // Vérification que tout n'est pas nul
+	    (p1 != 0xFF && p2 != 0xFF && p3 != 0xFF && p4 != 0xFF)
+	    // Puis qu'il y a au moins un point commun entre les pièces
+	    && (points_communs(p1, p2) != 0 && points_communs(p1, p3) != 0 && points_communs(p1, p4) != 0  )
+	    
     }
 
     /**
@@ -232,21 +193,15 @@ public class PlateauQuarto implements PlateauJeu {
      * @return true si toutes les pièces posées sur la ligne en question possèdent
      *         un point commun, false si aucun point commun ou toutes les pièces ne
      *         sont pas posées
-v     * @see test_carre
+     * @see test_carre
      * @see test_diagonales
      * @see finDePartie
      * @see test_colonne
      ***/
     private boolean test_ligne(byte id_ligne) {
         byte b1, b2;
-        try {
-            b1 = get_double_piece((byte) 0x00, id_ligne);
-            b2 = get_double_piece((byte) 0x02, id_ligne);
-        } catch (Exception e) {
-            return false;
-        }
-
-        return (points_communs_double_pieces(b1, b2) != 0x00);
+        // FIXME
+        
     }
 
     /**
@@ -262,6 +217,7 @@ v     * @see test_carre
      * @see test_colonne
      ***/
     private boolean test_diagonales() {
+	/// FIXME
         byte[] g = new byte[4], d = new byte[4];
         boolean g_false = false, d_false = false;
 
@@ -282,7 +238,6 @@ v     * @see test_carre
                     return false;
             }
         }
-
         return true;
     }
 
@@ -301,16 +256,13 @@ v     * @see test_carre
      **/
     private boolean test_colonne(byte colonne) {
         byte c1, c2, c3, c4;
-        try {
             c1 = get_piece(colonne, (byte) 0);
             c2 = get_piece(colonne, (byte) 1);
             c3 = get_piece(colonne, (byte) 2);
             c4 = get_piece(colonne, (byte) 3);
-        } catch (Exception e) {
-            return false;
-        }
 
-        return (points_communs(c1, c2) & points_communs(c3, c4)) != 0;
+	    
+	    
     }
 
     /**
@@ -337,34 +289,34 @@ v     * @see test_carre
      * @param coup
      *            un coup valide (!), sous la forme [coordonnée, piece]
      * @see play
-     * @see jouer
+     * @see jouers
      * @see unsafe_jouer_don
      ***/
-    private void unsafe_jouer_coup_depot(byte coup) {
+    private void unsafe_jouer_coup_depot(byte cp) {
+	int coup = 0x000000FF & cp;
         // 1. Dépot de la pièce
-        byte coord = (byte) (coup >>> 4);
-	byte piece = (byte) (0x0F & tourEtPiece);
-	
-        plateau = (plateau) | ((long) (piece << (4 * coord)));
+	int piece = 0x0000000F & tourEtPiece;
+        plateau = (plateau) | ( piece << (4 * coup));
 	
         // 2. Marquer la coordonnée comme jouée
-        indCases = (short) (indCases | ((0x0001) << (coord))); // -> on met un '1' au coord-ème bit (à partir de
+        indCases = (short) (0x0000FFFF & (indCases | (1 << coup))); // -> on met un '1' au coord-ème bit (à partir de
                                                                        // la droite) du short - qu'on présume à 0.
 	
         // 3. Changement du statut du tour : Le joueur venant de poser un pion
         // donne une autre pièce à l'adversaire : On change le 2e bit
         // de tourEtPiece.
-        tourEtPiece = (byte) (0x40 ^ tourEtPiece);
+        tourEtPiece = (byte) (0x000000FF & (0x40 ^ tourEtPiece));
     }
 
     /*
      * Aucun test. On part aussi du principe que piece est de la forme 0x0(pdpiece)
      */
     // ok
-    private void unsafe_jouer_coup_don(byte piece) {
+    private void unsafe_jouer_coup_don(byte p) {
+	int piece = 0x000000FF & p;
         // 1 : montrer la pièce qu'il faut jouer
-	tourEtPiece = (byte) (0xF0 & tourEtPiece);
-	tourEtPiece = (byte) (piece | (tourEtPiece));
+	tourEtPiece = (byte) (0x000000FF & ( 0xF0 & tourEtPiece));
+	tourEtPiece = (byte) ( piece | (tourEtPiece));
 	
         // 2 : Marquer la pièce comme jouée (même principe qu'au dessus)
         indPiece = (short) (indPiece | (1 << piece));
@@ -491,10 +443,11 @@ v     * @see test_carre
     public PlateauJeu copy() {
         return new PlateauQuarto(plateau, indCases, indPiece, tourEtPiece);
     }
-
+    
+    
     public boolean coupValide(Joueur j, CoupJeu cj) {
         CoupQuarto cq = (CoupQuarto) cj;
-        byte id_coup = (byte) (0x0F &cq.get());
+        int id_coup = (0x000000F & cq.get());
 	
         return
 	    // 1: vérification que c'est le bon joueur qui joue
@@ -701,14 +654,14 @@ v     * @see test_carre
                     j += 3; // Pour pas retomber sur la même chose. j+3 au lieu de j+4 étant donné que le
                             // j++ sera fait à la fin de la boucle
                     byte id_piece = stringToPiece(str_piece);
-
+		    
                     // on note la pièce comme jouée
-                    indPiece = (short) (indPiece | (0x1 << id_piece));
+                    indPiece = (short) (0x00FFFFFF & (indPiece | (0x1 << id_piece)));
 
                     // Notation de la case comme jouée
                     short ind_case = (short) (i * 4 + ind_of_cases_seen);
 
-                    indCases = (short) (indCases | (0x0001 << ind_case));
+                    indCases = (short) (0x0000FFFF & (indCases | (0x0001 << ind_case)));
 
                     // Ajout de la pièce au plateau
                     // plateau = plateau | (0x1 << (ind_case * 4));

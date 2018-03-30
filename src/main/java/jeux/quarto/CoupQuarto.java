@@ -13,7 +13,7 @@ public class CoupQuarto implements CoupJeu {
     
     public CoupQuarto(String s){
         byte coup = 0;
-	
+ 
         if (s.length() == 2) { // C'est une coordonnée.
 	    is_don = false;
             // 1. recherche de la colonne
@@ -73,7 +73,6 @@ public class CoupQuarto implements CoupJeu {
             this.idCoup = coup;
         } else 
 	    throw new IllegalArgumentException("Construction de coupQuarto : La chaîne n'est pas valide");
-
     }
 
     public byte get() {

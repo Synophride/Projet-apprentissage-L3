@@ -257,9 +257,7 @@ v	p2 = get_piece(colonne,  1);
 	return
 	    (p1 != 0xFF && p2 != 0xFF && p3 != 0xFF && p4 != 0xFF)
 	    && (points_communs(p1, p2) != 0 && points_communs(p1, p3) != 0
-		&& points_communs(p1, p4) != 0 );
-
-	    
+		&& points_communs(p1, p4) != 0 );	    
     }
 
     /**
@@ -289,7 +287,7 @@ v	p2 = get_piece(colonne,  1);
      * @see jouers
      * @see unsafe_jouer_don
      ***/
-    private void unsafe_jouer_coup_depot(byte cp) {
+    private void unsafe_jouer_coup_depot(byte cp){
         // 1. Dépot de la pièce
 	byte id_colonne = (byte) cp >>> 2;
 	byte id_ligne = (byte) 0x03 & cp;

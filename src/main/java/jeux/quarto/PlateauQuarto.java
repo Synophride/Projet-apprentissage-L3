@@ -119,7 +119,7 @@ public class PlateauQuarto implements PlateauJeu {
      * @see get_double_piece
      * @see points_communs
      ***/
-    private byte get_piece(int colonne, int ligne){
+    private byte get_piece(byte colonne, byte ligne){
 	return plateau[ligne][colonne];
     }
 
@@ -165,12 +165,12 @@ public class PlateauQuarto implements PlateauJeu {
      * @see test_diagonales
      * @see finDePartie
      ***/
-    private boolean test_carre(int id_colonne, int id_ligne) {
+    private boolean test_carre(byte id_colonne, byte id_ligne) {
 	byte p1, p2, p3, p4;
 	p1 = get_piece(id_colonne, id_ligne);
-	p2 = get_piece(id_colonne + 1, id_ligne);
-	p3 = get_piece(id_colonne, id_ligne + 1);
-	p4 = get_piece(id_colonne + 1, id_ligne + 1);
+	p2 = get_piece((byte) (id_colonne + 1), id_ligne);
+	p3 = get_piece(id_colonne, (byte) (id_ligne + 1));
+	p4 = get_piece((byte) (id_colonne + 1), (byte) (id_ligne + 1));
 
 	return
 	    // Vérification que tout n'est pas nul
@@ -226,7 +226,7 @@ public class PlateauQuarto implements PlateauJeu {
                 g[i] = get_piece(i, i);
 		if(g[i] == 0xff) g_false = true;
 		
-		d[i] = get_piece( 3 - i, 3 - i);
+		d[i] = get_piece( (byte) (3 - i), (byte) (3 - i));
 		if(d[i] == 0xff) d_false = true;
 
 		if(g_false && d_false) return false;

@@ -6,10 +6,10 @@ import iia.jeux.modele.PlateauJeu;
 public interface AlgoJeu {
 
 	/**
-	 * Renvoie le meilleur
+	 * Renvoie le meilleur coup
 	 * 
-	 * @param p
-	 * @return
+	 * @param p plateau de jeu
+	 * @return le meilleur coup
 	 */
 	public CoupJeu meilleurCoup(PlateauJeu p);
 

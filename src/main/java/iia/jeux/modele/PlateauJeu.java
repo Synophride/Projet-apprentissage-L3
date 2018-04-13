@@ -28,7 +28,6 @@ public interface PlateauJeu {
 
     //   public abstract CoupJeu parseCoup(String s);
     /** duplique le plateau courant
-     * 
      */
     public abstract PlateauJeu copy();
 
@@ -36,6 +35,7 @@ public interface PlateauJeu {
      *
      * @param j	Le joueur qui pourrait jouer ce coup
      * @param c Le coup envisagé par le joueur
+     * @return true si le coup est valide, false sinon
      */
     public abstract boolean coupValide(Joueur j, CoupJeu c);
 }

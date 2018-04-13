@@ -50,8 +50,8 @@ public class PlateauQuarto implements PlateauJeu {
     // ligne colonne
     private byte[][] plateau = new byte[4][4];
             
-    byte piece_a_jouer =  0xFF;;
-    int indices_pieces = 0;
+    byte piece_a_jouer = -1;;
+    int indice_pieces = 0;
     
     byte etat_du_tour = 0;
     
@@ -86,18 +86,18 @@ public class PlateauQuarto implements PlateauJeu {
      * Constructeur initialisant à partir d'un état du plateau,
      * 
      * @param plateau
-     *            l'état du plateau à partir duquel jouer
-     * @param indcases
-     *            short dénotant des cases libres
-     * @param indPiece
-     *            short dénotant des cases jouées
-     * @param tourEtPiece
-     *            dénotant de l'état du tour
+     *            L'état du plateau. Une case contient un id de pièce si elle est occupée, -1 sinon
+     * @param pieceAJouer
+     *            La pièce qui doit être jouée dans le cas d'un dépôt de pièce. Dans le cas contraire (ou il faut donner une pièce), cet attribut n'est pas significatif
+     * @param indicesPieces
+     *            entier dénotant des pièces jouées
+     * @param etatDuTour
+     *            Dénote de l'état du tour. 
      **/
-    public PlateauQuarto(byte[][] plateau, byte pieceAJouer, int indicesPieces,byte  etatDuTour) {
+    public PlateauQuarto(byte[][] plateau, byte pieceAJouer, int indicesPieces, byte  etatDuTour) {
 	this.plateau = plateau;
 	this.piece_a_jouer = pieceAJouer;
-	this.indices_pieces = indicesPieces;
+	this.indice_pieces = indicesPieces;
 	this.etat_du_tour = etatDuTour;
     }
 
@@ -110,11 +110,8 @@ public class PlateauQuarto implements PlateauJeu {
      * @return true si la pièce a été jouée, false sinon
      **/
     private boolean has_been_played(byte idPiece){
-<<<<<<< HEAD
+
 	return (indice_pieces >>> idPiece ) % 2 == 1;
-=======
-	return (indices_pieces >>> idPiece )%2 == 1;
->>>>>>> 9ac2b22e31569e5b96736431bc3ebeb3796bff9b
     }
     
     /**
@@ -148,14 +145,9 @@ public class PlateauQuarto implements PlateauJeu {
      * @see points_communs
      ***/
     private byte get_piece(byte coord){
-<<<<<<< HEAD
 	int id_colonne =  0b011 & coord;
 	int id_ligne = coord >>> 2;
-	return plateau[id_ligne][id_colonne]
-=======
-	//FIXME	
-        return 0;
->>>>>>> 9ac2b22e31569e5b96736431bc3ebeb3796bff9b
+	return plateau[id_ligne][id_colonne];
     }
     
     /**
@@ -248,40 +240,34 @@ public class PlateauQuarto implements PlateauJeu {
      * @see test_colonne
      ***/
     private boolean test_diagonales() {
-        byte[] g = new byte[4], d = new byte[4];
+        byte[]
+	    g = new byte[4],
+	    d = new byte[4];
+
         boolean g_false = false, d_false = false;
 
         
-        for (byte i = 0; i < 4; i++) {
-<<<<<<< HEAD
-	    g[i] = get_piece(i, i);
-	    if(g[i] = 0xff) g_false = true;
+        for (int i = 0; i < 4; i++) {
+	    g[i] = get_piece((byte) i, (byte) i);
+	    if(g[i] == -1 )
+		g_false = true;
 		
-	    d[i] = get_piece( 3 - i, 3 - i);
-	    if(d[i] = 0xff) d_false = true;
+	    d[i] = get_piece( (byte) (3 - i), (byte) (3 - i));
+	    if(d[i] == -1 )
+		d_false = true;
 		
 	    if(g_false && d_false) return false;
         }
-	return (( !g_false  &&  points_communs(g1[0], g[1]) != 0
-		  &&  points_communs(g1[0], g[12]) != 0
-		  &&  points_communs(g1[0], g[3]) != 0)
-		|| (!d_false && points_communs(d1[0], d[1]) != 0
-		    && points_communs(d1[0], d[12)) != 0
-		    && points_communs(d1[0], d[3]) != 0));
-=======
-                g[i] = get_piece(i, i);
-		if(g[i] == 0xff) g_false = true;
-		
-		d[i] = get_piece( (byte) (3 - i), (byte) (3 - i));
-		if(d[i] == 0xff) d_false = true;
-
-		if(g_false && d_false) return false;
-        }
-	return (( !g_false  &&  points_communs(g1[0], g[1]) != 0  &&  points_communs(g1[0], g[12]) != 0  &&  points_communs(g1[0], g[3]) != 0))
-		|| (!d_false && points_communs(d1[0], d[1]) != 0 && points_communs(d1[0], d[12]) != 0 && points_communs(d1[0], d[3]) != 0)));
->>>>>>> 9ac2b22e31569e5b96736431bc3ebeb3796bff9b
+	return (( !g_false
+		  &&  points_communs(g[0], g[1]) != 0
+		  &&  points_communs(g[0], g[2]) != 0
+		  &&  points_communs(g[0], g[3]) != 0)
+		|| (!d_false
+		    && points_communs(d[0], d[1]) != 0
+		    && points_communs(d[0], d[2] ) != 0
+		    && points_communs(d[0], d[3] ) != 0));
     }
-
+    
     /**
      * Méthode testant si les pièces d'une colonne possèdent un attribut en commun
      * 
@@ -297,17 +283,13 @@ public class PlateauQuarto implements PlateauJeu {
      **/
     private boolean test_colonne(byte colonne) {
         byte p1, p2, p3, p4;
-<<<<<<< HEAD
-	p1 = get_piepe(colonne,  0);
-=======
-	p1 = get_piece(colonne,  0);
->>>>>>> 9ac2b22e31569e5b96736431bc3ebeb3796bff9b
-	p2 = get_piece(colonne,  1);
-	p3 = get_piece(colonne,  2);
-	p4 = get_piece(colonne,  3);
+	p1 = get_piece(colonne, (byte) 0);
+	p2 = get_piece(colonne, (byte) 1);
+	p3 = get_piece(colonne, (byte) 2);
+	p4 = get_piece(colonne, (byte) 3);
 
 	return
-	    (p1 != 0xFF && p2 != 0xFF && p3 != 0xFF && p4 != 0xFF)
+	    (p1 != -1 && p2 != -1 && p3 != -1 && p4 != -1)
 	    && (points_communs(p1, p2) != 0 && points_communs(p1, p3) != 0
 		&& points_communs(p1, p4) != 0 );    
     }
@@ -341,25 +323,17 @@ public class PlateauQuarto implements PlateauJeu {
      ***/
     private void unsafe_jouer_coup_depot(byte cp) {
         // 1. Dépot de la pièce
-<<<<<<< HEAD
-	byte id_colonne = (byte) cp >>> 2;
-	byte id_ligne = (byte) 0b0111 & cp;
-=======
-	byte id_colonne = (byte) (cp >>> 2);
-	byte id_ligne = (byte) (0x03 & cp);
->>>>>>> 9ac2b22e31569e5b96736431bc3ebeb3796bff9b
 
+	int id_colonne=  cp >>> 2;
+	int id_ligne  = 0b0011 & cp;
+	
 	plateau [id_ligne][id_colonne] = piece_a_jouer;
 	
         // 3. Changement du statut du tour : Le joueur venant de poser un pion
         // donne une autre pièce à l'adversaire : On change le 2e bit
         // de tourEtPiece.
-<<<<<<< HEAD
-	etat_du_tour = (byte) etat_du_tour ^ 0x01;
-=======
-	etat_du_tour = (byte) (etat_du_tour ^ 0x01);
 	
->>>>>>> 9ac2b22e31569e5b96736431bc3ebeb3796bff9b
+	etat_du_tour = (byte) (etat_du_tour ^ 0x01);
     }
     
     /*
@@ -368,7 +342,7 @@ public class PlateauQuarto implements PlateauJeu {
     private void unsafe_jouer_coup_don(byte p) {
 	piece_a_jouer = p;
 	etat_du_tour = (byte) (etat_du_tour ^ 0x03);
-	indices_pieces = indices_pieces | (1 << p);
+	indice_pieces = indice_pieces | (1 << p);
     }
     
     /********************
@@ -454,17 +428,12 @@ public class PlateauQuarto implements PlateauJeu {
 	
 	if( is_don() ){
 	    for(byte i = 0; i<16; i++)
-		if ((indices_pieces >>> i) % 2 == 0 )
+		if ((indice_pieces >>> i) % 2 == 0 )
 		    ret.add( new CoupQuarto( i, true));
 	} else 
 	    for(byte i = 0; i<16; i++)
-<<<<<<< HEAD
-		if( plateau[i%4][i/4] = 0xFF)
+		if( plateau[i%4][i/4] == -1)
 		    ret.add( new CoupQuarto( i, false) );
-=======
-		if( plateau[i%4][i/4] == 0xFF)
-		    ret.add( new CoupQuarto( i, false));
->>>>>>> 9ac2b22e31569e5b96736431bc3ebeb3796bff9b
 	
         return ret;
     }
@@ -492,7 +461,11 @@ public class PlateauQuarto implements PlateauJeu {
 	    for(int j = 0; j<4; j++)
 		p[i][j] = plateau[i][j];
 	
-	new PlateauQuarto(p, piece_a_jouer, indices_pieces, etat_du_tour, indPiece, tourEtPiece);
+	return
+     new PlateauQuarto(p,
+		       piece_a_jouer,
+		       indice_pieces,
+		       etat_du_tour);
     }
     
     
@@ -505,7 +478,7 @@ public class PlateauQuarto implements PlateauJeu {
 	    || (c_type && !is_don() || !c_type && is_don()))
 	    return false;
 	
-	return (c_type && (indices_pieces >>> c_val) % 2 == 0)
+	return (c_type && (indice_pieces >>> c_val) % 2 == 0)
 	    || (!c_type && ( get_piece(c_val) ) == 0xff);
     }
     
@@ -528,7 +501,7 @@ public class PlateauQuarto implements PlateauJeu {
                     return true;
 
         /// Cas ou toutes les pièces ont été posées
-        return indices_pieces == 0x0000FFFF;
+        return indice_pieces == 0x0000FFFF;
     }
 
     /******************
@@ -540,7 +513,7 @@ public class PlateauQuarto implements PlateauJeu {
     /// FIXME
     public static String coordToString(byte coordonnee_case) {
         return
-	    (new CoupJeu(coordonnee_case, false).toString());
+	    (new CoupQuarto(coordonnee_case, false).toString());
     }
 
     
@@ -643,7 +616,11 @@ public class PlateauQuarto implements PlateauJeu {
 
     /*********** Méthodes de Partiel **************/
 
-    
+    /**
+     * Prend une chaine de caractères correspondant à un don de pièce.
+     *
+     * @param choix une string représentant 
+     **/
     public boolean estchoixValide(String choix, String joueur){
 	if( choix.length() != 4)
 	    return false;
@@ -654,55 +631,9 @@ public class PlateauQuarto implements PlateauJeu {
     // Autant séparer les tâches
     //FIXME
     public void setFromStringTab(String[] s) {
-        // Note : on commence par les bits de poids faible.
-        plateau = 0;
-        indCases = 0;
-        indPiece = 0;
-        tourEtPiece = 0;
-
-        int ind_of_cases_seen = 0; // indiquera qu'on regardera 'telle' case de la ligne
-
-        for (int i = 0; i < s.length; i++) {
-            ind_of_cases_seen = 0;
-            String str = s[i];
-            for (int j = 0; j < str.length(); j++)
-                if (str.charAt(j) == '+') { // Pas de pièce posée.
-                    ind_of_cases_seen++;
-                    continue;
-                } else { // Sinon
-                    String str_piece = str.substring(j, j + 4); // Le second indice est exclusif
-
-                    j += 3; // Pour pas retomber sur la même chose. j+3 au lieu de j+4 étant donné que le
-                            // j++ sera fait à la fin de la boucle
-                    byte id_piece = stringToPiece(str_piece);
-		    
-                    // on note la pièce comme jouée
-                    indPiece = (short) (0x00FFFFFF & (indPiece | (0x1 << id_piece)));
-
-                    // Notation de la case comme jouée
-                    short ind_case = (short) (i * 4 + ind_of_cases_seen);
-
-                    indCases = (short) (0x0000FFFF & (indCases | (0x0001 << ind_case)));
-
-                    // Ajout de la pièce au plateau
-                    // plateau = plateau | (0x1 << (ind_case * 4));
-                    plateau = plateau | (id_piece << (ind_case * 4));
-
-                    ind_of_cases_seen++;
-                }
-        }
-
-        // à la fin, on regarde le nombre de pièces jouées pour déterminer le joueur qui
-        // doit jouer
-        // Si ce nombre est pair, c'est J0 qui doit donner une pièce, sinon c'est J1.
-        byte cpt = 0;
-        for (byte i = 0; i < 16; i++)
-            if ((indPiece >>> i) % 2 == 1)
-                cpt++;
-
-        if (cpt % 2 == 1) // Joueur = J1
-            tourEtPiece = (byte) 0x80;
+	// FIXME
     }
+    
 
     public void setFromFile(String fileName) throws FileNotFoundException, IOException {
         // On peut calculer le joueur qui doit jouer en fonction du nombre de pièces
@@ -741,7 +672,7 @@ public class PlateauQuarto implements PlateauJeu {
     }
 
     public String toString() {
-        String ret = "";
+	/*        String ret = "";
 
         for (byte i = 0; i < 4; i++) {
             ret = ret + (i + 1) + " ";
@@ -779,7 +710,8 @@ public class PlateauQuarto implements PlateauJeu {
 	    ret = ret + "% Le joueur 1 doit donner une pièce ";
 	}
 	
-        return ret;
+        return ret;*/
+	return "";
     }
 
     public String getStrCurrentPlayer(){

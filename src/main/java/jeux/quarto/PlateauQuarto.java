@@ -34,6 +34,7 @@ public class PlateauQuarto implements PlateauJeu {
 
     // Le joueur noir commence à donner une pièce
     // Todo: modifier 
+
     /*******************
      * 
      * Attributs
@@ -50,10 +51,11 @@ public class PlateauQuarto implements PlateauJeu {
     private byte[][] plateau = new byte[4][4];
             
     byte piece_a_jouer = 0xFF;;
-    int indices_pieces = 0;
+    int  indices_pieces = 0;
     byte etat_du_tour = 0;
     
     /************* constructeurs ****************/
+
     /**
      * Constructeur de base de la classe
      **/
@@ -100,8 +102,14 @@ public class PlateauQuarto implements PlateauJeu {
 
     /************ Méthodes privées ****************/
 
+    /** 
+     * Méthode déterminant si la pièce représentée par l'idPiece a déjà été jouée
+     * @param idPiece
+     *           L'identifiant de la pièce dont on cherche à savoir si elle a déjà été jouée
+     * @return true si la pièce a été jouée, false sinon
+     **/
     private boolean has_been_played(byte idPiece){
-	return (indice_pieces >>> idPiece )%2 == 1;
+	return (indice_pieces >>> idPiece ) % 2 == 1;
     }
     
     /**
@@ -123,8 +131,21 @@ public class PlateauQuarto implements PlateauJeu {
 	return plateau[ligne][colonne];
     }
 
+    /**
+     * Méthode permettant d'accéder à l'identifiant de la pièce présente aux
+     * coordonnées indiquées par le byte (celui de coupQuarto.get() )
+     * 
+     * @param coord 
+     *            l'identifiant de la pièce, de la forme 0b0000 coord_ligne (2b.) coord_colonne (2b.)
+     * @return l'identifiant de la pièce accedée si cette pièce est posée sur le plateau
+     * 0xFF sinon
+     * @see get_double_piece
+     * @see points_communs
+     ***/
     private byte get_piece(byte coord){
-	//FIXME	
+	int id_colonne =  0b011 & coord;
+	int id_ligne = coord >>> 2;
+	return plateau[id_ligne][id_colonne]
     }
     
     /**
@@ -175,7 +196,7 @@ public class PlateauQuarto implements PlateauJeu {
 	    // Vérification que tout n'est pas nul
 	    (p1 != 0xFF && p2 != 0xFF && p3 != 0xFF && p4 != 0xFF)
 	    // Puis qu'il y a au moins un point commun entre les pièces
-	    && (points_communs(p1, p2) != 0 && points_communs(p1, p3) != 0 && points_communs(p1, p4) != 0  );	    
+	    && (points_communs(p1, p2) != 0 && points_communs(p1, p3) != 0 && points_communs(p1, p4) != 0  );
     }
 
     /**
@@ -222,16 +243,20 @@ public class PlateauQuarto implements PlateauJeu {
 
         
         for (byte i = 0; i < 4; i++) {
-                g[i] = get_piece(i, i);
-		if(g[i] = 0xff) g_false = true;
+	    g[i] = get_piece(i, i);
+	    if(g[i] = 0xff) g_false = true;
 		
-		d[i] = get_piece( 3 - i, 3 - i);
-		if(d[i] = 0xff) d_false = true;
-
-		if(g_false && d_false) return false;
+	    d[i] = get_piece( 3 - i, 3 - i);
+	    if(d[i] = 0xff) d_false = true;
+		
+	    if(g_false && d_false) return false;
         }
-	return (( !g_false  &&  points_communs(g1[0], g[1]) != 0  &&  points_communs(g1[0], g[12) != 0  &&  points_communs(g1[0], g[3]) != 0))
-		|| (!d_false && points_communs(d1[0], d[1]) != 0 && points_communs(d1[0], d[12) != 0 && points_communs(d1[0], d[3]) != 0)));
+	return (( !g_false  &&  points_communs(g1[0], g[1]) != 0
+		  &&  points_communs(g1[0], g[12]) != 0
+		  &&  points_communs(g1[0], g[3]) != 0)
+		|| (!d_false && points_communs(d1[0], d[1]) != 0
+		    && points_communs(d1[0], d[12)) != 0
+		    && points_communs(d1[0], d[3]) != 0));
     }
 
     /**
@@ -250,16 +275,14 @@ public class PlateauQuarto implements PlateauJeu {
     private boolean test_colonne(byte colonne) {
         byte p1, p2, p3, p4;
 	p1 = get_piepe(colonne,  0);
-v	p2 = get_piece(colonne,  1);
+	p2 = get_piece(colonne,  1);
 	p3 = get_piece(colonne,  2);
 	p4 = get_piece(colonne,  3);
 
 	return
 	    (p1 != 0xFF && p2 != 0xFF && p3 != 0xFF && p4 != 0xFF)
 	    && (points_communs(p1, p2) != 0 && points_communs(p1, p3) != 0
-		&& points_communs(p1, p4) != 0 );
-
-	    
+		&& points_communs(p1, p4) != 0 );    
     }
 
     /**
@@ -292,7 +315,7 @@ v	p2 = get_piece(colonne,  1);
     private void unsafe_jouer_coup_depot(byte cp) {
         // 1. Dépot de la pièce
 	byte id_colonne = (byte) cp >>> 2;
-	byte id_ligne = (byte) 0x03 & cp;
+	byte id_ligne = (byte) 0b0111 & cp;
 
 	plateau [id_ligne][id_colonne] = piece_a_jouer;
 	
@@ -300,7 +323,6 @@ v	p2 = get_piece(colonne,  1);
         // donne une autre pièce à l'adversaire : On change le 2e bit
         // de tourEtPiece.
 	etat_du_tour = (byte) etat_du_tour ^ 0x01;
-	
     }
     
     /*
@@ -312,7 +334,9 @@ v	p2 = get_piece(colonne,  1);
 	indice_pieces = indices_pieces | (1 << p);
     }
     
-    /********** Méthodes utiles pour les tests *********/
+    /********************
+     * Méthodes utiles pour les tests 
+     *******************/
 
     /**
      * Renvoie la représentation sous un octet de la pièce mentionnée en paramètre
@@ -334,7 +358,7 @@ v	p2 = get_piece(colonne,  1);
             id_krq = (byte) (0x02 ^ id_krq);
         if (idPiece[3] == 'c') // pièce carrée
             id_krq = (byte) (0x01 ^ id_krq);
-
+	
         return id_krq;
     }
 
@@ -384,7 +408,7 @@ v	p2 = get_piece(colonne,  1);
     // Apparemment pas besoin de vérifier que c'est le bon joueur qui demande. On
     // devrait pê faire une fonction genre "joueur jouant" ou quelque chose comme ça
     // ok
-    public ArrayList<CoupJeu> coupsPossibles(Joueur j) throws IllegalArgumentException {
+    public ArrayList<CoupJeu> coupsPossibles(Joueur j) throws IllegalArgumentException{
 	ArrayList<CoupJeu> ret = new ArrayList<CoupJeu>();
 	
         // Si c'est pas le bon joueur
@@ -398,14 +422,14 @@ v	p2 = get_piece(colonne,  1);
 	} else 
 	    for(byte i = 0; i<16; i++)
 		if( plateau[i%4][i/4] = 0xFF)
-		    ret.add( new CoupQuarto( i, false));
+		    ret.add( new CoupQuarto( i, false) );
 	
         return ret;
     }
 
     public void joue(Joueur j, CoupJeu cj) throws IllegalArgumentException {
 	// 1. vérification que c'est le bon joueur qui joue
-        if (! coupValide(j, cj))
+        if(! coupValide(j, cj) )
             throw new IllegalArgumentException("joue() : Coup invalide");
 	
         // On peut jouer le coup pusqu'il est valide
@@ -465,34 +489,16 @@ v	p2 = get_piece(colonne,  1);
         return indices_pieces == 0x0000FFFF;
     }
 
-    /*********** Méthodes de Partiel **************/
+    /******************
+     *
+     * Méthodes de Partiel 
+     *
+     ******************/
 
     /// FIXME
     public static String coordToString(byte coordonnee_case) {
-        byte chiffre = (byte) (0x03 & coordonnee_case);
-        byte lettre = (byte) ((0x0C & coordonnee_case) >>> 2);
-
-        char char_lettre = '?';
-
-        switch (lettre) {
-        case 0:
-            char_lettre = 'A';
-            break;
-        case 1:
-            char_lettre = 'B';
-            break;
-        case 2:
-            char_lettre = 'C';
-            break;
-        case 3:
-            char_lettre = 'D';
-            break;
-        default:
-            char_lettre = '?';
-            break;
-        }
-
-        return char_lettre + Integer.toString(chiffre);
+        return
+	    (new CoupJeu(coordonnee_case, false).toString());
     }
 
     

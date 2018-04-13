@@ -16,7 +16,8 @@ public class CoupQuarto implements CoupJeu {
  
         if (s.length() == 2) { // C'est une coordonnée.
 	    is_don = false;
-            // 1. recherche de la colonne
+ 
+	    // 1. recherche de la colonne
             char first_kr = s.charAt(0), second_kr = s.charAt(1);
 	    
             switch (second_kr) {

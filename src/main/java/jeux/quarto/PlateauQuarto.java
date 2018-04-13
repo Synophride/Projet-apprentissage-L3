@@ -50,8 +50,9 @@ public class PlateauQuarto implements PlateauJeu {
     // ligne colonne
     private byte[][] plateau = new byte[4][4];
             
-    byte piece_a_jouer = 0xFF;;
-    int  indices_pieces = 0;
+    byte piece_a_jouer =  0xFF;;
+    int indices_pieces = 0;
+    
     byte etat_du_tour = 0;
     
     /************* constructeurs ****************/
@@ -61,7 +62,7 @@ public class PlateauQuarto implements PlateauJeu {
      **/
     public PlateauQuarto() {
 	for(byte i = 0; i<16; i++){
-	    plateau[i/4][i%4]= 0xFF;
+	    plateau[i/4][i%4]=(byte) 0xFF;
 	}
     }
 
@@ -77,7 +78,7 @@ public class PlateauQuarto implements PlateauJeu {
         j0 = joueurZero;
         j1 = joueurUn;
 	for(byte i = 0; i<16; i++){
-	    plateau[i/4][i%4]= 0xFF;
+	    plateau[i/4][i%4]= (byte) 0xFF;
 	}
     }
 
@@ -109,7 +110,11 @@ public class PlateauQuarto implements PlateauJeu {
      * @return true si la pièce a été jouée, false sinon
      **/
     private boolean has_been_played(byte idPiece){
+<<<<<<< HEAD
 	return (indice_pieces >>> idPiece ) % 2 == 1;
+=======
+	return (indices_pieces >>> idPiece )%2 == 1;
+>>>>>>> 9ac2b22e31569e5b96736431bc3ebeb3796bff9b
     }
     
     /**
@@ -143,9 +148,14 @@ public class PlateauQuarto implements PlateauJeu {
      * @see points_communs
      ***/
     private byte get_piece(byte coord){
+<<<<<<< HEAD
 	int id_colonne =  0b011 & coord;
 	int id_ligne = coord >>> 2;
 	return plateau[id_ligne][id_colonne]
+=======
+	//FIXME	
+        return 0;
+>>>>>>> 9ac2b22e31569e5b96736431bc3ebeb3796bff9b
     }
     
     /**
@@ -188,9 +198,9 @@ public class PlateauQuarto implements PlateauJeu {
     private boolean test_carre(byte id_colonne, byte id_ligne) {
 	byte p1, p2, p3, p4;
 	p1 = get_piece(id_colonne, id_ligne);
-	p2 = get_piece(id_colonne + 1, id_ligne);
-	p3 = get_piece(id_colonne, id_ligne + 1);
-	p4 = get_piece(id_colonne + 1, id_ligne + 1);
+	p2 = get_piece((byte) (id_colonne + 1), id_ligne);
+	p3 = get_piece(id_colonne, (byte) (id_ligne + 1));
+	p4 = get_piece((byte) (id_colonne + 1), (byte) (id_ligne + 1));
 
 	return
 	    // Vérification que tout n'est pas nul
@@ -214,10 +224,10 @@ public class PlateauQuarto implements PlateauJeu {
      ***/
     private boolean test_ligne(byte id_ligne) {
         byte p1, p2, p3, p4;
-	p1 = plateau[ligne][0];
-	p2 = plateau[ligne][1];
-	p3 = plateau[ligne][2];
-	p4 = plateau[ligne][3];
+	p1 = plateau[id_ligne][0];
+	p2 = plateau[id_ligne][1];
+	p3 = plateau[id_ligne][2];
+	p4 = plateau[id_ligne][3];
 	
 	return
 	    (p1 != 0xFF && p2 != 0xFF && p3 != 0xFF && p4 != 0xFF)
@@ -243,6 +253,7 @@ public class PlateauQuarto implements PlateauJeu {
 
         
         for (byte i = 0; i < 4; i++) {
+<<<<<<< HEAD
 	    g[i] = get_piece(i, i);
 	    if(g[i] = 0xff) g_false = true;
 		
@@ -257,6 +268,18 @@ public class PlateauQuarto implements PlateauJeu {
 		|| (!d_false && points_communs(d1[0], d[1]) != 0
 		    && points_communs(d1[0], d[12)) != 0
 		    && points_communs(d1[0], d[3]) != 0));
+=======
+                g[i] = get_piece(i, i);
+		if(g[i] == 0xff) g_false = true;
+		
+		d[i] = get_piece( (byte) (3 - i), (byte) (3 - i));
+		if(d[i] == 0xff) d_false = true;
+
+		if(g_false && d_false) return false;
+        }
+	return (( !g_false  &&  points_communs(g1[0], g[1]) != 0  &&  points_communs(g1[0], g[12]) != 0  &&  points_communs(g1[0], g[3]) != 0))
+		|| (!d_false && points_communs(d1[0], d[1]) != 0 && points_communs(d1[0], d[12]) != 0 && points_communs(d1[0], d[3]) != 0)));
+>>>>>>> 9ac2b22e31569e5b96736431bc3ebeb3796bff9b
     }
 
     /**
@@ -274,7 +297,11 @@ public class PlateauQuarto implements PlateauJeu {
      **/
     private boolean test_colonne(byte colonne) {
         byte p1, p2, p3, p4;
+<<<<<<< HEAD
 	p1 = get_piepe(colonne,  0);
+=======
+	p1 = get_piece(colonne,  0);
+>>>>>>> 9ac2b22e31569e5b96736431bc3ebeb3796bff9b
 	p2 = get_piece(colonne,  1);
 	p3 = get_piece(colonne,  2);
 	p4 = get_piece(colonne,  3);
@@ -300,7 +327,7 @@ public class PlateauQuarto implements PlateauJeu {
      * @return true si le coup qui doit être joué est un don
      **/
     private boolean is_don() {
-        return etat_du_tour % 2 = 0;
+        return etat_du_tour % 2 == 0;
     }
 
     /**
@@ -314,15 +341,25 @@ public class PlateauQuarto implements PlateauJeu {
      ***/
     private void unsafe_jouer_coup_depot(byte cp) {
         // 1. Dépot de la pièce
+<<<<<<< HEAD
 	byte id_colonne = (byte) cp >>> 2;
 	byte id_ligne = (byte) 0b0111 & cp;
+=======
+	byte id_colonne = (byte) (cp >>> 2);
+	byte id_ligne = (byte) (0x03 & cp);
+>>>>>>> 9ac2b22e31569e5b96736431bc3ebeb3796bff9b
 
 	plateau [id_ligne][id_colonne] = piece_a_jouer;
 	
         // 3. Changement du statut du tour : Le joueur venant de poser un pion
         // donne une autre pièce à l'adversaire : On change le 2e bit
         // de tourEtPiece.
+<<<<<<< HEAD
 	etat_du_tour = (byte) etat_du_tour ^ 0x01;
+=======
+	etat_du_tour = (byte) (etat_du_tour ^ 0x01);
+	
+>>>>>>> 9ac2b22e31569e5b96736431bc3ebeb3796bff9b
     }
     
     /*
@@ -330,8 +367,8 @@ public class PlateauQuarto implements PlateauJeu {
      */
     private void unsafe_jouer_coup_don(byte p) {
 	piece_a_jouer = p;
-	etat_du_tour = (byte) etat_du_tour ^ 0x03;
-	indice_pieces = indices_pieces | (1 << p);
+	etat_du_tour = (byte) (etat_du_tour ^ 0x03);
+	indices_pieces = indices_pieces | (1 << p);
     }
     
     /********************
@@ -421,8 +458,13 @@ public class PlateauQuarto implements PlateauJeu {
 		    ret.add( new CoupQuarto( i, true));
 	} else 
 	    for(byte i = 0; i<16; i++)
+<<<<<<< HEAD
 		if( plateau[i%4][i/4] = 0xFF)
 		    ret.add( new CoupQuarto( i, false) );
+=======
+		if( plateau[i%4][i/4] == 0xFF)
+		    ret.add( new CoupQuarto( i, false));
+>>>>>>> 9ac2b22e31569e5b96736431bc3ebeb3796bff9b
 	
         return ret;
     }
@@ -455,12 +497,12 @@ public class PlateauQuarto implements PlateauJeu {
     
     
     public boolean coupValide(Joueur j, CoupJeu cj) {
-        CoupQuarto c = (CoupQuarto cj);
+        CoupQuarto c = (CoupQuarto) cj;
 	boolean c_type = c.get_type();
 	byte c_val = c.get();
 	// vérification que le ccoup est moralement valide (bon type, etc) 
-	if(j0plays() && j.equals(j1) || !j0plays() && j.equals(j0))
-	    || (c_type && !is_don() || !c_type && is_don)
+	if(j0plays() && j.equals(j1) || !j0plays() && j.equals(j0)
+	    || (c_type && !is_don() || !c_type && is_don()))
 	    return false;
 	
 	return (c_type && (indices_pieces >>> c_val) % 2 == 0)
@@ -606,7 +648,7 @@ public class PlateauQuarto implements PlateauJeu {
 	if( choix.length() != 4)
 	    return false;
 	boolean b;
-	return estMouvementValide(choix, joueur);
+	return estmoveValide(choix, joueur);
     }
 
     // Autant séparer les tâches

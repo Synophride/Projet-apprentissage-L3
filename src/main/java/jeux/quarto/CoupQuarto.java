@@ -115,7 +115,7 @@ public class CoupQuarto implements CoupJeu {
             break;
         }
 
-        return char_lettre + Integer.toString(chiffre);
+        return char_lettre + Integer.toString(chiffre+1);
     }
 
     private static String pieceToString(byte idPiece) {

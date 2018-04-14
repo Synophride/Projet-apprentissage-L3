@@ -14,7 +14,7 @@ Interface Partiel
 
 To do :
 
-/!\\ TODO 14/04 : (re )faire les tests, implémentation de l'interface avec l'arbitre + interface avec les String, et faire une javadoc propre
+//!\\ TODO 14/04 : (re )faire les tests, implémentation de l'interface avec l'arbitre + interface avec les String, et faire une javadoc propre
      
 Interface Partiel
   *   EstMoveValide (à redéfinir)

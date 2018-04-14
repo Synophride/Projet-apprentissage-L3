@@ -798,7 +798,7 @@ public class PlateauQuarto implements PlateauJeu {
 	ret = ret + "Le joueur " + joueur " doit ";
 	if(! is_don())
 	    ret = ret + "poser la pièce " + pieceToString(piece_a_jouer) + " \n" ;
-	else "donner une pièce, comprise dans la liste sui"
+	else "donner une pièce, comprise dans la liste suivant"
 	return ret;
     }
 

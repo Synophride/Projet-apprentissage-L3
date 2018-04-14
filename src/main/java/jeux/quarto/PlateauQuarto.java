@@ -329,8 +329,8 @@ public class PlateauQuarto implements PlateauJeu {
     private void unsafe_jouer_coup_depot(byte cp) {
         // 1. Dépot de la pièce
 
-	int id_colonne=  cp >>> 2;
-	int id_ligne  = 0b0011 & cp;
+	int id_ligne = cp >>> 2;
+	int id_colonne  = 0b0011 & cp;
 	
 	plateau [id_ligne][id_colonne] = piece_a_jouer;
 	
@@ -806,7 +806,7 @@ public class PlateauQuarto implements PlateauJeu {
 	else joueur = "blanc";
 	
 	String ret = "\t A \t B \t C \t D \n";
-	for(int l = 0; l<4; l++){ // ligne
+	for(int l = 0; l < 4; l++){ // ligne
 	    ret = ret + (l+1) + "\t";
 	    for(int c = 0; c<4; c++){ // colonne
 		 

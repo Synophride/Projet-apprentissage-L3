@@ -12,48 +12,47 @@ public class CoupQuarto implements CoupJeu {
     }
     
     public CoupQuarto(String s){
-        byte coup = 0;
- 
+        int coup = 0;
+	
         if (s.length() == 2) { // C'est une coordonnée.
 	    is_don = false;
- 
+	    // Ligne colonne
 	    // 1. recherche de la colonne
             char first_kr = s.charAt(0), second_kr = s.charAt(1);
 	    
             switch (second_kr) {
             case ('1'):
-                coup = 0x00;
                 break;
             case ('2'):
-                coup = 0x04;
+                coup = 0b0000_01_00;
                 break;
             case ('3'):
-                coup = 0x08;
+                coup = 0b0000_10_00;
                 break;
             case ('4'):
-                coup = 0x0C;
+                coup = 0b0000_11_00;
                 break;
             default:
                 throw new IllegalArgumentException("Construction de coupQuarto : La chaîne n'est pas valide");
             }
 	    
-            switch (first_kr) {
+            switch(first_kr){
             case ('A'):
 		break;
             case ('B'):
-                coup = (byte) (coup ^ 0x01);
+                coup = coup ^ 1;
                 break;
             case ('C'):
-                coup = (byte) (coup ^ 0x02);
+                coup = coup ^ 0x02;
                 break;
             case ('D'):
-                coup = (byte) (coup ^ 0x03);
+                coup = coup ^ 0x03;
                 break;
             default:
                 throw new IllegalArgumentException("Construction de coupQuarto : La chaîne n'est pas valide");
             }
 	    
-            this.idCoup = coup;
+            this.idCoup = (byte) coup;
 	    
         } else if (s.length() == 4 ){
 	    is_don = true;
@@ -65,13 +64,14 @@ public class CoupQuarto implements CoupJeu {
             if (color == 'b')
                 coup = 0x08;
             if (taille == 'g')
-                coup = (byte) (coup ^ 0x04);
+                coup = (coup ^ 0x04);
             if (pleinure == 'p')
-                coup = (byte) (coup ^ 0x02);
+                coup = (coup ^ 0x02);
             if (carrure == 'c')
-                coup = (byte) (coup ^ 0x01);
-
-            this.idCoup = coup;
+                coup = (coup ^ 0x01);
+	    
+            this.idCoup = (byte) coup;
+	    
         } else 
 	    throw new IllegalArgumentException("Construction de coupQuarto : La chaîne n'est pas valide");
     }

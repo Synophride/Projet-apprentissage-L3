@@ -110,7 +110,6 @@ public class PlateauQuarto implements PlateauJeu {
      * @return true si la pièce a été jouée, false sinon
      **/
     private boolean has_been_played(byte idPiece){
-
 	return (indice_pieces >>> idPiece ) % 2 == 1;
     }
     
@@ -202,7 +201,7 @@ public class PlateauQuarto implements PlateauJeu {
 
 	return
 	    // Vérification que tout n'est pas nul
-	    (p1 != 0xFF && p2 != 0xFF && p3 != 0xFF && p4 != 0xFF)
+	    (p1 != -1 && p2 != -1 && p3 != -1 && p4 != -1)
 	    // Puis qu'il y a au moins un point commun entre les pièces
 	    && (points_communs(p1, p2) != 0 && points_communs(p1, p3) != 0 && points_communs(p1, p4) != 0  );
     }
@@ -228,7 +227,7 @@ public class PlateauQuarto implements PlateauJeu {
 	p4 = plateau[id_ligne][3];
 	
 	return
-	    (p1 != 0xFF && p2 != 0xFF && p3 != 0xFF && p4 != 0xFF)
+	    (p1 != -1 && p2 != -1 && p3 != -1 && p4 != -1)
 	    && (points_communs(p1, p2) != 0 && points_communs(p1, p3) != 0
 		&& points_communs(p1, p4) != 0 );
     }
@@ -446,6 +445,7 @@ public class PlateauQuarto implements PlateauJeu {
         return ret;
     }
 
+    
     public void joue(Joueur j, CoupJeu cj) throws IllegalArgumentException {
 	// 1. vérification que c'est le bon joueur qui joue
         if(! coupValide(j, cj) )
@@ -491,7 +491,7 @@ public class PlateauQuarto implements PlateauJeu {
 	    return false;
 	
 	return (c_type && (indice_pieces >>> c_val) % 2 == 0)
-	    || (!c_type && ( get_piece(c_val) ) == 0xff);
+	    || (!c_type && ( get_piece(c_val) ) == -1 );
     }
     
     public boolean finDePartie() {
@@ -578,7 +578,7 @@ public class PlateauQuarto implements PlateauJeu {
     // Rend les "coups" et pas les mouvements
     public String[] mouvementsPossibles(String player) {
         Joueur j;
-        if (player.equals(j0.toString()))
+         if (player.equals(j0.toString()))
             j = j0;
         else
             j = j1;
@@ -627,10 +627,11 @@ public class PlateauQuarto implements PlateauJeu {
     /// Note : la vérification de la validité du coup se fait dans la méthode joue
     public void play(String move, String player) {
         Joueur j;
-        if (player.equals("noir"))
+        if( player.equals("noir") )
             j = j0;
         else
             j = j1;
+	
 	CoupQuarto cq = new CoupQuarto(move);
 	
 	joue(j, cq);
@@ -654,23 +655,35 @@ public class PlateauQuarto implements PlateauJeu {
 	put_piece(coord, id_piece);
     }
 
+    public void play_dbstr(String str){
+	String [] splitted_str = str.split("-");
+	// Str 0 -> la case
+	// Str 1 -> la pièce donnée
+	String j;
+	if(j0plays())
+	    j = "noir";
+	else
+	    j = "blanc";
+	play_double_coup(splitted_str[1], splitted_str[0], j);
+    }
+    
     // Joue a) le dépôt de la pièce à jouer sur la case move
     // b) le don de la pièce 
-    public void play_bis(String choose, String move, String player) {
+    public void play_double_coup(String choose, String move, String player) {
+        Joueur j;
+	if (player.equals("blanc"))
+	    j = j1;
+	else
+	    j = j0;
+	    
 	/// A - dépôt
 	byte coord = stringToCoord(move);
-
-
-	
+	CoupQuarto cq = new CoupQuarto(move);
+	joue(j, cq);
+	// B : Don
 	byte id_piece = stringToPiece(choose);
-
-	if(is_don()
-	   || id_piece != this.piece_a_jouer
-	   || get_piece(coord) != -1
-	   || ( false  ) )
-	    return;
-	
-	
+	CoupQuarto cq_bis = new CoupQuarto(choose);
+	joue(j, cq);
     }
     
     // coordonnées = 0000 ligne colonne
@@ -738,14 +751,8 @@ public class PlateauQuarto implements PlateauJeu {
 	boolean b; // FIXME
 	return estmoveValide(choix, joueur);
     }
-
-    // Autant séparer les tâches
-    //FIXME
-    public void setFromStringTab(String[] s) {
-	// FIXME
-    }
     
-
+    /*   /// INUTILE
     public void setFromFile(String fileName) throws FileNotFoundException, IOException {
         // On peut calculer le joueur qui doit jouer en fonction du nombre de pièces
         // posées.
@@ -781,28 +788,42 @@ public class PlateauQuarto implements PlateauJeu {
         }
         setFromStringTab(tab_of_lignes);
     }
-
+    */
+    private String str_pieces_non_jouees(){
+	String ret = "";
+	int idp = indice_pieces;
+	for(byte i = 0; i<16; i++){
+	    if(idp%2 == 0)
+		ret = ret + " " + pieceToString(i) + " , " ;
+	    idp = idp >>> 1;
+	}
+	return ret;
+    }
+     
     public String toString() {
+	String joueur;
+	if (j0plays()) joueur = "noir";
+	else joueur = "blanc";
+	
 	String ret = "\t A \t B \t C \t D \n";
 	for(int l = 0; l<4; l++){ // ligne
 	    ret = ret + (l+1) + "\t";
 	    for(int c = 0; c<4; c++){ // colonne
 		 
-		ret = ret + pieceToString( plateau[i][j]) + "\t" ;
+		ret = ret + pieceToString( plateau[l][c] ) + "\t" ;
 		
 	    }
-	    ret = ret + (l+1) + "\n"
+	    ret = ret + (l+1) + "\n";
 	}
-	
-
-	ret = ret + "Le joueur " + joueur " doit ";
-	if(! is_don())
+	ret = ret + "Le joueur " + joueur + " doit " ;
+	if(! is_don() )
 	    ret = ret + "poser la pièce " + pieceToString(piece_a_jouer) + " \n" ;
-	else "donner une pièce, comprise dans la liste sui"
+	else
+	    ret = ret + "donner une pièce, comprise dans la liste suivante :" + str_pieces_non_jouees() + "\n";
 	return ret;
     }
-
-    public static Joueur joueur_jouant(){
+    
+    public Joueur joueur_jouant(){
 	if(j0plays())
 	    return j0;
 	else

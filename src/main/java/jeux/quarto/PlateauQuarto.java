@@ -572,27 +572,42 @@ public class PlateauQuarto implements PlateauJeu {
      * @return une chaine de caractères représentant une case, de la forme [A-D][1-4], ou la lettre représente la colonne, le chiffre la ligne
      */
     public static String coordToString(byte coordonnee_case) {
-	boolean
-	    is_carre = coordonnee_case%2 == 1,
-	    is_plein = (coordonnee_case >>> 1) % 2 == 1,
-	    is_grand = (coordonnee_case >>> 2) % 2 == 1,
-	    is_bleu  = (coordonnee_case >>> 3) % 2 == 1;
+	// Ligne colonne
+	int ind_ligne = coordonnee_case >>> 2;
+	int ind_colonne = 0b011 & coordonnee_case;
+	char[] c = new char[2];
+	switch(ind_ligne){
+	case 0:
+	    c[1] = '1';
+	    break;
+	case 1:
+	    c[1] = '2';
+	    break;
+	case 2:
+	    c[1] = '3';
+	    break;
+	case 3:
+	    c[1]= '4';
+	    break;
+	}
 	
-	char[] char_arr = new char[4];
+	switch(ind_colonne){
+	case 0:
+	    c[0] = 'A';
+	    break;
+	case 1:
+	    c[0] = 'B';
+	    break;
+	case 2:
+	    c[0] = 'C';
+	    break;
+	case 3:
+	    c[0]= 'D';
+	    break;
+	}
 
-	if(is_bleu) char_arr[0] = 'b';
-	else char_arr[0] = 'r';
-
-	if(is_grand) char_arr[1] = 'g';
-	else char_arr[1] = 'p';
-	
-	if(is_plein) char_arr[2] = 'p';
-	else char_arr[2] = 't';
-	
-	if(is_carre) char_arr[3] = 'c';
-	else char_arr[3] = 'r';
-
-	return new String(char_arr);
+	return
+	    new String(c);
     }
 
     

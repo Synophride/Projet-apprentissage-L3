@@ -50,7 +50,7 @@ public class PlateauQuarto implements PlateauJeu {
     // ligne colonne
     private byte[][] plateau = new byte[4][4];
             
-    byte piece_a_jouer = -1;;
+    byte piece_a_jouer = -1;
     int indice_pieces = 0;
     
     byte etat_du_tour = 0;
@@ -77,8 +77,9 @@ public class PlateauQuarto implements PlateauJeu {
     public PlateauQuarto(Joueur joueurZero, Joueur joueurUn) {
         j0 = joueurZero;
         j1 = joueurUn;
+
 	for(byte i = 0; i<16; i++){
-	    plateau[i/4][i%4]= (byte) 0xFF;
+	    plateau[i/4][i%4]= -1;
 	}
     }
 
@@ -124,7 +125,7 @@ public class PlateauQuarto implements PlateauJeu {
      *            la coordonnée "ligne" de la pièce à laquelle on veut accéder
      *            (entre 0 et 3 inclus)
      * @return l'identifiant de la pièce accedée si cette pièce est posée sur le plateau
-     * 0xFF sinon
+     * -1 sinon
      * @see get_double_piece
      * @see points_communs
      ***/
@@ -139,12 +140,12 @@ public class PlateauQuarto implements PlateauJeu {
      * @param coord 
      *            l'identifiant de la pièce, de la forme 0b0000 coord_ligne (2b.) coord_colonne (2b.)
      * @return l'identifiant de la pièce accedée si cette pièce est posée sur le plateau
-     * 0xFF sinon
+     * -1 sinon
      * @see get_double_piece
      * @see points_communs
      ***/
     private byte get_piece(byte coord){
-	int id_colonne =  0b011 & coord;
+	int id_colonne =  0b0011 & coord;
 	int id_ligne = coord >>> 2;
 	return plateau[id_ligne][id_colonne];
     }
@@ -330,15 +331,14 @@ public class PlateauQuarto implements PlateauJeu {
         // 1. Dépot de la pièce
 
 	int id_ligne = cp >>> 2;
-	int id_colonne  = 0b0011 & cp;
+	int id_colonne  = 3 & cp;
 	
 	plateau [id_ligne][id_colonne] = piece_a_jouer;
 	
         // 3. Changement du statut du tour : Le joueur venant de poser un pion
         // donne une autre pièce à l'adversaire : On change le 2e bit
         // de tourEtPiece.
-	
-	etat_du_tour = (byte) (etat_du_tour ^ 0x01);
+	etat_du_tour = (byte) (etat_du_tour ^ 1);
     }
     
     /*
@@ -346,7 +346,7 @@ public class PlateauQuarto implements PlateauJeu {
      */
     private void unsafe_jouer_coup_don(byte p) {
 	piece_a_jouer = p;
-	etat_du_tour = (byte) (etat_du_tour ^ 0x03);
+	etat_du_tour = (byte) (etat_du_tour ^ 3);
 	indice_pieces = indice_pieces | (1 << p);
     }
     
@@ -430,25 +430,47 @@ public class PlateauQuarto implements PlateauJeu {
 	ArrayList<CoupJeu> ret = new ArrayList<CoupJeu>();
 	
         // Si c'est pas le bon joueur
-        if (j0plays() && j.equals(j1) || (!j0plays() && j.equals(j0)))
-            throw new IllegalArgumentException("CoupsPossibles : Mauvais joueur demandé (Joueur courant = " + j.toString() + ")");
+	if( j0plays() && j.equals(j1) || (!j0plays() && j.equals(j0)))
+	    throw new IllegalArgumentException("CoupsPossibles : Mauvais joueur demandé (Joueur demandé = " + j.toString() + ", Joueur jouant = " + joueur_jouant().toString() + ")\n");
 	
-	if( is_don() ){
-	    for(byte i = 0; i<16; i++)
-		if ((indice_pieces >>> i) % 2 == 0 )
-		    ret.add( new CoupQuarto( i, true));
-	} else 
-	    for(byte i = 0; i<16; i++)
-		if( plateau[i%4][i/4] == -1)
-		    ret.add( new CoupQuarto( i, false) );
 	
-        return ret;
+	// 1. Liste des cases ou il est possible de poser la pièce donnée
+	ArrayList<Integer> cases_libres = new ArrayList<>();
+	for( int i = 0; i<16; i++ )
+	    if( plateau[i/4][i%4]==-1 )
+		cases_libres.add(i);
+	
+	// 2. Liste des pieces restantes
+	ArrayList<Integer> pieces_restantes = new ArrayList <>();
+	for(int i = 0; i<16; i++)
+	    if( (indice_pieces >>> i) % 2 == 0)
+		pieces_restantes.add(i);
+	
+	// 3. Combinaison de tout ça
+        
+	for(int i = 0; i<cases_libres.size(); i++)
+	    for(int k = 0; k<pieces_restantes.size(); k++)
+		ret.add(new DoubleCoupQuarto(cases_libres.get(i).byteValue(),
+					     pieces_restantes.get(k).byteValue()));
+	
+	return ret;
     }
 
-    
+    public void joue_double(Joueur j, DoubleCoupQuarto dcq){
+	joue(j,
+	     new CoupQuarto(dcq.get_coord(), false));
+	
+	joue(j,
+	     new CoupQuarto(dcq.get_piece(), true));
+    }
     public void joue(Joueur j, CoupJeu cj) throws IllegalArgumentException {
+	if(cj instanceof DoubleCoupQuarto){
+	    joue_double(j, (DoubleCoupQuarto) cj);
+	    return;
+	}
+	
 	// 1. vérification que c'est le bon joueur qui joue
-        if(! coupValide(j, cj) )
+	if(! coupValide(j, cj) )
             throw new IllegalArgumentException("joue() : Coup invalide");
 	
         // On peut jouer le coup pusqu'il est valide
@@ -461,37 +483,58 @@ public class PlateauQuarto implements PlateauJeu {
             unsafe_jouer_coup_depot(c.get());
         }
     }
-
+    
     /**
     * Retourne un nouveau plateau de jeu, qui est une copie du plateau présent
     * @return un plateau équivalent au plateau présent
     ***/
     public PlateauJeu copy() {
-	byte[][] p= new byte[4][4];
+	byte[][] p = new byte[4][4];
 	
 	for(int i = 0; i<4; i++)
 	    for(int j = 0; j<4; j++)
 		p[i][j] = plateau[i][j];
 	
 	return
-     new PlateauQuarto(p,
-		       piece_a_jouer,
-		       indice_pieces,
-		       etat_du_tour);
+	    new PlateauQuarto(p,
+			      piece_a_jouer,
+			      indice_pieces,
+			      etat_du_tour);
     }
     
+    private boolean coupValide_d(Joueur j, DoubleCoupQuarto dcq){
+	CoupQuarto
+	    cq1 = new CoupQuarto(dcq.get_coord(), false),
+	    cq2 = new CoupQuarto(dcq.get_piece(), true);
+	
+	PlateauQuarto pq = (PlateauQuarto) this.copy();	
+	pq.joue(j, cq1);
+	return
+	    coupValide(j, cq1) && pq.coupValide(j, cq2);
+	
+	    
+    }
     
     public boolean coupValide(Joueur j, CoupJeu cj) {
+	if( cj instanceof DoubleCoupQuarto )
+	    return coupValide_d(j, (DoubleCoupQuarto) cj );
+	
         CoupQuarto c = (CoupQuarto) cj;
 	boolean c_type = c.get_type();
-	byte c_val = c.get();
+
+	int c_val = c.get();
+	
 	// vérification que le ccoup est moralement valide (bon type, etc) 
-	if(j0plays() && j.equals(j1) || !j0plays() && j.equals(j0)
-	    || (c_type && !is_don() || !c_type && is_don()))
+	if(! j.equals(joueur_jouant())
+	   &&
+	   (c_type     && (!is_don())
+	    || (!c_type)   &&   is_don()))
 	    return false;
 	
-	return (c_type && (indice_pieces >>> c_val) % 2 == 0)
-	    || (!c_type && ( get_piece(c_val) ) == -1 );
+	return (c_type
+		&& (indice_pieces >>> c_val) % 2 == 0)
+	    || ((!c_type)
+		&& ( get_piece((byte) c_val) ) == -1 );
     }
     
     public boolean finDePartie() {
@@ -578,7 +621,7 @@ public class PlateauQuarto implements PlateauJeu {
     // Rend les "coups" et pas les mouvements
     public String[] mouvementsPossibles(String player) {
         Joueur j;
-         if (player.equals(j0.toString()))
+	if (player.equals("noir") )
             j = j0;
         else
             j = j1;
@@ -592,7 +635,6 @@ public class PlateauQuarto implements PlateauJeu {
         }
 
         String[] ret = new String[cj_arr.size()];
-        boolean is_don = this.is_don();
 
         for (int i = 0; i < cj_arr.size(); i++) {
             CoupJeu cj = cj_arr.get(i);

@@ -20,39 +20,49 @@ public class PartieQuarto {
     private static int prof_blanc = 2;
     private static int prof_noir = 2;
 
-    public static void main(String[] args) throws IOException {
+    private static AlgoJeu algoJoueur[] = new AlgoJeu[2];
         
-        AlgoJeu AlgoJoueurChoixPiece[] = new AlgoJeu[2];
-        AlgoJeu AlgoJoueurChoixPosition[] = new AlgoJeu[2];
-        
-        AlgoJoueurChoixPiece[0] = new Minimax(HeuristiqueQuarto.heuristique_aleatoire, joueur_noir, joueur_blanc, prof_blanc);
-        AlgoJoueurChoixPiece[1] = new Minimax(HeuristiqueQuarto.heuristique_aleatoire, joueur_blanc, joueur_noir, prof_noir);
-        
-        AlgoJoueurChoixPosition[0] = new Minimax(HeuristiqueQuarto.heuristique_aleatoire, joueur_noir, joueur_blanc, prof_blanc);
-        AlgoJoueurChoixPosition[1] = new Minimax(HeuristiqueQuarto.heuristique_aleatoire, joueur_blanc, joueur_noir, prof_noir);
-        
-        PlateauQuarto p = new PlateauQuarto(joueur_noir, joueur_blanc);
-        
+    private static PlateauQuarto p = new PlateauQuarto(joueur_noir, joueur_blanc);
+    
+    
+    public static void init(){
+	algoJoueur[0] =
+	    new Minimax(HeuristiqueQuarto.heuristique_aleatoire,
+			joueur_noir,
+			joueur_blanc,
+			prof_blanc);
+
+	algoJoueur[1] =
+	    new Minimax(HeuristiqueQuarto.heuristique_aleatoire,
+			joueur_blanc,
+			joueur_noir,
+			prof_noir);
+            }
+    
+    public static void main_ia_vs_ia(String[] args) throws IOException {
+	init();
+	// BLANC = 0
+	// NOIR  = 1
+	
         Scanner input = new Scanner(System.in);
-        
+	int joueur_courant = 0;
+	
         while (!p.finDePartie()) {
             System.out.println(p.toString());
-            
-            int joueur_courant = 0;
-            
-            if (p.joueur_jouant().toString() == "blanc")
-                joueur_courant = 1;   
-
+	    
+	    Joueur joueur_jouant = p.joueur_jouant();
+	    
+	    if(joueur_jouant.equals(joueur_noir) )
+		joueur_courant = 0;
+	    else
+		joueur_courant = 1;
+	    
             CoupJeu meilleur_coup = null;
+	    
+	    meilleur_coup = algoJoueur[joueur_courant].meilleurCoup(p);
+	    
+            System.out.println("choix : " + meilleur_coup.toString() + "\n");
             
-            if(p.is_don())
-                meilleur_coup = AlgoJoueurChoixPiece[joueur_courant].meilleurCoup(p);
-            else
-                meilleur_coup = AlgoJoueurChoixPosition[joueur_courant].meilleurCoup(p);
-            
-            System.out.println("choix : " + ((CoupQuarto) meilleur_coup).toString(p.is_don()) + "\n");
-            
-            // Joue à la main
             // String str = input.nextLine();
             
             try {
@@ -65,4 +75,9 @@ public class PartieQuarto {
         System.out.println("La partie est finie");
         input.close();
     }
+
+    public static void main(String [] args) throws IOException {
+	main_ia_vs_ia(args);
+    }
+    
 }

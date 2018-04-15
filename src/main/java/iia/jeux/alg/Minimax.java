@@ -76,14 +76,14 @@ public class Minimax implements AlgoJeu {
 		ArrayList<CoupJeu> coupsPossibles = p.coupsPossibles(joueurMax);
 		int max = Integer.MIN_VALUE;
 		CoupJeu meilleurCoup = null;
-
+		
 		for (CoupJeu coup : coupsPossibles) {
 			PlateauJeu pbis = p.copy();
 			pbis.joue(joueurMax, coup);
-			int nmax = -negaMax(1, joueurMin, pbis);
+			int nmax = - negaMax(1, joueurMin, pbis);
 			if (nmax > max) {
-				max = nmax;
-				meilleurCoup = coup;
+			    max = nmax;
+			    meilleurCoup = coup;
 			}
 		}
 		System.out.println("nb noeuds développés :" + nbnoeuds + "\nnb feuilles développés :" + nbfeuilles + "\n");
@@ -108,23 +108,23 @@ public class Minimax implements AlgoJeu {
 			return joueurMin;
 	}
 
-	private int negaMax(int profondeur, Joueur joueurQuiJoue, PlateauJeu etatDuPlateau) {
+    private int negaMax(int profondeur, Joueur joueurQuiJoue, PlateauJeu etatDuPlateau) {
 
-		if (etatDuPlateau.finDePartie() || profondeur >= profMax) {
-			nbfeuilles++;
-			return h.eval(etatDuPlateau, joueurQuiJoue);
-		} else {
-			nbnoeuds++;
-			int max = Integer.MIN_VALUE + 1;
-			ArrayList<CoupJeu> coupsPossibles = etatDuPlateau.coupsPossibles(joueurQuiJoue);
-			for (CoupJeu i : coupsPossibles) {
-				PlateauJeu p = etatDuPlateau.copy();
-				p.joue(joueurQuiJoue, i);
-				int n = -negaMax(profondeur + 1, this.autreJoueur(joueurQuiJoue), p);
-				if (n > max)
-					max = n;
-			}
-			return max;
-		}
+	if (etatDuPlateau.finDePartie() || profondeur >= profMax) {
+	    nbfeuilles++;
+	    return h.eval(etatDuPlateau, joueurQuiJoue);
+	} else {
+	    nbnoeuds++;
+	    int max = Integer.MIN_VALUE + 1;
+	    ArrayList<CoupJeu> coupsPossibles = etatDuPlateau.coupsPossibles(joueurQuiJoue);
+	    for (CoupJeu i : coupsPossibles) {
+		PlateauJeu p = etatDuPlateau.copy();
+		p.joue(joueurQuiJoue, i);
+		int n = -negaMax(profondeur + 1, this.autreJoueur(joueurQuiJoue), p);
+		if (n > max)
+		    max = n;
+	    }
+	    return max;
 	}
+    }
 }

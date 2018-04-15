@@ -313,7 +313,7 @@ public class PlateauQuarto implements PlateauJeu {
      * 
      * @return true si le coup qui doit être joué est un don
      **/
-    private boolean is_don() {
+    public boolean is_don() {
         return etat_du_tour % 2 == 0;
     }
 
@@ -431,7 +431,7 @@ public class PlateauQuarto implements PlateauJeu {
 	
         // Si c'est pas le bon joueur
         if (j0plays() && j.equals(j1) || (!j0plays() && j.equals(j0)))
-            throw new IllegalArgumentException("CoupsPossibles : Mauvais joueur demandé");
+            throw new IllegalArgumentException("CoupsPossibles : Mauvais joueur demandé (Joueur courant = " + j.toString() + ")");
 	
 	if( is_don() ){
 	    for(byte i = 0; i<16; i++)

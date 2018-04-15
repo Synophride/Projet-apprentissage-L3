@@ -34,15 +34,34 @@ public class PartieQuarto {
         PlateauQuarto p = new PlateauQuarto(joueur_noir, joueur_blanc);
         
         Scanner input = new Scanner(System.in);
+        
         while (!p.finDePartie()) {
             System.out.println(p.toString());
-            String str = input.nextLine();
+            
+            int joueur_courant = 0;
+            
+            if (p.joueur_jouant().toString() == "blanc")
+                joueur_courant = 1;   
+
+            CoupJeu meilleur_coup = null;
+            
+            if(p.is_don())
+                meilleur_coup = AlgoJoueurChoixPiece[joueur_courant].meilleurCoup(p);
+            else
+                meilleur_coup = AlgoJoueurChoixPosition[joueur_courant].meilleurCoup(p);
+            
+            System.out.println("choix : " + ((CoupQuarto) meilleur_coup).toString(p.is_don()) + "\n");
+            
+            // Joue à la main
+            // String str = input.nextLine();
+            
             try {
-                p.play(str, p.getStrCurrentPlayer());
+                p.joue(p.joueur_jouant(), meilleur_coup);
             } catch (Exception e) {
                 System.out.println("le coup est invalide");
             }
         }
+        
         System.out.println("La partie est finie");
         input.close();
     }

@@ -27,7 +27,7 @@ public class PartieQuarto {
     
     public static void init(){
 	algoJoueur[0] =
-	    new Minimax(HeuristiqueQuarto.heuristique_aleatoire,
+	    new Minimax(HeuristiqueQuarto.heuristique1_j1,
 			joueur_noir,
 			joueur_blanc,
 			prof_blanc);

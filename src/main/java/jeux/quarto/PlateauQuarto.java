@@ -529,10 +529,7 @@ public class PlateauQuarto implements PlateauJeu {
 	    || (!c_type)   &&   is_don()))
 	    return false;
 	
-	return (c_type
-		&& (indice_pieces >>> c_val) % 2 == 0)
-	    || ((!c_type)
-		&& ( get_piece((byte) c_val) ) == -1 );
+	return (c_type && (indice_pieces >>> c_val) % 2 == 0) || ((!c_type) && ( get_piece((byte) c_val) ) == -1 );
     }
     
     public boolean finDePartie() {
@@ -855,7 +852,143 @@ public class PlateauQuarto implements PlateauJeu {
 	}
 	return ret;
     }
-     
+    
+    /**
+     * Retourne le nombre de pièce restante pour chaque caractéristique
+     * 
+     * globale : indice 0
+     * troue : indice 1
+     * non troue : indice 2
+     * grand : indice 3
+     * petit : indice 4
+     * rond : indice 5
+     * carre : indice 6
+     * rouge : indice 7
+     * bleu : indice 8
+     * 
+     * @return nombre de pièce restante par caractéristique
+     **/
+    public int[] nb_piece_restante() {
+        int[] res = new int[9];
+        
+        int idp = indice_pieces;
+        
+        for(byte i = 0; i<16; i++) {
+            if(idp%2 == 0) {
+                if ((i >>> 1) % 2 == 0)
+                    res[1]++;
+                
+                if ((i >>> 1) % 2 != 0)
+                    res[2]++;
+                    
+                if ((i >>> 2) % 2 != 0)
+                    res[3]++;
+
+                if ((i >>> 2) % 2 == 0)
+                    res[4]++;
+
+                if ((i >>> 3) % 2 == 0)
+                    res[5]++;
+
+                if ((i >>> 3) % 2 != 0)
+                    res[6]++;
+ 
+                if (i % 2 == 0)
+                    res[7]++;
+
+                if (i % 2 != 0)
+                    res[8]++;
+            }
+            
+            idp = idp >>> 1;
+        }
+        
+        return res;
+    }
+    
+    /**
+     * Retourne un tableau avec vrai si il existe une position de dépôt gagnante sur le plateau
+     * pour chaque caractéristique
+     * 
+     * globale : indice 0
+     * troue : indice 1
+     * non troue : indice 2
+     * grand : indice 3
+     * petit : indice 4
+     * rond : indice 5
+     * carre : indice 6
+     * rouge : indice 7
+     * bleu : indice 8
+     * 
+     * @return nombre de pièce restante par caractéristique
+     **/
+    public int[] nb_position_gagnante() {
+        int[] res = new int[9];
+        
+        for(byte i=0; i<16; i++) {
+            if((indice_pieces >>> i) % 2 == 0) {
+                for(int j = 1; j<9; j++) {
+                    PlateauQuarto temp = (PlateauQuarto) this.copy();
+                    
+                    switch (j) {
+                    case 1:
+                        temp.piece_a_jouer = PlateauQuarto.stringToPiece("rgtc");
+                        break;
+                        
+                    case 2:
+                        temp.piece_a_jouer = PlateauQuarto.stringToPiece("rgpc");
+                        break;
+                        
+                    case 3:
+                        temp.piece_a_jouer = PlateauQuarto.stringToPiece("rgtc");
+                        break;
+                        
+                    case 4:
+                        temp.piece_a_jouer = PlateauQuarto.stringToPiece("bptr");
+                        break;
+                        
+                    case 5:
+                        temp.piece_a_jouer = PlateauQuarto.stringToPiece("rptr");
+                        break;
+                        
+                    case 6:
+                        temp.piece_a_jouer = PlateauQuarto.stringToPiece("rgtc");
+                        break;
+                        
+                    case 7:
+                        temp.piece_a_jouer = PlateauQuarto.stringToPiece("rgtc");
+                        break;
+                        
+                    case 8:
+                        temp.piece_a_jouer = PlateauQuarto.stringToPiece("bptr");
+                        break;
+                    }
+                    
+                    temp.unsafe_jouer_coup_depot(i);
+                    
+                    if(temp.finDePartie()) {
+                        res[0]++;
+                        res[j]++;
+                    }
+                }
+            }
+        }
+        return res;
+    }
+    
+    public boolean existe_position_gagnante(byte piece) {
+        for(byte i=0; i<16; i++) {
+            PlateauQuarto temp = (PlateauQuarto) this.copy();
+            temp.piece_a_jouer = piece;
+            temp.unsafe_jouer_coup_depot(i);
+            
+            if(temp.finDePartie())
+                return true;
+        }
+        
+        return false;
+    }
+    
     public String toString() {
 	String joueur;
 	if (j0plays()) joueur = "noir";

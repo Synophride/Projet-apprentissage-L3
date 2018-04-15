@@ -46,7 +46,7 @@ public class HeuristiqueQuarto {
             
             for(int i=1; i<9; i++) {
                 if(nb_piece[0] > 0)
-                    val += (nb_piece[i]/nb_piece[0])*10;
+                    val += ((nb_piece[i]/nb_piece[0])*existe_position_gagnante[i]);
             }
             
             return val;

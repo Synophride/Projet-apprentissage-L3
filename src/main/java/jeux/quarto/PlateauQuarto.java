@@ -176,6 +176,8 @@ public class PlateauQuarto implements PlateauJeu {
         return (byte) (0x0F & (~(p1 ^ p2))); // Pê truc foireux avec les entiers. A voir.
     }
 
+    
+    
     /// id_colonne id_ligne < 3
     /**
      * Méthode testant si un carré contient quatre pièces du plateau ont une
@@ -204,7 +206,7 @@ public class PlateauQuarto implements PlateauJeu {
 	    // Vérification que tout n'est pas nul
 	    (p1 != -1 && p2 != -1 && p3 != -1 && p4 != -1)
 	    // Puis qu'il y a au moins un point commun entre les pièces
-	    && (points_communs(p1, p2) != 0 && points_communs(p1, p3) != 0 && points_communs(p1, p4) != 0  );
+	    && (points_communs(p1, p2) & points_communs(p3, p4)) != 0;
     }
 
     /**
@@ -229,8 +231,7 @@ public class PlateauQuarto implements PlateauJeu {
 	
 	return
 	    (p1 != -1 && p2 != -1 && p3 != -1 && p4 != -1)
-	    && (points_communs(p1, p2) != 0 && points_communs(p1, p3) != 0
-		&& points_communs(p1, p4) != 0 );
+	    && (points_communs(p1, p2) & points_communs(p3, p4)) != 0;
     }
 
     /**
@@ -264,14 +265,12 @@ public class PlateauQuarto implements PlateauJeu {
 		
 	    if(g_false && d_false) return false;
         }
-	return (( !g_false
-		  &&  points_communs(g[0], g[1]) != 0
-		  &&  points_communs(g[0], g[2]) != 0
-		  &&  points_communs(g[0], g[3]) != 0)
-		|| (!d_false
-		    && points_communs(d[0], d[1]) != 0
-		    && points_communs(d[0], d[2] ) != 0
-		    && points_communs(d[0], d[3] ) != 0));
+	return
+	    (!g_false
+	     &&  (points_communs(g[0], g[1]) & points_communs(g[3], g[2])) != 0)
+	    || (!d_false
+		&& (points_communs(d[1], d[2]) & points_communs(d[3], d[4])) != 0);
+
     }
     
     /**
@@ -296,8 +295,7 @@ public class PlateauQuarto implements PlateauJeu {
 
 	return
 	    (p1 != -1 && p2 != -1 && p3 != -1 && p4 != -1)
-	    && (points_communs(p1, p2) != 0 && points_communs(p1, p3) != 0
-		&& points_communs(p1, p4) != 0 );    
+	    && (points_communs(p1, p2) & points_communs(p3, p4)) != 0;
     }
 
     /**
@@ -846,6 +844,7 @@ public class PlateauQuarto implements PlateauJeu {
         setFromStringTab(tab_of_lignes);
     }
     */
+    
     private String str_pieces_non_jouees(){
 	String ret = "";
 	int idp = indice_pieces;

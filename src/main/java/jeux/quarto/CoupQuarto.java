@@ -13,7 +13,7 @@ public class CoupQuarto implements CoupJeu {
     
     public CoupQuarto(String s){
         int coup = 0;
-	
+        
         if (s.length() == 2) { // C'est une coordonnée.
 	    is_don = false;
 	    // Ligne colonne
@@ -86,9 +86,9 @@ public class CoupQuarto implements CoupJeu {
 
     public String toString(boolean isDon) {
         if (isDon)
-            return coordToString(idCoup);
-        else
             return pieceToString(idCoup);
+        else
+            return coordToString(idCoup);
     }
 
     private static String coordToString(byte coordonnee_case) {

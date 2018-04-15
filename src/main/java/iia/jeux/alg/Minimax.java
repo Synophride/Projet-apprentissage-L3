@@ -86,7 +86,7 @@ public class Minimax implements AlgoJeu {
 				meilleurCoup = coup;
 			}
 		}
-		System.out.println("nb noeuds développés :" + nbnoeuds + "\n nb feuilles développés :" + nbfeuilles);
+		System.out.println("nb noeuds développés :" + nbnoeuds + "\nnb feuilles développés :" + nbfeuilles + "\n");
 
 		return meilleurCoup;
 	}

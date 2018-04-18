@@ -173,7 +173,10 @@ public class PlateauQuarto implements PlateauJeu {
      * @see test_diagonale
      ***/
     private byte points_communs(byte p1, byte p2) {
-        return (byte) (0x0F & (~(p1 ^ p2))); // Pê truc foireux avec les entiers. A voir.
+	int pts_communs = p1 ^ p2;
+	pts_communs = ~ pts_communs;
+	pts_communs = 0x0F & pts_communs;
+	return (byte) pts_communs;
     }
 
     
@@ -231,7 +234,8 @@ public class PlateauQuarto implements PlateauJeu {
 	
 	return
 	    (p1 != -1 && p2 != -1 && p3 != -1 && p4 != -1)
-	    && (points_communs(p1, p2) & points_communs(p3, p4)) != 0;
+	    &&
+	    (points_communs(p1, p2) & points_communs(p3, p4)) != 0;
     }
 
     /**

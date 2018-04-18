@@ -2,12 +2,14 @@ package jeux.quarto;
 
 import iia.jeux.modele.joueur.Joueur;
 
+import static org.junit.Assert.*;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
 public class PlateauQuartoTest {
-    PlateauQuarto plateau_depart;
+    PlateauQuarto plateau_depart = new PlateauQuarto(new Joueur("blanc"), new Joueur("noir"));
     PlateauQuarto plateau_final;
     // Syntaxe des pièces ("en commençant par les bits de poids fort="
     // b/r -> bleu , rouge. resp. 1 et 0 en notation binaire.
@@ -19,7 +21,7 @@ public class PlateauQuartoTest {
     public void init() {
 	
     }
-
+    
     @Test
     public void testPlateauQuarto() {
     }
@@ -44,5 +46,10 @@ public class PlateauQuartoTest {
     public void testFinDePartie() {
     }
 
-    
+    @Test
+    public void testPointsCommuns() {
+    	Assert.assertEquals(plateau_depart.points_communs((byte) 0x01, (byte) 0x0E), 0);
+    	Assert.assertEquals(plateau_depart.points_communs((byte) 0x02, (byte) 0x0E), 3);
+    	Assert.assertEquals(plateau_depart.points_communs((byte) 0x0F, (byte) 0x0F), 0x0F);
+    }
 }

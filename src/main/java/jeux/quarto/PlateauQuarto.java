@@ -269,7 +269,7 @@ public class PlateauQuarto implements PlateauJeu {
 	    (!g_false
 	     &&  (points_communs(g[0], g[1]) & points_communs(g[3], g[2])) != 0)
 	    || (!d_false
-		&& (points_communs(d[1], d[2]) & points_communs(d[3], d[4])) != 0);
+		&& (points_communs(d[0], d[1]) & points_communs(d[2], d[3])) != 0);
 
     }
     

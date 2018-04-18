@@ -204,7 +204,7 @@ public class PlateauQuarto implements PlateauJeu {
 	p2 = get_piece((byte) (id_colonne + 1), id_ligne);
 	p3 = get_piece(id_colonne, (byte) (id_ligne + 1));
 	p4 = get_piece((byte) (id_colonne + 1), (byte) (id_ligne + 1));
-
+	
 	return
 	    // Vérification que tout n'est pas nul
 	    (p1 != -1 && p2 != -1 && p3 != -1 && p4 != -1)
@@ -255,25 +255,33 @@ public class PlateauQuarto implements PlateauJeu {
 	    g = new byte[4],
 	    d = new byte[4];
 
-        boolean g_false = false, d_false = false;
+        boolean
+	    g_false = false,
+	    d_false = false;
 
         
         for (int i = 0; i < 4; i++) {
 	    g[i] = get_piece((byte) i, (byte) i);
-	    if(g[i] == -1 )
-		g_false = true;
-		
 	    d[i] = get_piece( (byte) (3 - i), (byte) (3 - i));
-	    if(d[i] == -1 )
+
+	    if (g[i] == -1 )
+		g_false = true;
+	    
+	    if (d[i] == -1 )
 		d_false = true;
-		
-	    if(g_false && d_false) return false;
-        }
+	    
+	    if (g_false && d_false)
+		return false;
+
+	}
+
 	return
-	    (!g_false
-	     &&  (points_communs(g[0], g[1]) & points_communs(g[3], g[2])) != 0)
-	    || (!d_false
-		&& (points_communs(d[0], d[1]) & points_communs(d[2], d[3])) != 0);
+	    (((!g_false)
+	      &&  (points_communs(g[0], g[1]) & points_communs(g[3], g[2])) != 0))
+	    ||
+	    ( (!d_false)
+	      && ((points_communs(d[0], d[1])
+		   & points_communs(d[2], d[3])) != 0));
 
     }
     
@@ -298,8 +306,11 @@ public class PlateauQuarto implements PlateauJeu {
 	p4 = get_piece(colonne, (byte) 3);
 
 	return
-	    (p1 != -1 && p2 != -1 && p3 != -1 && p4 != -1)
-	    && (points_communs(p1, p2) & points_communs(p3, p4)) != 0;
+	    (p1 != -1
+	     && p2 != -1
+	     && p3 != -1
+	     && p4 != -1)
+	    && ((points_communs(p1, p2) & points_communs(p3, p4)) != 0);
     }
 
     /**

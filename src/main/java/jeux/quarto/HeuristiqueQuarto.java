@@ -65,4 +65,10 @@ public class HeuristiqueQuarto {
             return rand.nextInt();
         }
     };
+    
+    public static Heuristique heuristique1 = new Heuristique() {
+        public int eval(PlateauJeu plateau, Joueur j) {
+            return 1;
+        }
+    };
 }

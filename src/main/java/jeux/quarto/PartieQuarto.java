@@ -27,7 +27,7 @@ public class PartieQuarto {
     
     public static void init(){
 	algoJoueur[0] =
-	    new Minimax(HeuristiqueQuarto.heuristique1_j1,
+	    new AlphaBeta(HeuristiqueQuarto.heuristique1_j1,
 			joueur_noir,
 			joueur_blanc,
 			prof_blanc);
@@ -44,23 +44,23 @@ public class PartieQuarto {
 	// BLANC = 0
 	// NOIR  = 1
 	
-        Scanner input = new Scanner(System.in);
+    Scanner input = new Scanner(System.in);
 	int joueur_courant = 0;
-	
-        while (!p.finDePartie()) {
-            System.out.println(p.toString());
+	System.out.println(p.toString());
+	boolean b = p.finDePartie();
+        while (! b) {
+            
 	    
 	    Joueur joueur_jouant = p.joueur_jouant();
 	    
 	    if(joueur_jouant.equals(joueur_noir) )
-		joueur_courant = 0;
+	    	joueur_courant = 0;
 	    else
-		joueur_courant = 1;
+	    	joueur_courant = 1;
 	    
             CoupJeu meilleur_coup = null;
 	    
 	    meilleur_coup = algoJoueur[joueur_courant].meilleurCoup(p);
-	    
             System.out.println("choix : " + meilleur_coup.toString() + "\n");
             
             // String str = input.nextLine();
@@ -70,9 +70,13 @@ public class PartieQuarto {
             } catch (Exception e) {
                 System.out.println("le coup est invalide");
             }
-        }
+            b = p.finDePartie();	
+            System.out.println(p.toString());
         
-        System.out.println("La partie est finie");
+        }
+
+        System.out.println("La partie est finie\nPlateau:\n" + p.toString());
+        
         input.close();
     }
 

@@ -12,41 +12,47 @@ public class HeuristiqueQuarto {
         public int eval(PlateauJeu plateau, Joueur j) {
             PlateauQuarto p = (PlateauQuarto) plateau;
             
-            // Valeur d'heuristique
-            int val = 0;
-            
+            /*
+             * Heuristique tj calculé après un don de pièce
+             */
+          
             // Nombre de pièces restantes pour chaque caractéristique
             int[] nb_piece = p.nb_piece_restante();
             
             // Vrai si il existe une position où le dépôt d'une pièce rendrait le plateau gagnant pour chaque
             int[] existe_position_gagnante = p.nb_position_gagnante();
             
-            // Comme l'algo joue puis évalue l'heuristique, cela veut dire que le coup était un dépôt
-            if(p.is_don()) {
-                if(p.finDePartie())
-                    return Integer.MAX_VALUE;
-                
-                for(int i=1; i<9; i++) {
-                    if(nb_piece[i] == nb_piece[0] && existe_position_gagnante[i] >= 1)
-                        return Integer.MIN_VALUE;
-                }
-            }
-            // Le coup qui a été joué est un don
-            else {
-                byte piece = p.piece_a_jouer;
-                
-                if(p.existe_position_gagnante(piece))
-                    return Integer.MIN_VALUE;
-                
-                for(int i=1; i<9; i++) {
-                    if(nb_piece[i] == nb_piece[0] && existe_position_gagnante[i] >= 1)
-                        return Integer.MAX_VALUE;
+             if(p.finDePartie()) {
+                return Integer.MAX_VALUE;
+             }
+             
+             if(p.existe_position_gagnante(p.piece_a_jouer)) {
+                 return Integer.MIN_VALUE;
+             }
+             
+             for(int i=1; i<9; i++) {
+                 if(nb_piece[i] == nb_piece[0] && existe_position_gagnante[i] >= 1) {
+                     return Integer.MAX_VALUE;
+                 }
+             }
+            
+            int val = 0;
+            
+            for(int i=1; i<9; i++) {
+                if(nb_piece[0] > 0) {
+                    if(nb_piece[i] > 0 && existe_position_gagnante[i] >= 1) {
+                        if((nb_piece[0] - nb_piece[i])%2 == 0)
+                            val += (nb_piece[i]*existe_position_gagnante[i]*20) - (nb_piece[0] - nb_piece[i])*10;
+                        else
+                            val -= (nb_piece[i]*existe_position_gagnante[i]*20) - (nb_piece[0] - nb_piece[i])*10;
+                    }
                 }
             }
             
-            for(int i=1; i<9; i++) {
-                if(nb_piece[0] > 0)
-                    val += ((nb_piece[i]/nb_piece[0])*existe_position_gagnante[i]);
+            Random rand = new Random();
+            
+            if (val == 0) {
+                val = rand.nextInt(50);
             }
             
             return val;
@@ -62,7 +68,7 @@ public class HeuristiqueQuarto {
     public static Heuristique heuristique_aleatoire = new Heuristique() {
         public int eval(PlateauJeu plateau, Joueur j) {
             Random rand = new Random();
-            return rand.nextInt();
+            return rand.nextInt(10000);
         }
     };
     

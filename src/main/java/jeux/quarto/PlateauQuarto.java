@@ -894,6 +894,9 @@ public class PlateauQuarto implements PlateauJeu {
 
 			idp = idp >>> 1;
 		}
+		
+		for (int i=1; i<9; i++)
+            res[0] += res[i];
 
 		return res;
 	}

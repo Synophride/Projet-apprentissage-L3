@@ -1,7 +1,7 @@
 package quarto;
 
 import iia.jeux.alg.AlgoJeu;
-
+import iia.jeux.modele.CoupJeu;
 import java.util.Scanner;
 
 public class JoueurHumainQuarto implements AlgoJeu {

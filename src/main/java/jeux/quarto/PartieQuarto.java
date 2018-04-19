@@ -50,33 +50,33 @@ public class PartieQuarto {
             System.out.println(p.toString());
             
             while (!p.finDePartie()) {
-
+		
                 Joueur joueur_jouant = p.joueur_jouant();
-
+		
                 if (joueur_jouant.equals(joueur_noir))
                     joueur_courant = 0;
                 else
                     joueur_courant = 1;
-
+		
                 CoupJeu meilleur_coup = null;
-
+		
                 meilleur_coup = algoJoueur[joueur_courant].meilleurCoup(p);
                 System.out.println("choix : " + meilleur_coup.toString() + "\n");
-
+		
                 // String str = input.nextLine();
-
+		
                 try {
                     p.joue(p.joueur_jouant(), meilleur_coup);
                 } catch (Exception e) {
                     System.out.println("le coup est invalide");
                 }
-
+		
                 System.out.println(p.toString());
-
+		
             }
             
             System.out.println("La partie est finie\nPlateau :\n" + p.toString());
-
+	    
             if (p.joueur_jouant().equals(joueur_noir)) {
                 System.out.println("Le joueur blanc gagne !");
                 victoire_blanc++;

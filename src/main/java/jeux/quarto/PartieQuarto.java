@@ -17,7 +17,7 @@ public class PartieQuarto {
     public static Joueur joueur_noir = new Joueur("noir");
     public static Joueur joueur_blanc = new Joueur("blanc");
 
-    private static int prof_blanc = 2;
+    private static int prof_blanc = 1;
     private static int prof_noir = 2;
 
     private static AlgoJeu algoJoueur[] = new AlgoJeu[2];
@@ -25,9 +25,9 @@ public class PartieQuarto {
     private static PlateauQuarto p = new PlateauQuarto(joueur_noir, joueur_blanc);
 
     public static void init() {
-        algoJoueur[0] = new AlphaBeta(HeuristiqueQuarto.heuristique1_j1, joueur_noir, joueur_blanc, prof_blanc);
+        algoJoueur[0] = new AlphaBeta(HeuristiqueQuarto.heuristique1_j1, joueur_noir, joueur_blanc, prof_noir);
 
-        algoJoueur[1] = new Minimax(HeuristiqueQuarto.heuristique_aleatoire, joueur_blanc, joueur_noir, prof_noir);
+        algoJoueur[1] = new Minimax(HeuristiqueQuarto.heuristique_aleatoire, joueur_blanc, joueur_noir, prof_blanc);
     }
 
     public static void main_ia_vs_ia(String[] args) throws IOException {
@@ -38,7 +38,7 @@ public class PartieQuarto {
         Scanner input = new Scanner(System.in);
         
         int joueur_courant = 0;
-        int nb_de_partie = 1;
+        int nb_de_partie = 10;
         
         int victoire_noir = 0;
         int victoire_blanc = 0;

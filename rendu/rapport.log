@@ -1,0 +1,132 @@
+This is LuaTeX, Version 1.0.4 (TeX Live 2017)  (format=lualatex 2018.4.6)  20 APR 2018 15:45
+ restricted system commands enabled.
+**rapport.tex
+(./rapport.tex
+LaTeX2e <2017-04-15>
+Lua module: luaotfload-main 2017/01/29 2.80001 OpenType layout system.
+Lua module: lualibs 2017-02-01 2.5 ConTeXt Lua standard libraries.
+Lua module: lualibs-extended 2017-02-01 2.5 ConTeXt Lua libraries -- extended co
+llection.(using write cache: /home/synophride/texdir/texmf-var/luatex-cache/gene
+ric)(using read cache: /home/synophride/texdir/texmf-var/luatex-cache/generic /h
+ome/synophride/.texlive2017/texmf-var/luatex-cache/generic)
+luaotfload | conf : Root cache directory is /home/synophride/texdir/texmf-var/lu
+atex-cache/generic/names.
+luaotfload | init : Loading fontloader “fontloader-2017-02-11.lua” from kpse
+-resolved path “/home/synophride/texdir/texmf-dist/tex/luatex/luaotfload/fontl
+oader-2017-02-11.lua”.
+Lua-only attribute luaotfload@state = 1
+Lua-only attribute luaotfload@noligature = 2
+Lua-only attribute luaotfload@syllabe = 3
+luaotfload | init : Context OpenType loader version “3.027”
+Inserting `luaotfload.node_processor' at position 1 in `pre_linebreak_filter'.
+Inserting `luaotfload.node_processor' at position 1 in `hpack_filter'.
+Inserting `luaotfload.define_font' at position 1 in `define_font'.
+Lua-only attribute luaotfload_color_attribute = 4
+luaotfload | conf : Root cache directory is /home/synophride/texdir/texmf-var/lu
+atex-cache/generic/names.
+Inserting `luaotfload.aux.set_sscale_dimens' at position 1 in `luaotfload.patch_
+font'.
+Inserting `luaotfload.aux.patch_cambria_domh' at position 2 in `luaotfload.patch
+_font'.
+Inserting `luaotfload.aux.fixup_fontdata' at position 1 in `luaotfload.patch_fon
+t_unsafe'.
+Inserting `luaotfload.aux.set_capheight' at position 3 in `luaotfload.patch_font
+'.
+Inserting `luaotfload.rewrite_fontname' at position 4 in `luaotfload.patch_font'
+.
+luaotfload | main : initialization completed in 0.125 seconds
+Babel <3.18> and hyphenation patterns for 1 language(s) loaded.
+(/home/synophride/texdir/texmf-dist/tex/latex/base/article.cls
+Document Class: article 2014/09/29 v1.4h Standard LaTeX document class
+(/home/synophride/texdir/texmf-dist/tex/latex/base/size10.clo
+File: size10.clo 2014/09/29 v1.4h Standard LaTeX file (size option)
+luaotfload | db : Font names database loaded from /home/synophride/texdir/texmf-
+var/luatex-cache/generic/names/luaotfload-names.luc(load luc: /home/synophride/t
+exdir/texmf-var/luatex-cache/generic/fonts/otl/lmroman10-regular.luc))
+\c@part=\count79
+\c@section=\count80
+\c@subsection=\count81
+\c@subsubsection=\count82
+\c@paragraph=\count83
+\c@subparagraph=\count84
+\c@figure=\count85
+\c@table=\count86
+\abovecaptionskip=\skip41
+\belowcaptionskip=\skip42
+\bibindent=\dimen102
+) (/home/synophride/texdir/texmf-dist/tex/latex/base/inputenc.sty
+Package: inputenc 2015/03/17 v1.2c Input encoding file
+\inpenc@prehook=\toks14
+\inpenc@posthook=\toks15
+
+
+Package inputenc Warning: inputenc package ignored with utf8 based engines.
+
+) (./rapport.aux)
+\openout1 = rapport.aux
+
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 8.
+LaTeX Font Info:    ... okay on input line 8.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 8.
+LaTeX Font Info:    ... okay on input line 8.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 8.
+LaTeX Font Info:    ... okay on input line 8.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 8.
+LaTeX Font Info:    ... okay on input line 8.
+LaTeX Font Info:    Checking defaults for TU/lmr/m/n on input line 8.
+LaTeX Font Info:    ... okay on input line 8.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 8.
+LaTeX Font Info:    ... okay on input line 8.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 8.
+LaTeX Font Info:    ... okay on input line 8.
+(load luc: /home/synophride/texdir/texmf-var/luatex-cache/generic/fonts/otl/lmro
+man17-regular.luc)(load luc: /home/synophride/texdir/texmf-var/luatex-cache/gene
+ric/fonts/otl/lmroman12-regular.luc)
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <12> on input line 9.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <8> on input line 9.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <6> on input line 9.
+(load luc: /home/synophride/texdir/texmf-var/luatex-cache/generic/fonts/otl/lmro
+man12-bold.luc)
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <7> on input line 17.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <5> on input line 17.
+
+Overfull \hbox (57.85126pt too wide) in paragraph at lines 15--18
+\TU/lmr/m/n/10 téris-tiques définis-sant la pièce. Ce byte est de la forme (
+ $\OT1/cmr/m/n/10 0000 [] []\OML/cmm/m/it/10 couleur []hauteur []sommet []forme
+$
+ []
+
+[1
+
+{/home/synophride/texdir/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
+(./rapport.aux))
+
+Here is how much of LuaTeX's memory you used:
+ 288 strings out of 494480
+ 100000,89155 words of node,token memory allocated
+ 358 words of node memory still in use:
+   2 hlist, 1 vlist, 1 rule, 2 glue, 3 attribute, 46 glue_spec, 3 attribute_list
+, 1 write nodes
+   avail lists: 2:103,3:57,4:9,5:49,6:580,7:193,8:35,9:37,10:6,11:35
+ 4472 multiletter control sequences out of 65536+600000
+ 38 fonts using 2432031 bytes
+ 22i,6n,17p,139b,195s stack positions out of 5000i,500n,10000p,200000b,100000s
+</home/synophride/texdir/texmf-dist/fonts/opentype/public/lm/lmroman10-regular.o
+tf></home/synophride/texdir/texmf-dist/fonts/opentype/public/lm/lmroman12-bold.o
+tf></home/synophride/texdir/texmf-dist/fonts/opentype/public/lm/lmroman12-regula
+r.otf></home/synophride/texdir/texmf-dist/fonts/opentype/public/lm/lmroman17-reg
+ular.otf></home/synophride/texdir/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi
+10.pfb></home/synophride/texdir/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.
+pfb>
+Output written on rapport.pdf (1 page, 33441 bytes).
+
+PDF statistics: 44 PDF objects out of 1000 (max. 8388607)
+ 26 compressed objects within 1 object stream
+ 0 named destinations out of 1000 (max. 131072)
+ 1 words of extra memory for PDF output out of 10000 (max. 100000000)
+

@@ -1,0 +1,38 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+
+\author{Nicolas Devatine, Julien Guyot}
+\title{Rendu du projet d'intro à l'IA}
+\date{20 avril 2018}
+
+\begin{document}
+\maketitle
+\section{Introduction}
+
+\section{Description des problèmes rencontrés au cours du projet}
+
+
+% Dire que java c'est de la merde
+\section{Modélisation du plateau}
+Chaque pièce est modélisée sous la forme d'un byte, qui contient les
+quatre caractéristiques définissant la pièce. Ce byte est de la forme 
+\\ ( \( 0000~~couleur~hauteur~sommet~forme \) ) 
+
+
+Le plateau de jeu est une matrice de byte, o\`u chaque case est
+initialisée à -1.
+L'état du tour est matérialisé dans un byte, dont seuls les deux
+derniers bits sont significatifs. Celui de poids le plus faible dénote de quel
+type de tour on traite, le second informe de quel joueur joue.
+
+
+Le plateau stocke une pièce à jouer, qui est la pièce donnée par le
+joueur.
+
+
+
+
+\section{Heuristiques}
+
+\end{document}
+

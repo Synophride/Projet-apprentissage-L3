@@ -7,14 +7,15 @@ import quartoplus.IJoueur;
 public class JoueurQuarto implements IJoueur {
     private int coulour;
     // BLANC commence
-    private static final int BLANC = IJoueur.BLANC;
-    private static final int NOIR = IJoueur.NOIR;
+    private static final int NOIR  = IJoueur.BLANC;
+    private static final int BLANC = IJoueur.NOIR;
     
     AlgoJeu jh = new JoueurHumainQuarto();
     
     private Joueur
 	j_blanc = new Joueur("blanc"),
 	j_noir = new Joueur("noir");
+    
     private PlateauQuarto p = new PlateauQuarto(j_blanc, j_noir);
     
     private AlgoJeu algo = new JoueurHumainQuarto();
@@ -26,6 +27,7 @@ public class JoueurQuarto implements IJoueur {
     public JoueurQuarto(){
 	
     }
+    
     /**
      * Initialise un nouveau joueur avec l'algo de jeu aj
      **/
@@ -45,12 +47,12 @@ public class JoueurQuarto implements IJoueur {
      */
     public void initJoueur(int mycolour){
 	coulour = mycolour;
-	
+	if(coulour == NOIR)
+	    jh = new AlphaBeta(HeuristiqueQuarto.heuristique1_j1, j_noir, j_blanc, 1);	
     }
 
     /*
-      algoJoueur[0] = new AlphaBeta(HeurcistiqueQuarto.heuristique1_j1, joueur_noir, joueur_blanc, prof_blanc);
-      algoJoueur[1] = new Minimax(HeuristiqueQuarto.heuristique_aleatoire, joueur_blanc, joueur_noir, prof_noir);
+      algoJoueur[0] = 
     */
     
     public int getNumJoueur(){
@@ -58,6 +60,7 @@ public class JoueurQuarto implements IJoueur {
     }
     
     public String choixMouvement(){
+	System.out.println(p.toString());      
 	CoupJeu ret = jh.meilleurCoup(p);
 	p.joue( p.joueur_jouant(), ret);
 	return ret.toString();
@@ -75,6 +78,6 @@ public class JoueurQuarto implements IJoueur {
     
     /// Pê le nom du binôme
     public String binoName(){
-	return "";
+	return "eluhjizdaugyutguhujiuytfrdtfgjhjiuytfhg";
     }
 }

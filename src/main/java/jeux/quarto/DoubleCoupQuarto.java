@@ -11,7 +11,14 @@ public class DoubleCoupQuarto implements CoupJeu {
 	id_piece = idPiece;
 	id_coord = idCoord;
     }
-
+    
+    //  COORD - PIECE
+    public DoubleCoupQuarto(String str){
+	String[] separated_str = str.split("-");
+	id_coord = PlateauQuarto.stringToCoord(separated_str[0]);
+	id_piece = PlateauQuarto.stringToPiece(separated_str[1]);
+    }
+    
     public byte get_coord(){
 	return id_coord;
     }

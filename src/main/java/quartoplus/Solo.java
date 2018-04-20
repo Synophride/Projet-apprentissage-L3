@@ -2,7 +2,7 @@ package quartoplus;
 
 
 import java.util.Date;
-
+import jeux.quarto.JoueurQuarto;
 /**
  * Petite Classe toute simple qui vous montre comment on peut lancer une partie sur deux IJoueurs...
  * Cela vous servira a debugger facilement votre projet en conditions presque reelles de tournoi
@@ -48,10 +48,10 @@ public class Solo {
     private static IJoueur getDefaultPlayer(String s) {
 	System.out.println(s + " : defaultPlayer");
 	// vous devez faire qq chose comme return new MonMeilleurJoueur();
-	return new JoueurAleatoire();
+	return new JoueurQuarto();
 
     }
-
+    
     /**
      * Juste pour rendre le tout plus generique, et vous donner une idee de comment le tournoi sera
      * lance automatiquement, voici une methode permettant de charger une certaine classe implantant

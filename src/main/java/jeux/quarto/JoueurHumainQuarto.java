@@ -1,18 +1,18 @@
-package quarto;
+package jeux.quarto;
 
 import iia.jeux.alg.AlgoJeu;
 import iia.jeux.modele.CoupJeu;
+import iia.jeux.modele.PlateauJeu;
+
 import java.util.Scanner;
 
 public class JoueurHumainQuarto implements AlgoJeu {
     private Scanner input= new Scanner(System.in);
     
     public CoupJeu meilleurCoup(PlateauJeu p){
-	PlateauQuarto pq = (PlateauQuarto) p;
-	System.out.prinln( "Etat du plateau :\n" + pq.toString() );
+	System.out.println( "Etat du plateau :\n" + p.toString() );
 	String s = input.nextLine();
-	return DoubleCoupQuarto(s);
+	return new DoubleCoupQuarto(s);
     }
-    
 }
 

@@ -78,9 +78,9 @@ public class PlateauQuarto implements PlateauJeu {
 	public PlateauQuarto(Joueur joueurZero, Joueur joueurUn) {
 		j0 = joueurZero;
 		j1 = joueurUn;
-
+		
 		for (byte i = 0; i < 16; i++) {
-			plateau[i / 4][i % 4] = -1;
+		    plateau[i / 4][i % 4] = -1;
 		}
 	}
 

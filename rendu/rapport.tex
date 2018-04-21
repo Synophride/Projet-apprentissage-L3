@@ -10,9 +10,63 @@
 \section{Introduction}
 
 \section{Description des problèmes rencontrés au cours du projet}
+Dans un premier temps, nous avions prévu un modèle assez
+optimisé, qui etait refléchie pour prendre le moins de place possible,
+et pour que les opérations sur le plateau soient le moins coûteuses en
+CPU possibles. 
+
+
+
+On en était arrivé à un état du plateau qui prenait ``moralement'' une
+douzaine d'octets (hors questionnements spécifiques à
+java, ou l'on prendrait en compte la taille liée aux headers de la
+classe \footnote{Je ne connais pas l'implémentation du
+  langage, par conséquent il se peut que je dise n'importe quoi}
+
+
+Une description détaillée de ce qu'il était prévu de faire est
+disponible dans le document du premier rendu.\\
+En principe, le contenu du plateau était codé sur 64+16 bits (un long
++ un short), les pièces posées étaient indiquées par un short, et
+l'état du tour était indiqué par un byte. 
+
+
+
+Néanmoins, cette idée nécessitait d'avoir un contrôle assez fin sur les
+entiers, comme par exemple la gestion des entiers signés, ou une
+gestion fine des opérateurs bit à bit.
+
+
+Malheureusement, la gestion des entiers (et/ou des short, byte) de n'a
+pas permis la réalisation qui était à la base prévu. Cela est
+principalement dû aux
+spécificités suivantes :
+\begin{itemize}
+\item Les entiers java sont forcément signés --- en tous cas les
+  entiers atomiques (``int'' et pas ``Integer''). 
+\item Les opérateurs bit à bit traitent uniquement les entiers
+  (c'est à dire ni les bytes, ni les short). Par conséquent,
+  l'opération (byte \& byte) \begin{enumerate}
+    \item Convertit les bytes en int 
+    \item Applique l'opérateur 
+    \item Renvoie un int, qu'il faut re-caster si l'on cherche à calculer un byte
+  \end{enumerate}
+  Si cela ne semble pas bien méchant, cela possède des
+  effets qui étaient insoupconnés : Par exemple, l'opération
+  \(0xF0\quad>>>\quad4 \) (ou 0xF0 est un byte), rendra \(0xFF\),
+  alors qu'on aurait pu s'attendre à \( 0x0F \)
+\end{itemize}
+
+Si, dans un premier temps, l'optimisation semblait intéressante ---
+quasiment pas d'espace gâché, des modification du plateau rapides, et
+par conséquent de bonnes performances ---, la réalité fut autre :
+Le ``non-signage'' des entiers provoquants divers bugs dont la cause
+restait mystérieuse, et le ``mono-type'' des opérateurs logiques qui
+causait des effets relativement étranges
 
 
 % Dire que java c'est de la merde
+
 \section{Modélisation du plateau}
 Chaque pièce est modélisée sous la forme d'un byte, qui contient les
 quatre caractéristiques définissant la pièce. Ce byte est de la forme 
@@ -28,9 +82,6 @@ type de tour on traite, le second informe de quel joueur joue.
 
 Le plateau stocke une pièce à jouer, qui est la pièce donnée par le
 joueur.
-
-
-
 
 \section{Heuristiques}
 

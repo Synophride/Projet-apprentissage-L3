@@ -1,4 +1,4 @@
-This is LuaTeX, Version 1.0.4 (TeX Live 2017)  (format=lualatex 2018.4.6)  20 APR 2018 15:45
+This is LuaTeX, Version 1.0.4 (TeX Live 2017)  (format=lualatex 2018.4.6)  20 APR 2018 21:09
  restricted system commands enabled.
 **rapport.tex
 (./rapport.tex
@@ -34,7 +34,7 @@ Inserting `luaotfload.aux.set_capheight' at position 3 in `luaotfload.patch_font
 '.
 Inserting `luaotfload.rewrite_fontname' at position 4 in `luaotfload.patch_font'
 .
-luaotfload | main : initialization completed in 0.125 seconds
+luaotfload | main : initialization completed in 0.126 seconds
 Babel <3.18> and hyphenation patterns for 1 language(s) loaded.
 (/home/synophride/texdir/texmf-dist/tex/latex/base/article.cls
 Document Class: article 2014/09/29 v1.4h Standard LaTeX document class
@@ -91,42 +91,41 @@ LaTeX Font Info:    External font `cmex10' loaded for size
 (load luc: /home/synophride/texdir/texmf-var/luatex-cache/generic/fonts/otl/lmro
 man12-bold.luc)
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <7> on input line 17.
+(Font)              <7> on input line 22.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <5> on input line 17.
+(Font)              <5> on input line 22.
+(load luc: /home/synophride/texdir/texmf-var/luatex-cache/generic/fonts/otl/lmro
+man7-regular.luc)(load luc: /home/synophride/texdir/texmf-var/luatex-cache/gener
+ic/fonts/otl/lmroman8-regular.luc)(load luc: /home/synophride/texdir/texmf-var/l
+uatex-cache/generic/fonts/otl/lmroman6-regular.luc) [1
 
-Overfull \hbox (57.85126pt too wide) in paragraph at lines 15--18
-\TU/lmr/m/n/10 téris-tiques définis-sant la pièce. Ce byte est de la forme (
- $\OT1/cmr/m/n/10 0000 [] []\OML/cmm/m/it/10 couleur []hauteur []sommet []forme
-$
- []
-
-[1
-
-{/home/synophride/texdir/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
-(./rapport.aux))
+{/home/synophride/texdir/texmf-var/fonts/map/pdftex/updmap/pdftex.map}] [2] (./
+rapport.aux))
 
 Here is how much of LuaTeX's memory you used:
- 288 strings out of 494480
+ 294 strings out of 494480
  100000,89155 words of node,token memory allocated
- 358 words of node memory still in use:
-   2 hlist, 1 vlist, 1 rule, 2 glue, 3 attribute, 46 glue_spec, 3 attribute_list
+ 369 words of node memory still in use:
+   2 hlist, 1 vlist, 1 rule, 3 glue, 4 attribute, 46 glue_spec, 4 attribute_list
 , 1 write nodes
-   avail lists: 2:103,3:57,4:9,5:49,6:580,7:193,8:35,9:37,10:6,11:35
- 4472 multiletter control sequences out of 65536+600000
- 38 fonts using 2432031 bytes
- 22i,6n,17p,139b,195s stack positions out of 5000i,500n,10000p,200000b,100000s
-</home/synophride/texdir/texmf-dist/fonts/opentype/public/lm/lmroman10-regular.o
-tf></home/synophride/texdir/texmf-dist/fonts/opentype/public/lm/lmroman12-bold.o
-tf></home/synophride/texdir/texmf-dist/fonts/opentype/public/lm/lmroman12-regula
-r.otf></home/synophride/texdir/texmf-dist/fonts/opentype/public/lm/lmroman17-reg
-ular.otf></home/synophride/texdir/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi
-10.pfb></home/synophride/texdir/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.
-pfb>
-Output written on rapport.pdf (1 page, 33441 bytes).
+   avail lists: 2:181,3:96,4:9,5:105,6:1479,7:434,8:37,9:80,10:6,11:97
+ 4475 multiletter control sequences out of 65536+600000
+ 41 fonts using 2827159 bytes
+ 24i,8n,17p,148b,195s stack positions out of 5000i,500n,10000p,200000b,100000s
+</home/synophride/texdir/texmf-dist/fonts/opentype/public/lm/lmroman8-regular.ot
+f></home/synophride/texdir/texmf-dist/fonts/opentype/public/lm/lmroman6-regular.
+otf></home/synophride/texdir/texmf-dist/fonts/opentype/public/lm/lmroman7-regula
+r.otf></home/synophride/texdir/texmf-dist/fonts/opentype/public/lm/lmroman10-reg
+ular.otf></home/synophride/texdir/texmf-dist/fonts/opentype/public/lm/lmroman12-
+bold.otf></home/synophride/texdir/texmf-dist/fonts/opentype/public/lm/lmroman12-
+regular.otf></home/synophride/texdir/texmf-dist/fonts/opentype/public/lm/lmroman
+17-regular.otf></home/synophride/texdir/texmf-dist/fonts/type1/public/amsfonts/c
+m/cmmi10.pfb></home/synophride/texdir/texmf-dist/fonts/type1/public/amsfonts/cm/
+cmr10.pfb>
+Output written on rapport.pdf (2 pages, 43632 bytes).
 
-PDF statistics: 44 PDF objects out of 1000 (max. 8388607)
- 26 compressed objects within 1 object stream
+PDF statistics: 68 PDF objects out of 1000 (max. 8388607)
+ 40 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 131072)
  1 words of extra memory for PDF output out of 10000 (max. 100000000)
 

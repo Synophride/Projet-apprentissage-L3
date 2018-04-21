@@ -906,20 +906,7 @@ public class PlateauQuarto implements PlateauJeu {
      *
      *
      */
-    public boolean existe_position_gagnante(byte piece) {
-	for (byte i = 0; i < 16; i++) {
-	    PlateauQuarto temp = (PlateauQuarto) this.copy();
-
-	    if(temp.plateau[i/4][i%4] != -1)
-		continue;
-
-	    temp.plateau[i/4][i%4] = piece;
-	    if (temp.finDePartie())
-		return true;
-	}
-	return false;
-    }
-
+    
     public String toString() {
 	String joueur;
 	if (j0plays())

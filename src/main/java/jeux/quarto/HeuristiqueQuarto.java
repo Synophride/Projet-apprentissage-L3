@@ -23,25 +23,11 @@ public class HeuristiqueQuarto {
             int[] existe_position_gagnante = p.nb_position_gagnante();
             
              if(p.finDePartie()) {
-            	 if(p.joueur_jouant().equals(p.j0))
-            		 return Integer.MIN_VALUE + 1;
-            	 else
-            		 return Integer.MAX_VALUE - 1;
-            		 
-             }
-             
-             if(p.existe_position_gagnante(p.piece_a_jouer)) {
-            	 if(p.joueur_jouant().equals(p.j0))
-            		 return Integer.MAX_VALUE - 1;
-            	 else
-            		 return Integer.MIN_VALUE + 1;
+            		 return Integer.MAX_VALUE - 1;	 
              }
              
              for(int i=1; i<9; i++) {
                  if(nb_piece[i] == nb_piece[0] && existe_position_gagnante[i] >= 1) {
-                	 if(p.joueur_jouant().equals(p.j0))
-                		 return Integer.MIN_VALUE + 1;
-                	 else
                 		 return Integer.MAX_VALUE - 1;
                  }
              }

@@ -851,53 +851,47 @@ public class PlateauQuarto implements PlateauJeu {
     public int[] nb_position_gagnante() {
 	int[] res = new int[9];
 
-	for (byte i = 0; i < 16; i++) {
-	    if ((indice_pieces >>> i) % 2 == 0) {
 		for (int j = 1; j < 9; j++) {
-		    PlateauQuarto temp = (PlateauQuarto) this.copy();
-
+		    byte pieceTemp = 0;
+		    
 		    switch (j) {
 		    case 1:
-			temp.piece_a_jouer = PlateauQuarto.stringToPiece("rgtc");
+		        pieceTemp = PlateauQuarto.stringToPiece("rgtc");
 			break;
 
 		    case 2:
-			temp.piece_a_jouer = PlateauQuarto.stringToPiece("rgpc");
+		        pieceTemp = PlateauQuarto.stringToPiece("rgpc");
 			break;
 
 		    case 3:
-			temp.piece_a_jouer = PlateauQuarto.stringToPiece("rgtc");
+		        pieceTemp = PlateauQuarto.stringToPiece("rgtc");
 			break;
 
 		    case 4:
-			temp.piece_a_jouer = PlateauQuarto.stringToPiece("bptr");
+		        pieceTemp = PlateauQuarto.stringToPiece("bptr");
 			break;
 
 		    case 5:
-			temp.piece_a_jouer = PlateauQuarto.stringToPiece("rptr");
+		        pieceTemp = PlateauQuarto.stringToPiece("rptr");
 			break;
 
 		    case 6:
-			temp.piece_a_jouer = PlateauQuarto.stringToPiece("rgtc");
+		        pieceTemp = PlateauQuarto.stringToPiece("rgtc");
 			break;
 
 		    case 7:
-			temp.piece_a_jouer = PlateauQuarto.stringToPiece("rgtc");
+		        pieceTemp = PlateauQuarto.stringToPiece("rgtc");
 			break;
 
 		    case 8:
-			temp.piece_a_jouer = PlateauQuarto.stringToPiece("bptr");
+		        pieceTemp = PlateauQuarto.stringToPiece("bptr");
 			break;
 		    }
 
-		    temp.unsafe_jouer_coup_depot(i);
-
-		    if (temp.finDePartie()) {
+		    if (existe_position_gagnante(pieceTemp)) {
 			res[0]++;
 			res[j]++;
 		    }
-		}
-	    }
 	}
 	return res;
     }

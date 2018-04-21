@@ -442,11 +442,6 @@ public class PlateauQuarto implements PlateauJeu {
      *
      ********************************************************/
 
-    // Apparemment pas besoin de vérifier que c'est le bon joueur qui demande.
-    // On
-    // devrait pê faire une fonction genre "joueur jouant" ou quelque chose
-    // comme ça
-    // ok
     public ArrayList<CoupJeu> coupsPossibles(Joueur j) throws IllegalArgumentException {
 	ArrayList<CoupJeu> ret = new ArrayList<CoupJeu>();
 
@@ -477,7 +472,11 @@ public class PlateauQuarto implements PlateauJeu {
     }
 
     /**
-    * Joue un doublecoupquarto
+    * Joue un doublecoupquarto, par le joueur j
+    * @param j 
+    *      le joueur voulant jouer un double coup quarto
+    * @param dcq
+    *      le doubleCoupQuarto joué
     ***/ 
     private void joue_double(Joueur j, DoubleCoupQuarto dcq) {
 	joue(j, new CoupQuarto(dcq.get_coord(), false));
@@ -522,6 +521,11 @@ public class PlateauQuarto implements PlateauJeu {
 	return new PlateauQuarto(p, piece_a_jouer, indice_pieces, etat_du_tour);
     }
 
+    /**
+     * Détermine si un doublecoupquarto est bien valide, id est les deux actions correspondants à 
+     * ce coup sont elles-mêmes valides
+     *
+     **/
     private boolean coupValide_d(Joueur j, DoubleCoupQuarto dcq) {
 	CoupQuarto cq1 = new CoupQuarto(dcq.get_coord(), false), cq2 = new CoupQuarto(dcq.get_piece(), true);
 
@@ -546,6 +550,7 @@ public class PlateauQuarto implements PlateauJeu {
 
 	return (c_type && (indice_pieces >>> c_val) % 2 == 0) || ((!c_type) && (get_piece((byte) c_val)) == -1);
     }
+
 
     public boolean finDePartie() {
 	for (byte i = 0; i < 4; i++) {
@@ -647,7 +652,7 @@ public class PlateauQuarto implements PlateauJeu {
 
 
     /** 
-    *
+    * Joue un double coup quarto, représenté par une string
     ***/
     public void play_dbstr(String str) {
 	String[] splitted_str = str.split("-");
@@ -655,9 +660,9 @@ public class PlateauQuarto implements PlateauJeu {
 	// Str 1 -> la pièce donnée
 	String j;
 	if (j0plays())
-	    j = "noir";
+	    j = j0.toString();
 	else
-	    j = "blanc";
+	    j = j1.toString();
 	play_double_coup(splitted_str[1], splitted_str[0], j);
     }
 
@@ -680,7 +685,12 @@ public class PlateauQuarto implements PlateauJeu {
 	joue(j, cq);
     }
 
-    // coordonnées = 0000 ligne colonne
+    /**
+     * Transfome une chaîne de caractères représentant une coordonnée en un identifiant de coordonneés
+     * @param str 
+     *          la chaîne de caractères représentant une coordonnée, de la forme [A-D][1-4]
+     * @return un identifiant de coordonnée
+     **/
     public static byte stringToCoord(String str) {
 	char c1 = str.charAt(0), c2 = str.charAt(1);
 	int ret = 0;
@@ -718,10 +728,12 @@ public class PlateauQuarto implements PlateauJeu {
 	return (byte) ret;
     }
 
+    /** Getter de j0 **/
     public Joueur getJ0() {
 	return j0;
     }
 
+    /** Getter de j1 **/
     public Joueur getJ1() {
 	return j1;
     }
@@ -743,39 +755,6 @@ public class PlateauQuarto implements PlateauJeu {
 	boolean b; // FIXME
 	return estmoveValide(choix, joueur);
     }
-
-    /*
-     * /// INUTILE public void setFromFile(String fileName) throws
-     * FileNotFoundException, IOException { // On peut calculer le joueur qui
-     * doit jouer en fonction du nombre de pièces // posées. /// Note: étant
-     * donné qu'on utilise java préhistorique, ce code donne une erreur // (car
-     * le bufferedReader doit pas être déclaré dans un try, je crois... Ou il //
-     * faut un bloc "finally") BufferedReader br = new BufferedReader(new
-     * FileReader(fileName));
-     * 
-     * String line;
-     * 
-     * int cpt_ligne = 0; // Compte le nombre de lignes intéressantes qu'on a
-     * déjà vu
-     * 
-     * String[] tab_of_lignes = new String[4];
-     * 
-     * while ((line = br.readLine()) != null) {
-     * 
-     * if (line.charAt(0) != '%') { // Si pas un commentaire
-     * 
-     * String[] s = line.split(" "); // Séparation par les espaces
-     * 
-     * /// De ce que je vois sur la fig3, la /// Ligne ressemble à
-     * [CHIFFRE][ESPACE][ID DES PIECES/+][ESPACE][CHIFFRE]. /// Par conséquent
-     * on a juste besoin du truc au milieu String ligne_plateau = s[1];
-     * 
-     * tab_of_lignes[cpt_ligne] = ligne_plateau; // On garde la ligne
-     * intéressante cpt_ligne++;
-     * 
-     * // Si on a vu toutes les lignes intéressantes if (cpt_ligne == 4) break;
-     * } } setFromStringTab(tab_of_lignes); }
-     */
 
     private String str_pieces_non_jouees() {
 	String ret = "";
@@ -895,12 +874,6 @@ public class PlateauQuarto implements PlateauJeu {
 	}
 	return res;
     }
-    /**
-     *
-     *
-     *
-     */
-    
     public String toString() {
 	String joueur;
 	if (j0plays())
@@ -924,8 +897,9 @@ public class PlateauQuarto implements PlateauJeu {
 	    ret = ret + "donner une pièce, comprise dans la liste suivante :" + str_pieces_non_jouees() + "\n";
 	return ret;
     }
+
     /**
-     * Rend le joueur qui doit accomplir une action
+     * @return le joueur qui doit accomplir une action
      */
     public Joueur joueur_jouant() {
 	if (j0plays())

@@ -5,12 +5,23 @@ import iia.jeux.modele.CoupJeu;
 public class CoupQuarto implements CoupJeu {
     private final byte idCoup;
     private boolean is_don;
-    
+    /**
+     * Constructeur de CoupQuarto
+     * @param id
+     *    L'identifiant du coup joué
+     * @param is_don true si le coup est un don, donc l'identifiant représente une pièce, false dans le cas contraire
+     **/
     public CoupQuarto(byte id, boolean is_don){
 	idCoup = id;
 	this.is_don = is_don;
     }
-    
+
+    /**
+     * Constructeur de CoupQuarto
+     * @param s
+     *   une chaine de caractères pouvant représenter soit une coordonnées, ou la chaine est de forme [A-D][1-4]
+     *   ou une pièce, donc de la forme ([b|r][g|p][p|t][r|c])
+     **/ 
     public CoupQuarto(String s){
         int coup = 0;
         
@@ -76,74 +87,23 @@ public class CoupQuarto implements CoupJeu {
 	    throw new IllegalArgumentException("Construction de coupQuarto : La chaîne n'est pas valide");
     }
 
+    /** 
+     * @return l'identifiant du coup
+     */
     public byte get() {
         return idCoup;
     }
-
+    /**
+     * @return true si le coup est un don de pièce, false si c'est un dépôt
+     */
     public boolean get_type(){
 	return is_don;
     }
 
     public String toString(boolean isDon) {
         if (isDon)
-            return pieceToString(idCoup);
+            return PlateauQuarto.pieceToString(idCoup);
         else
-            return coordToString(idCoup);
-    }
-
-    private static String coordToString(byte coordonnee_case) {
-        byte chiffre = (byte) (0x03 & coordonnee_case >>> 2);
-        byte lettre = (byte) ((0x0C & coordonnee_case));
-
-        char char_lettre = '?';
-
-        switch (lettre) {
-        case 0:
-            char_lettre = 'A';
-            break;
-        case 1:
-            char_lettre = 'B';
-            break;
-        case 2:
-            char_lettre = 'C';
-            break;
-        case 3:
-            char_lettre = 'D';
-            break;
-        default:
-            char_lettre = '?';
-            break;
-        }
-
-        return char_lettre + Integer.toString(chiffre+1);
-    }
-
-    private static String pieceToString(byte idPiece) {
-        // Bleu/rouge, Grand/petit, Plein/troué, Rond/carré
-        // Bleu = blanc, Rouge = noir
-
-        char[] str = new char[4];
-
-        if (idPiece % 2 == 0) // 0 = rond
-            str[3] = 'r';
-        else
-            str[3] = 'c';
-
-        if ((idPiece >>> 1) % 2 == 0) // 0 = troué
-            str[2] = 't';
-        else
-            str[2] = 'p';
-
-        if ((idPiece >>> 2) % 2 == 0) // 0 = troué
-            str[1] = 'p';
-        else
-            str[1] = 'g';
-
-        if ((idPiece >>> 3) % 2 == 0) // 0 = troué
-            str[0] = 'r';
-        else
-            str[0] = 'b';
-
-        return new String(str);
+            return PlateauQuarto.coordToString(idCoup);
     }
 }

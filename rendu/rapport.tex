@@ -1,5 +1,6 @@
 \documentclass{article}
 \usepackage[utf8]{inputenc}
+\usepackage{hyperref}
 
 \author{Nicolas Devatine, Julien Guyot}
 \title{Rendu du projet d'intro à l'IA}
@@ -10,78 +11,171 @@
 \section{Introduction}
 
 \section{Description des problèmes rencontrés au cours du projet}
+\subsection{Implémentation du plateau de jeu}
 Dans un premier temps, nous avions prévu un modèle assez
 optimisé, qui etait refléchie pour prendre le moins de place possible,
 et pour que les opérations sur le plateau soient le moins coûteuses en
-CPU possibles. 
+CPU possibles --- Ce modèle était décrit assez précisément dans le
+document du premier rendu ---
 
 
-
-On en était arrivé à un état du plateau qui prenait ``moralement'' une
-douzaine d'octets (hors questionnements spécifiques à
-java, ou l'on prendrait en compte la taille liée aux headers de la
-classe \footnote{Je ne connais pas l'implémentation du
-  langage, par conséquent il se peut que je dise n'importe quoi}
-
-
-Une description détaillée de ce qu'il était prévu de faire est
-disponible dans le document du premier rendu.\\
-En principe, le contenu du plateau était codé sur 64+16 bits (un long
-+ un short), les pièces posées étaient indiquées par un short, et
-l'état du tour était indiqué par un byte. 
-
+Nous avions imaginé une modélisation de l'état du plateau qui occupait
+``en principe'' (c'est à dire hors questionnements spécifiques à java)
+une douzaine d'octets (un long, deux shorts, et un byte). 
 
 
 Néanmoins, cette idée nécessitait d'avoir un contrôle assez fin sur les
-entiers, comme par exemple la gestion des entiers signés, ou une
-gestion fine des opérateurs bit à bit.
+entiers, comme par exemple la gestion des entiers non signés, ou une
+gestion propre des opérateurs bit à bit.
 
 
-Malheureusement, la gestion des entiers (et/ou des short, byte) de n'a
+Malheureusement, la gestion de java des entiers (et/ou des shorts et bytes) de n'a
 pas permis la réalisation qui était à la base prévu. Cela est
-principalement dû aux
-spécificités suivantes :
+principalement dû aux spécificités de java suivantes :
 \begin{itemize}
 \item Les entiers java sont forcément signés --- en tous cas les
-  entiers atomiques (``int'' et pas ``Integer''). 
+  entiers atomiques (``int'' et pas ``Integer'').
 \item Les opérateurs bit à bit traitent uniquement les entiers
   (c'est à dire ni les bytes, ni les short). Par conséquent,
-  l'opération (byte \& byte) \begin{enumerate}
-    \item Convertit les bytes en int 
-    \item Applique l'opérateur 
-    \item Renvoie un int, qu'il faut re-caster si l'on cherche à calculer un byte
+  l'opération (byte \& byte)
+  \begin{enumerate}
+  \item Convertit les bytes en int 
+  \item Applique l'opérateur 
+  \item Renvoie un int, qu'il faut re-caster si l'on cherche à calculer un byte
   \end{enumerate}
-  Si cela ne semble pas bien méchant, cela possède des
-  effets qui étaient insoupconnés : Par exemple, l'opération
-  \(0xF0\quad>>>\quad4 \) (ou 0xF0 est un byte), rendra \(0xFF\),
-  alors qu'on aurait pu s'attendre à \( 0x0F \)
-\end{itemize}
+ \end{itemize}
+Si cela ne semble a priori pas plus problématique que cela, 
+nous avons observé des effets qui étaient
+insoupçonnés : Par exemple, l'opération
+\((byte)  \; F0_{16} \, >>> \,4 \)  (o\`u \(F0_{16} \) est un byte), rendra
+\( FF_{16} \), alors qu'on aurait pu s'attendre à \( 0F_{16} \)
+\footnote{ \(X_{N}\) désigne le
+  nombre X écrit en base N. L'opérateur \(>>>\) désigne le décalage à
+  droite logique}
 
-Si, dans un premier temps, l'optimisation semblait intéressante ---
+
+Dans un premier temps, l'optimisation semblait intéressante ---
 quasiment pas d'espace gâché, des modification du plateau rapides, et
-par conséquent de bonnes performances ---, la réalité fut autre :
-Le ``non-signage'' des entiers provoquants divers bugs dont la cause
-restait mystérieuse, et le ``mono-type'' des opérateurs logiques qui
-causait des effets relativement étranges
+par conséquent de bonnes performances --- la réalité fut autre :
 
 
-% Dire que java c'est de la merde
+Le signage des entiers, allié au ``mono-type'' des opérateurs logiques 
+causaient des effets inattendus.
+De plus, les divers calculs qui
+auraient été nécessaires pour pallier à ces problèmes auraient été
+assez difficiles à implémenter, et auraient considérablement ralenti
+les calculs sur le plateau.
 
-\section{Modélisation du plateau}
+
+Ainsi, nous avons choisi une implémentation du plateau moins
+extrémiste, mais qui a le mérite de fonctionner.
+
+\section{Modélisation du quarto}
+\subsection{Plateau de jeu}
+\paragraph{}
+La classe contenant le plateau de jeu est la classe PlateauJeu, du
+package jeux.quarto.
+
+\paragraph{Description de la classe}
+Le plateau est constitué de quatre à six attributs : Le plateau en lui-même (une
+matrice de byte) qui donne l'emplacement des pièces sur le plateau, 
+un attribut dénotant des pièces qui ont été jouées, un attribut (byte)
+indiquant le cas échéant quelle pièce devra être jouée ainsi qu'un dernier
+attribut indiquant l'état du tour (quel joueur doit jouer quel type de
+coup), ainsi que les deux joueurs.
+
+\paragraph{Modélisation des pièces}
 Chaque pièce est modélisée sous la forme d'un byte, qui contient les
 quatre caractéristiques définissant la pièce. Ce byte est de la forme 
-\\ ( \( 0000~~couleur~hauteur~sommet~forme \) ) 
+\[ 0000~~couleur~hauteur~sommet~forme \]
+Et tel que:
+\begin{itemize}
+\item couleur = 1 si la pièce est bleue, 0 si la pièce est rouge
+\item hauteur = 1 si la pièce est grande, 0 si elle est petite
+\item sommet = 1 si le sommet est plein, 0 sinon
+\item forme = 1 si le sommet est carré, 0 si le sommet est rond
+\end{itemize}
+
+\paragraph{Attribut plateau}
+Le plateau en lui-même est une matrice 4 \times 4 de bytes, o\`u
+chaque case peut accueillir une pièce. Si une case donnée ne contient
+pas de pièce, sa valeur est de -1.
+
+\paragraph{Attribut piece\_a\_jouer}
+L'attribut de la pièce à jouer est la pièce qu'il faut jouer, dans le
+cas o\`u le tour est un dépôt de pièce. Ce dernier est initialisé à
+\(-1\) , afin que lors de la première ``double-action''\footnote{ on
+  appelle double-action un coup composé à la fois d'un dépôt et d'un
+  don de pièce. Ainsi, une ``action'' sera uniquement soit un dépôt,
+  soit un don}
+
+\paragraph{Attribut indices\_pieces}
+Cet attribut est un int, et indique quelles pièces ont été jouées, ou données.
+Si le n-ème bit de poids faible est à 1, cela indique que la pièce
+d'identifiant \(n-1\) a été donnée, ou posée.
+
+\paragraph{Attribut etat\_du\_tour}
+Comme son nom l'indique, cet attribut indique l'état du tour.
+Son bit de poids faible est à 0 si un des joueurs doit donner une
+pièce à l'autre joueur, et à 1 si l'un des joueurs doit poser une
+pièce.\\
+Le second bit de poids faible est à 0 si le joueur j0 doit accomplir
+une action, et à 1 si c'est j1 qui doit jouer.
 
 
-Le plateau de jeu est une matrice de byte, o\`u chaque case est
-initialisée à -1.
-L'état du tour est matérialisé dans un byte, dont seuls les deux
-derniers bits sont significatifs. Celui de poids le plus faible dénote de quel
-type de tour on traite, le second informe de quel joueur joue.
+\paragraph{Note sur les joueurs}
+Dans la classe PlateauJeu (et plus généralement dans le package
+quarto), nous avons considéré que le premier joueur à jouer (j0) était
+le joueur noir. \\
+Par conséquent, toutes les documentations/tous les
+commentaires mentionnant le joueur noir/le joueur blanc parlent
+respectivement du joueur j0, et du joueur j1.
 
 
-Le plateau stocke une pièce à jouer, qui est la pièce donnée par le
-joueur.
+
+\subsection{Coups}
+\subsubsection{Classe CoupQuarto}
+Cette classe --- qui implémente l'interface CoupJeu ---
+possède deux attributs, et est utilisée pour représenter
+une action qui peut être un don comme un dépôt.
+
+Son attribut is\_don est un booléen indiquant le type d'action
+représenté : S'il est à \emph{true}, alors le coup est un don de
+pièce, dans le cas contraire le coup est un dépôt.
+
+Dans le cas o\`u l'action est un don, alors l'attribut idCoup prend la 
+valeur d'un identifiant de pièce, dont la forme est décrite
+ci-dessus. 
+
+Dans le cas contraire, l'action est donc un dépôt, et idCoup
+représente un identifiant d'une coordonnée, de la forme
+\[ 0000~~colonne~ligne\]
+O\`u la colonne est entre 0 et 3, est est codée sur 2 bits, idem pour
+l'indice de la ligne.
+
+La classe contient deux constructeurs, un à partir d'un byte et d'un
+booléen, et l'autre à partir d'une chaîne de caractères, dont la forme
+est spécifiée dans la documentation. % note : faire la documentation
+
+
+\subsubsection{Classe DoubleCoupQuarto}
+Lors des tests sur les algorithmes de jeux, nous avons remarqué que
+les algorithmes de jeu partaient systématiquement du principe que les
+deux joueurs jouaient l'un après l'autre.
+
+Par conséquent, afin de ne pas avoir à modifier des algorithmes qui,
+du coup, ne serait plus généraux, nous avons implémenté une classe
+implémentant CoupJeu, et permettant de faire en sorte que les joueurs
+jouent successivement l'un après l'autre.
+
+Ainsi, cette classe ne contient plus un seul attribut ``identifiant'',
+mais deux attributs, qui indiquent l'identifiant de la coordonnée,
+et l'identifiant de la pièce.
+
+Il y a toujours deux constructeurs, le premier par deux byte, le
+second par une chaine de caractères de la forme
+``[coordonnée]-[identifiant piece]''.
+
 
 \section{Heuristiques}
 

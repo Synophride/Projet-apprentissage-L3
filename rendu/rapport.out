@@ -1,0 +1,9 @@
+\BOOKMARK [1][-]{section.1}{Introduction}{}% 1
+\BOOKMARK [1][-]{section.2}{Description des problèmes rencontrés au cours du projet}{}% 2
+\BOOKMARK [2][-]{subsection.2.1}{Implémentation du plateau de jeu}{section.2}% 3
+\BOOKMARK [1][-]{section.3}{Modélisation du quarto}{}% 4
+\BOOKMARK [2][-]{subsection.3.1}{Plateau de jeu}{section.3}% 5
+\BOOKMARK [2][-]{subsection.3.2}{Coups}{section.3}% 6
+\BOOKMARK [3][-]{subsubsection.3.2.1}{Classe CoupQuarto}{subsection.3.2}% 7
+\BOOKMARK [3][-]{subsubsection.3.2.2}{Classe DoubleCoupQuarto}{subsection.3.2}% 8
+\BOOKMARK [1][-]{section.4}{Heuristiques}{}% 9

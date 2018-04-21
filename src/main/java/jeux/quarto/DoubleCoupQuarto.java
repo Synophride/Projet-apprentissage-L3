@@ -1,7 +1,10 @@
 package jeux.quarto;
 
 import iia.jeux.modele.CoupJeu;
-
+/**
+ * Cette classe modélise une double action de quarto, c'est à dire un dépôt de pièce
+ * plus un don de pièce
+ **/
 public class DoubleCoupQuarto implements CoupJeu {
     private final byte id_coord;
     private final byte id_piece;

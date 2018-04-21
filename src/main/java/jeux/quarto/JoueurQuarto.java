@@ -4,6 +4,9 @@ import iia.jeux.modele.*;
 import iia.jeux.modele.joueur.Joueur;
 import quartoplus.IJoueur;
 
+/**
+ * Classe implémentant l'interface IJoueur, pour le quarto
+ **/
 public class JoueurQuarto implements IJoueur {
     private int coulour;
     // BLANC commence

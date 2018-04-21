@@ -6,6 +6,10 @@ import iia.jeux.modele.PlateauJeu;
 
 import java.util.Scanner;
 
+/**
+ * Cette classe est une implémentation simple de l'interface AlgoJeu, qui permet 
+ * de jouer en tant qu'humain, en écrivant les coups via l'entrée standard
+ **/
 public class JoueurHumainQuarto implements AlgoJeu {
     private Scanner input= new Scanner(System.in);
     

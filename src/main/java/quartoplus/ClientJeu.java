@@ -12,7 +12,7 @@ import java.util.StringTokenizer;
  * (ou "localhost") sur laquelle le serveur de jeu est lancé, ainsi que le port sur lequel la
  * machine écoute.
  * 
- * Exemple: >>>java -cp . frontieres.ClientJeu frontieres.joueurProf localhost 1234
+ * Exemple: java -cp . frontieres.ClientJeu frontieres.joueurProf localhost 1234
  * 
  * Le client s'occupe alors de tout en lan?ant les méthodes implantées de l'interface IJoueur. Toute
  * la gestion réseau est donc cachée.

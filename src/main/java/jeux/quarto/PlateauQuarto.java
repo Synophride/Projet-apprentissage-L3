@@ -10,6 +10,11 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.lang.IllegalArgumentException;
 
+/**
+ *
+ * Classe modélisant un plateau de quarto
+ *
+ **/
 public class PlateauQuarto implements PlateauJeu {
 
     /********** commentaires *********/
@@ -183,9 +188,8 @@ public class PlateauQuarto implements PlateauJeu {
      *         bit représentant une caractéristique de la pièce soit à 1 si les
      *         identifiants ont cette caractéristique en commun
      * @see get_piece
-     * @see points_communs_double_piece
      * @see test_colonne
-     * @see test_diagonale
+     * @see test_diagonales
      ***/
     public byte points_communs(byte p1, byte p2) {
 	int pts_communs = p1 ^ p2;
@@ -379,6 +383,8 @@ public class PlateauQuarto implements PlateauJeu {
      *            lettre correspond à la couleur (r rouge/b bleu), la seconde
      *            FIXME
      * @return l'identifiant de la pièce associée à la str associée en paramètre
+     * @see pieceToString
+     * @see coordToString
      ***/
     public static byte stringToPiece(String strPiece) {
 	char[] idPiece = strPiece.toCharArray();
@@ -589,7 +595,9 @@ public class PlateauQuarto implements PlateauJeu {
      * @return une chaine de caractères représentant une case, de la forme
      *         [A-D][1-4], ou la lettre représente la colonne, le chiffre la
      *         ligne
-     */
+     * @see stringToCoord
+     * @see pieceToString
+     ***/
     public static String coordToString(byte coordonnee_case) {
 	// Ligne colonne
 	int ind_ligne = coordonnee_case >>> 2;
@@ -756,6 +764,25 @@ public class PlateauQuarto implements PlateauJeu {
 	return estmoveValide(choix, joueur);
     }
 
+    /**
+     * Fonction déterminant s'il existe une position libre sur le plateau telle qu'en posant la pièce piece, on puisse poser la pièce en question et que cela fasse un alignement/carré de pièces ayant un attribut commun
+     *
+     * @param piece 
+     *          la pièce à jouer (qui peut déjà avoir été jouée)
+     * @return true s'il existe une position libre ou, quand on pose la piece donnée en paramètre la partie est finie
+     **/
+    public boolean existe_position_gagnante(byte piece){
+	for(byte i = 0; i<16; i++){
+	    byte piece_plateau = get_piece(piece);
+
+	    if(piece_plateau == -1){
+		PlateauQuarto pq = (PlateauQuarto) this.copy();
+		pq.unsafe_jouer_coup_depot(piece);
+		if(pq.finDePartie()) return true;
+	    }
+	}
+	return false;
+    }
     private String str_pieces_non_jouees() {
 	String ret = "";
 	int idp = indice_pieces;

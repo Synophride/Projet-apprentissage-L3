@@ -2,9 +2,16 @@ package jeux.quarto;
 
 import iia.jeux.modele.CoupJeu;
 
+
+/**
+ * Cette classe modélise une action de quarto, qui peut être un don de pièce comme un 
+ * dépôt de pièce sur une case du plateau
+ **/
 public class CoupQuarto implements CoupJeu {
+    
     private final byte idCoup;
     private boolean is_don;
+
     /**
      * Constructeur de CoupQuarto
      * @param id

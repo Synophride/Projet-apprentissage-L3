@@ -1,4 +1,4 @@
-This is LuaTeX, Version 1.0.4 (TeX Live 2017)  (format=lualatex 2018.4.6)  22 APR 2018 10:32
+This is LuaTeX, Version 1.0.4 (TeX Live 2017)  (format=lualatex 2018.4.6)  22 APR 2018 16:57
  restricted system commands enabled.
 **rapport.tex
 (./rapport.tex
@@ -34,7 +34,7 @@ Inserting `luaotfload.aux.set_capheight' at position 3 in `luaotfload.patch_font
 '.
 Inserting `luaotfload.rewrite_fontname' at position 4 in `luaotfload.patch_font'
 .
-luaotfload | main : initialization completed in 0.145 seconds
+luaotfload | main : initialization completed in 0.144 seconds
 Babel <3.18> and hyphenation patterns for 1 language(s) loaded.
 (/home/synophride/texdir/texmf-dist/tex/latex/base/article.cls
 Document Class: article 2014/09/29 v1.4h Standard LaTeX document class
@@ -225,55 +225,48 @@ LaTeX Font Info:    External font `cmex10' loaded for size
 LaTeX Font Info:    External font `cmex10' loaded for size
 (Font)              <6> on input line 11.
 (load luc: /home/synophride/texdir/texmf-var/luatex-cache/generic/fonts/otl/lmro
-man12-bold.luc) [1
+man12-bold.luc)(load luc: /home/synophride/texdir/texmf-var/luatex-cache/generic
+/fonts/otl/lmroman10-bold.luc) [1
 
 {/home/synophride/texdir/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <7> on input line 61.
+(Font)              <7> on input line 71.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <5> on input line 61.
+(Font)              <5> on input line 71.
 (load luc: /home/synophride/texdir/texmf-var/luatex-cache/generic/fonts/otl/lmro
 man7-regular.luc)(load luc: /home/synophride/texdir/texmf-var/luatex-cache/gener
 ic/fonts/otl/lmroman8-regular.luc)(load luc: /home/synophride/texdir/texmf-var/l
-uatex-cache/generic/fonts/otl/lmroman6-regular.luc)(load luc: /home/synophride/t
-exdir/texmf-var/luatex-cache/generic/fonts/otl/lmroman10-bold.luc)
+uatex-cache/generic/fonts/otl/lmroman6-regular.luc)
 [2](load luc: /home/synophride/texdir/texmf-var/luatex-cache/generic/fonts/otl/l
 mroman10-italic.luc) [3] [4]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 251.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 269.
  [5]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 251.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 269.
  (./rapport.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 251.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 251.
-
-
-Package rerunfilecheck Warning: File `rapport.out' has changed.
-(rerunfilecheck)                Rerun to get outlines right
-(rerunfilecheck)                or use package `bookmark'.
-
-Package rerunfilecheck Info: Checksums for `rapport.out':
-(rerunfilecheck)             Before: 1ED80C01F06932769126E49360C19D37;647
-(rerunfilecheck)             After:  9379C41F0600366BF98CE3C740E6C74B;710.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 251.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 269.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 269.
+Package rerunfilecheck Info: File `rapport.out' has not changed.
+(rerunfilecheck)             Checksum: 9379C41F0600366BF98CE3C740E6C74B;710.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 269.
 )
 
 Here is how much of LuaTeX's memory you used:
- 4584 strings out of 494480
+ 4587 strings out of 494480
  100000,184870 words of node,token memory allocated
  398 words of node memory still in use:
    2 hlist, 1 vlist, 1 rule, 4 glue, 7 attribute, 48 glue_spec, 7 attribute_list
 , 1 write nodes
-   avail lists: 2:239,3:103,4:7,5:145,6:2587,7:598,8:46,9:100,10:6,11:181
- 8602 multiletter control sequences out of 65536+600000
+   avail lists: 2:251,3:94,4:7,5:144,6:2262,7:578,8:35,9:96,10:6,11:152
+ 8603 multiletter control sequences out of 65536+600000
  44 fonts using 3222223 bytes
- 28i,8n,28p,159b,475s stack positions out of 5000i,500n,10000p,200000b,100000s
+ 28i,8n,28p,159b,395s stack positions out of 5000i,500n,10000p,200000b,100000s
 </home/synophride/texdir/texmf-dist/fonts/opentype/public/lm/lmroman10-italic.ot
 f></home/synophride/texdir/texmf-dist/fonts/opentype/public/lm/lmroman8-regular.
 otf></home/synophride/texdir/texmf-dist/fonts/opentype/public/lm/lmroman6-regula
-r.otf></home/synophride/texdir/texmf-dist/fonts/opentype/public/lm/lmroman10-bol
-d.otf></home/synophride/texdir/texmf-dist/fonts/opentype/public/lm/lmroman7-regu
+r.otf></home/synophride/texdir/texmf-dist/fonts/opentype/public/lm/lmroman7-regu
 lar.otf></home/synophride/texdir/texmf-dist/fonts/opentype/public/lm/lmroman10-r
 egular.otf></home/synophride/texdir/texmf-dist/fonts/opentype/public/lm/lmroman1
+0-bold.otf></home/synophride/texdir/texmf-dist/fonts/opentype/public/lm/lmroman1
 2-bold.otf></home/synophride/texdir/texmf-dist/fonts/opentype/public/lm/lmroman1
 2-regular.otf></home/synophride/texdir/texmf-dist/fonts/opentype/public/lm/lmrom
 an17-regular.otf></home/synophride/texdir/texmf-dist/fonts/type1/public/amsfonts
@@ -283,10 +276,10 @@ mmi8.pfb></home/synophride/texdir/texmf-dist/fonts/type1/public/amsfonts/cm/cmr1
 0.pfb></home/synophride/texdir/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pf
 b></home/synophride/texdir/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb>
 
-Output written on rapport.pdf (5 pages, 95084 bytes).
+Output written on rapport.pdf (5 pages, 96204 bytes).
 
-PDF statistics: 185 PDF objects out of 1000 (max. 8388607)
- 143 compressed objects within 2 object streams
- 37 named destinations out of 1000 (max. 131072)
- 81 words of extra memory for PDF output out of 10000 (max. 100000000)
+PDF statistics: 190 PDF objects out of 1000 (max. 8388607)
+ 148 compressed objects within 2 object streams
+ 39 named destinations out of 1000 (max. 131072)
+ 89 words of extra memory for PDF output out of 10000 (max. 100000000)
 

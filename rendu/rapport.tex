@@ -10,11 +10,16 @@
 \maketitle
 \section{Introduction}
 
-L'archive contient
+L'archive contient : 
 \begin{enumerate}
-\item Les sources java, dans le dossier src
-\item Le document présent, résumant 
+\item Les sources java, dans le dossier src. 
+\item Le document présent, résumant le contenu des sources, ainsi que
+  le déroulement général du projet.
+\item un dossier apidocs, qui contient la javadoc du projet
 \end{enumerate}
+
+
+% Todo : dire de la merde
 
 \section{Description des problèmes rencontrés au cours du projet}
 \subsection{Implémentation du plateau de jeu}
@@ -43,7 +48,7 @@ principalement dû aux spécificités de java suivantes :
   entiers atomiques (``int'' et pas ``Integer'').
 \item Les opérateurs bit à bit traitent uniquement les entiers
   (c'est à dire ni les bytes, ni les short). Par conséquent,
-  l'opération (byte \& byte)
+  l'opération (byte \& byte) (ET logique)
   \begin{enumerate}
   \item Convertit les bytes en int 
   \item Applique l'opérateur 
@@ -66,21 +71,24 @@ par conséquent de bonnes performances --- la réalité fut autre :
 
 
 Le signage des entiers, allié au ``mono-type'' des opérateurs logiques 
-causaient des effets inattendus.
-De plus, les divers calculs qui
+causaient des effets inattendus --- De la même nature que l'exemple
+évoqué ci-dessus ---. Les divers calculs qui
 auraient été nécessaires pour pallier à ces problèmes auraient été
 assez difficiles à implémenter, et auraient considérablement ralenti
-les calculs sur le plateau.
+les calculs sur le plateau. Par conséquent, ce qui aurait dû faire la
+force 
 
 
 Ainsi, nous avons choisi une implémentation du plateau moins
-extrémiste, mais qui a le mérite de fonctionner.
-
+extrémiste, sans être trop différente de la première idée, afin de ne
+pas avoir à réécrire trop de code. 
+ 
 \section{Modélisation du quarto}
+Nous décrirons ici l'implémentation des diverses classes composant le
+package jeux.quarto
 \subsection{Plateau de jeu}
 \paragraph{}
-La classe contenant le plateau de jeu est la classe PlateauJeu, du
-package jeux.quarto.
+La classe contenant le plateau de jeu est la classe PlateauJeu.
 
 \paragraph{Description de la classe}
 Le plateau est constitué de quatre à six attributs : Le plateau en lui-même (une
@@ -137,8 +145,6 @@ Par conséquent, toutes les documentations/tous les
 commentaires mentionnant le joueur noir/le joueur blanc parlent
 respectivement du joueur j0, et du joueur j1.
 
-
-
 \subsection{Coups}
 \subsubsection{Classe CoupQuarto}
 Cette classe --- qui implémente l'interface CoupJeu ---
@@ -182,21 +188,37 @@ Il y a toujours deux constructeurs, le premier par deux byte, le
 second par une chaine de caractères de la forme
 ``[coordonnée]-[identifiant piece]''.
 
+\subsection{Autres classes}
+Contient une procédure main, qui déroule une partie
 
-\section{Heuristiques}
+\paragraph{HeuristiqueQuarto}
+Contient une heuristique pour le quarto
+
+\paragraph{JoueurQuarto}
+Implémentation de l'interface IJoueur. Contient un AlgoJeu, qui
+définit quelle heuristique est adoptée.
+
+
+\paragraph{JoueurHumainQuarto}
+Implémente l'interface AlgoJeu, pour permettre à un humain de jouer au
+quarto en tapant les coups joués
+
+\paragraph{PartieQuarto}
+
+\section{Heuristique}
 Pour notre heuristique nous avons d'abord pris en compte les cas 
 extrêmes qui sont les cas o\`u la position est finale
 ( ``il existe une configuration gagnante pour au moins une
 caractéristique, pour l'un des deux joueurs'' ).
- Dans ce cas, nous fixons une heuristique maximale ou minimale, dans
- les cas o\`u la partie est respectivement gagnante ou perdante?
+Dans ce cas, nous fixons une heuristique maximale ou minimale, dans
+les cas o\`u la partie est respectivement gagnante ou perdante?
 
 
- Il reste ensuite à traiter les autres configurations.
- La difficulté du quarto est qu'en plus du plateau en lui-même,
- il faut prendre en compte les pièces
- non encore jouées qui vont avoir une influence sur l'heuristique.
- De plus comme un coup joué est en réalité un double coup, il faut à la fois
+Il reste ensuite à traiter les autres configurations.
+La difficulté du quarto est qu'en plus du plateau en lui-même,
+il faut prendre en compte les pièces
+non encore jouées qui vont avoir une influence sur l'heuristique.
+De plus comme un coup joué est en réalité un double coup, il faut à la fois
 traiter le plateau avec le dépôt qu'on a fait et le choix de la pièce
 à donner.
 Au quarto il est plus facile d'adopter des stratégies
@@ -210,6 +232,7 @@ valeur à cela pour calculer notre heuristique.
 % Note : Il doit être possible de prendre en compte la ``parité'' du
 % nombre de pièces restantes
 
+
 La formule consiste à regarder pour chaque caractéristique s’il existe
 une position gagnante sur le plateau pour cette caractéristique. Si
 c'est le cas, on regarde le nombre de pièces qui n'ont pas cette
@@ -221,6 +244,9 @@ plateau, alors l'adversaire n'aura pas le choix et il devra nous
 donner la pièce qui nous fera gagner.
 
 \section{Conclusion}
+
+Ainsi, nous avons décrit le déroulement du projet d'introduction à
+l'intelligence artificielle.
 
 \end{document}
 

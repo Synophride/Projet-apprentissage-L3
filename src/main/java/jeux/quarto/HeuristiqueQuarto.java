@@ -46,7 +46,7 @@ public class HeuristiqueQuarto {
             }
             
             if(val == 0 ) return 60;
-
+	    return val;
         }
     };
 

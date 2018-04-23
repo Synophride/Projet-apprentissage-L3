@@ -18,10 +18,9 @@ public class JoueurQuarto implements IJoueur {
     
     private PlateauQuarto p =
 	new PlateauQuarto(j_blanc, j_noir);
-
+    
     /**
      * Initialise un nouveau joueur humain
-     *
      **/
     public JoueurQuarto(){
 	
@@ -36,7 +35,7 @@ public class JoueurQuarto implements IJoueur {
 	if( IJoueur.BLANC == coulour )
 	    jh = new AlphaBeta(HeuristiqueQuarto.heuristique1_j1, j_blanc, j_noir, 2);
 	else
-	    jh = new Minimax(HeuristiqueQuarto.heuristique_aleatoire, j_noir, j_blanc, 2);
+	    jh = new AlphaBeta(HeuristiqueQuarto.heuristique1_j2, j_noir, j_blanc, 2);
     }
 
     public int getNumJoueur(){

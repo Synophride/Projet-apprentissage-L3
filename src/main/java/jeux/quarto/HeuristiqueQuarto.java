@@ -45,7 +45,11 @@ public class HeuristiqueQuarto {
                 }
             }
             
-            if(val == 0 ) return 60;
+	    Random r = new Random();
+
+	    if(val == 0)
+		return new Random(50);
+
 	    return val;
         }
     };

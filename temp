@@ -1,0 +1,1 @@
+java -cp target/iia.td3-4_Devatine_Guyot-1.0.jar quartoplus.ClientJeu jeux.quarto.JoueurQuarto localhost 1234

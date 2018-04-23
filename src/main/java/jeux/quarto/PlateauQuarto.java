@@ -470,13 +470,13 @@ public class PlateauQuarto implements PlateauJeu {
 
 	// 3. Combinaison de tout ça
 	if (pieces_restantes.size() == 0 ){
-	    ret.add(new DoubleCoupQuarto(cases_libres.get(i).byteValue(), 0b0000_0000)); // Ajout d'un coup factice, puisqu'il reste plus rien
+	    pieces_restantes.add(-1);
 	}
 	
 	for (int i = 0; i < cases_libres.size(); i++)
 	    for (int k = 0; k < pieces_restantes.size(); k++)
 		ret.add(new DoubleCoupQuarto(cases_libres.get(i).byteValue(), pieces_restantes.get(k).byteValue()));
-
+	
 	return ret;
     }
 

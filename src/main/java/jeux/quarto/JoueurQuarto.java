@@ -9,19 +9,15 @@ import quartoplus.IJoueur;
  **/
 public class JoueurQuarto implements IJoueur {
     private int coulour;
-    // BLANC commence
-    private static final int NOIR  = IJoueur.BLANC;
-    private static final int BLANC = IJoueur.NOIR;
     
-    AlgoJeu jh = new JoueurHumainQuarto();
+    AlgoJeu jh;
     
     private Joueur
 	j_blanc = new Joueur("blanc"),
 	j_noir = new Joueur("noir");
     
-    private PlateauQuarto p = new PlateauQuarto(j_blanc, j_noir);
-    
-    private AlgoJeu algo = new JoueurHumainQuarto();
+    private PlateauQuarto p =
+	new PlateauQuarto(j_blanc, j_noir);
 
     /**
      * Initialise un nouveau joueur humain
@@ -32,32 +28,16 @@ public class JoueurQuarto implements IJoueur {
     }
     
     /**
-     * Initialise un nouveau joueur avec l'algo de jeu aj
-     **/
-    public JoueurQuarto(AlgoJeu aj){
-	jh = aj; 
-    }
-
-    /**
-     * Changement de l'algorithme de jeu (par exemple parce qu'on change de "partie de la partie"
-     **/ 
-    public void changementAlgoJeu(AlgoJeu aj){
-	jh = aj;
-    }
-
-    /**
      * Initialise le joueur à mycolour. 
      */
     public void initJoueur(int mycolour){
 	coulour = mycolour;
-	if(coulour == NOIR)
-	    jh = new AlphaBeta(HeuristiqueQuarto.heuristique1_j1, j_noir, j_blanc, 1);	
+	if(IJoueur.BLANC == mycolour)
+	    jh = new AlphaBeta(HeuristiqueQuarto.heuristique1_j1, j_blanc, j_noir, 2);
+	else
+	    jh = new AlphaBeta(HeuristiqueQuarto.heuristique_aleatoire, j_noir, j_blanc, 2);
     }
 
-    /*
-      algoJoueur[0] = 
-    */
-    
     public int getNumJoueur(){
 	return coulour;
     }
@@ -81,6 +61,6 @@ public class JoueurQuarto implements IJoueur {
     
     /// Pê le nom du binôme
     public String binoName(){
-	return "eluhjizdaugyutguhujiuytfrdtfgjhjiuytfhg";
+	return "Devatine  --  Guyot ";
     }
 }

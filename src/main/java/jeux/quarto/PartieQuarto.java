@@ -14,8 +14,10 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class PartieQuarto {
-    public static Joueur joueur_noir = new Joueur("noir");
-    public static Joueur joueur_blanc = new Joueur("blanc");
+    public static Joueur joueur_noir =
+	new Joueur("noir");
+    public static Joueur joueur_blanc =
+	new Joueur("blanc");
 
     private static int prof_blanc = 1;
     private static int prof_noir = 2;
@@ -71,8 +73,7 @@ public class PartieQuarto {
                     System.out.println("le coup est invalide");
                 }
 		
-                System.out.println(p.toString());
-		
+                System.out.println(p.toString());		
             }
             
             System.out.println("La partie est finie\nPlateau :\n" + p.toString());

@@ -32,10 +32,12 @@ public class JoueurQuarto implements IJoueur {
      */
     public void initJoueur(int mycolour){
 	coulour = mycolour;
-	if(IJoueur.BLANC == mycolour)
-	    jh = new AlphaBeta(HeuristiqueQuarto.heuristique1_j1, j_blanc, j_noir, 2);
+
+	if( IJoueur.BLANC == coulour )
+	    jh = new AlphaBeta(HeuristiqueQuarto.heuristique1_j1, j_blanc, j_noir, 1);
+
 	else
-	    jh = new AlphaBeta(HeuristiqueQuarto.heuristique_aleatoire, j_noir, j_blanc, 2);
+	    jh = new Minimax(HeuristiqueQuarto.heuristique_aleatoire, j_noir, j_blanc, 3);
     }
 
     public int getNumJoueur(){

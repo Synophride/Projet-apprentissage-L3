@@ -15,22 +15,22 @@ public class HeuristiqueQuarto {
             /*
              * Heuristique tj calculé après un don de pièce
              */
-          
+	    
             // Nombre de pièces restantes pour chaque caractéristique
             int[] nb_piece = p.nb_piece_restante();
             
             // Vrai si il existe une position où le dépôt d'une pièce rendrait le plateau gagnant pour chaque
             int[] existe_position_gagnante = p.nb_position_gagnante();
-            
-             if(p.finDePartie()) {
-            		 return Integer.MAX_VALUE - 1;	 
-             }
+	    
+	    if(p.finDePartie()) {
+		return Integer.MAX_VALUE - 1;	 
+	    }
              
-             for(int i=1; i<9; i++) {
-                 if(nb_piece[i] == nb_piece[0] && existe_position_gagnante[i] >= 1) {
-                		 return Integer.MAX_VALUE - 1;
-                 }
-             }
+	    for(int i=1; i<9; i++) {
+		if(nb_piece[i] == nb_piece[0] && existe_position_gagnante[i] >= 1) {
+		    return Integer.MAX_VALUE - 1;
+		}
+	    }
             
             int val = 0;
             
@@ -45,21 +45,16 @@ public class HeuristiqueQuarto {
                 }
             }
             
-            Random rand = new Random();
-            
-            if (val == 0) {
-                val = rand.nextInt(50);
-            }
-            
-            return val;
+            if(val == 0 ) return 60;
+
         }
     };
 
     public static Heuristique heuristique1_j2 = new Heuristique() {
-        public int eval(PlateauJeu plateau, Joueur j) {
-            return -heuristique1_j1.eval(plateau, j);
-        }
-    };
+	    public int eval(PlateauJeu plateau, Joueur j) {
+		return - heuristique1_j1.eval(plateau, j);
+	    }
+	};
     
     public static Heuristique heuristique_aleatoire = new Heuristique() {
         public int eval(PlateauJeu plateau, Joueur j) {
